@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 
-BookHaven/appsettings.json
+BookHeaven/appsettings.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
