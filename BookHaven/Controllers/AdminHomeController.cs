@@ -4,9 +4,9 @@ namespace BookHaven.Controllers
 {
     public class AdminHomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult showAdminHome()
         {
-            return View();
+            return View("AdminHomeView");
         }
     }
 }
