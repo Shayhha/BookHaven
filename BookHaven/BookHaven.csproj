@@ -8,4 +8,10 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
+  <ItemGroup>
+    <None Remove="Views\UserHome\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\UserHome\" />
+  </ItemGroup>
 </Project>
