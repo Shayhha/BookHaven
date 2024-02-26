@@ -2,7 +2,7 @@
 
 namespace BookHaven.Controllers
 {
-    public class AdminController : Controller
+    public class AdminHomeController : Controller
     {
         public IActionResult Index()
         {
