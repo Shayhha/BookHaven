@@ -9,37 +9,85 @@
     <link rel="stylesheet" href="~/BookHaven.styles.css" asp-append-version="true" />
 
     <style>
-        .navbar {
-            overflow: hidden;
-            background-color: #333;
-        }
+    .navbar {
+        overflow: hidden;
+        background-color: #333;
+        display: flex;
+        justify-content: space-between;
+    }
 
-            .navbar a {
-                float: left;
-                display: block;
-                color: #f2f2f2;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-            }
+    .navbar a {
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        border: 1px solid #f2f2f2; /* Add border to the buttons */
+        margin: 0 5px; /* Add some space between the buttons */
+        border-radius: 5px; /* Add border radius */
+    }
 
-                .navbar a:hover {
-                    background-color: #ddd;
-                    color: black;
-                }
+    .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .navbar .site-title {
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        cursor: default; /* Remove the pointer cursor */
+        font-size: 24px; /* Increase the font size */
+    }
+
+    .navbar .search-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar input[type=text] {
+        padding: 6px;
+        margin-right: 10px;
+        font-size: 17px;
+        border: none;
+        width: 300px; /* Adjust the width of the search bar */
+    }
+
+    .navbar .search-container button {
+        float: right;
+        padding: 6px 10px;
+        margin-right: 16px;
+        background: #ddd;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px; /* Add border radius */
+    }
+
+    .navbar .search-container button:hover {
+        background: #ccc;
+    }
+
+    .navbar .auth-links {
+        display: flex;
+    }
     </style>
 
 </head>
 <body>
     <header>
-
         <div class="navbar">
-            <a href="#home">BookHaven</a>
-            <input type="text" placeholder="Search..">
-            <a href="#login">Login</a>
-            <a href="#signup">Sign Up</a>
+            <div class="site-title">BookHaven</div>
+            <div class="search-container">
+                <input type="text" placeholder="Search..">
+                <button type="submit">🔍</button>
+            </div>
+            <div class="auth-links">
+                <a href="#login">Login</a>
+                <a href="#signup">Sign Up</a>
+            </div>
         </div>
-
     </header>
     <div class="container">
         <main role="main" class="pb-3">
