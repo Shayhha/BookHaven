@@ -1,8 +1,8 @@
-﻿using BookHaven.Models;
+﻿using BookHeaven.Models;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookHaven.Controllers
+namespace BookHeaven.Controllers
 {
     public class UserHomeController : Controller
     {
@@ -11,10 +11,51 @@ namespace BookHaven.Controllers
             return View("UserHomeView");
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult showLoginView()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            Login login = new Login();
+            return View("LoginView", login);
         }
+
+        public IActionResult showSignupView()
+        {
+            Signup signup = new Signup();
+            return View("SignupView", signup);
+        }
+
+
+        public IActionResult tryToLogin(Login login)
+        {
+            if (ModelState.IsValid)
+            {
+                // add some SQL stuff here
+                return View("UserHomeView", login);
+            }
+            else
+            {
+                return View("LoginView", login);
+            }
+        }
+
+        public IActionResult tryToSignup(Signup signup)
+        {
+            if (ModelState.IsValid)
+            {
+                // add some SQL stuff here
+                return View("UserHomeView", signup);
+            }
+            else
+            {
+                return View("SignupView", signup);
+            }
+        }
+
+
+
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }
