@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace BookHaven.Controllers
+namespace BookHeaven.Controllers
 {
     public class OrdersController : Controller
     {
