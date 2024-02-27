@@ -29,8 +29,16 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                // add some SQL stuff here
-                return View("UserHomeView", login);
+                if (SQLHelper.SQLLogin(login) != "")
+                {
+                    // User found in the database
+                    return View("UserHomeView");
+                }
+                else
+                {
+                    // User not found in the database
+                    return View("LoginView", login);
+                }
             }
             else
             {
