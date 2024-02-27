@@ -9,7 +9,7 @@ namespace BookHeaven.Controllers
     {
         public IActionResult showAdminHome()
         {
-            Login login = new Login(); 
+            Login login = new Login();
             return View("AdminHomeView", login);
         }
 

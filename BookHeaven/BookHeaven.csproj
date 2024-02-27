@@ -31,8 +31,4 @@
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Remove="Views\UserHome\LoginView.cshtml" />
-    <Content Remove="Views\UserHome\SignupView.cshtml" />
-  </ItemGroup>
 </Project>
