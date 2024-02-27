@@ -10,12 +10,18 @@ namespace BookHaven.Models
         //initial configuration of the SQL connection
         public static IConfiguration _configuration;
         public static string connectionString = "";
-        public static void Initialize(IConfiguration configuration) //!!must call this function in the start of the website!!!
+        //end of SQL connection configuration
+
+        /// <summary>
+        /// Function for configuring the initial connection with the database, we call in program.cs
+        /// </summary>
+        /// <param name="configuration"></param>
+        public static void Initialize(IConfiguration configuration) 
         {
             _configuration = configuration;
             connectionString = _configuration.GetConnectionString("myConnection");
         }
-        //end of SQL connection configuration
+
 
         /// <summary>
         /// Function to generate SHA-256 hash for strings
@@ -90,27 +96,34 @@ namespace BookHaven.Models
             }
         }
 
-        public static bool SQLSignup(Signup signup)
+        public static string SQLSignup(Signup signup)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 string query = @"
-                    INSERT INTO UserInfo VALUES(@email, @fname, @lname);
-                    INSERT INTO Users VALUES(@email, @password);";
+                    INSERT INTO UserInfo(email, fname, lname) VALUES(@email, @fname, @lname);
+                    INSERT INTO Users(email, password) VALUES(@email, @password);
+                    SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@email", signup.email);
-                    command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
-                    command.Parameters.AddWithValue("@fname", signup.fname);
-                    command.Parameters.AddWithValue("@lname", signup.lname);
+                    //command.Parameters.AddWithValue("@email", signup.email);
+                    //command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
+                    //command.Parameters.AddWithValue("@fname", signup.fname);
+                    //command.Parameters.AddWithValue("@lname", signup.lname);
 
                     int numOfRowsEffected = command.ExecuteNonQuery();
-                    if (numOfRowsEffected > 0)
-                        return true; // successfully inserted user into tables
+                    if (numOfRowsEffected > 0) // successfully inserted user into tables
+                    {
+                        object result = command.ExecuteScalar(); //get the userId from table
+                        if (result != null)
+                            return result.ToString();
+                        else
+                            return ""; // else we failed inserting
+                    }
                     else
-                        return false; // else we failed inserting
+                        return ""; // else we failed inserting
                 }
             }
         }

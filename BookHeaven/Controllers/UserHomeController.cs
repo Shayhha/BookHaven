@@ -8,6 +8,7 @@ namespace BookHaven.Controllers
     {
         public IActionResult showUserHome()
         {
+            Console.WriteLine(SQLHelper.ToSHA256("Shay1234"));
             return View("UserHomeView");
         }
 
