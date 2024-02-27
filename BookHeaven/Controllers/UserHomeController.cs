@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookHaven.Models;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookHaven.Controllers
 {
@@ -7,6 +9,12 @@ namespace BookHaven.Controllers
         public IActionResult showUserHome()
         {
             return View("UserHomeView");
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
