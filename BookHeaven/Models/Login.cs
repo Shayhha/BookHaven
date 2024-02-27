@@ -11,7 +11,7 @@ namespace BookHeaven.Models
 
         [Required(ErrorMessage = "password is required")] 
         [RegularExpression("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d!@#$%^&*()-_=+{}\\[\\]|;:'\",.<>?]{6,12}$",
-            ErrorMessage = "password must have at-least one cappital letter, at-least one number and be between 6 and 12 chars long.")]
+            ErrorMessage = "password must have at-least one capital letter, at-least one number and be between 6 and 12 chars long.")]
         public string password { get; set; }
 
         public Login() { }
