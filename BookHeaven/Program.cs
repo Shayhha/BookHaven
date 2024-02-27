@@ -1,4 +1,4 @@
-using BookHaven.Models;
+using BookHeaven.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

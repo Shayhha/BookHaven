@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BookHaven.Models
+namespace BookHeaven.Models
 {
     public static class SQLHelper
     {

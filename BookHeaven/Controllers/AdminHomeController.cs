@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookHeaven.Models;
 using System.Data.SqlClient;
-using BookHaven.Models;
 using System.Reflection.PortableExecutable;
 
 namespace BookHeaven.Controllers
@@ -10,7 +9,7 @@ namespace BookHeaven.Controllers
     {
         public IActionResult showAdminHome()
         {
-            Login login = new Login(); 
+            Login login = new Login();
             return View("AdminHomeView", login);
         }
 

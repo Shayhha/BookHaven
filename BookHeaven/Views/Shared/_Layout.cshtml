@@ -78,14 +78,14 @@
 <body>
     <header>
         <div class="navbar">
-            <div class="site-title">BookHaven</div>
+            <div class="site-title">BookHeaven</div>
             <div class="search-container">
                 <input type="text" placeholder="Search..">
                 <button type="submit">🔍</button>
             </div>
             <div class="auth-links">
-                <a href="#login">Login</a>
-                <a href="#signup">Sign Up</a>
+                <a href="/UserHome/showLoginView" id="loginButton">Login</a>
+                <a href="/UserHome/showSignupView" id="signupButton">Sign Up</a>
             </div>
         </div>
     </header>
@@ -98,6 +98,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

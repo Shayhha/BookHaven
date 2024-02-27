@@ -1,4 +1,4 @@
-﻿namespace BookHaven.Models
+﻿namespace BookHeaven.Models
 {
     public class User
     {
