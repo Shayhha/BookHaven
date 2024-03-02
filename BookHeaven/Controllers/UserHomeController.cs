@@ -8,7 +8,7 @@ namespace BookHeaven.Controllers
     {
         public IActionResult showUserHome()
         {
-            Console.WriteLine(SQLHelper.ToSHA256("Shay1234"));
+            //Console.WriteLine(SQLHelper.ToSHA256("Shay1234"));
             return View("UserHomeView");
         }
 
@@ -50,8 +50,14 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                // add some SQL stuff here
-                return View("UserHomeView", signup);
+                if (SQLHelper.SQLSignup(signup) != "")
+                {
+                    return View("UserHomeView", signup);
+                }
+                else
+                {
+                    return View("SignupView", signup);
+                }
             }
             else
             {

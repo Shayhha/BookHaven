@@ -1,4 +1,5 @@
 ﻿using BookHeaven.Models;
+using System.Data;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
@@ -16,7 +17,7 @@ namespace BookHeaven.Models
         /// Function for configuring the initial connection with the database, we call in program.cs
         /// </summary>
         /// <param name="configuration"></param>
-        public static void Initialize(IConfiguration configuration) 
+        public static void Initialize(IConfiguration configuration)
         {
             _configuration = configuration;
             connectionString = _configuration.GetConnectionString("myConnection");
@@ -108,10 +109,10 @@ namespace BookHeaven.Models
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    //command.Parameters.AddWithValue("@email", signup.email);
-                    //command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
-                    //command.Parameters.AddWithValue("@fname", signup.fname);
-                    //command.Parameters.AddWithValue("@lname", signup.lname);
+                    command.Parameters.AddWithValue("@email", signup.email);
+                    command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
+                    command.Parameters.AddWithValue("@fname", signup.firstName);
+                    command.Parameters.AddWithValue("@lname", signup.lastName);
 
                     int numOfRowsEffected = command.ExecuteNonQuery();
                     if (numOfRowsEffected > 0) // successfully inserted user into tables
@@ -127,5 +128,31 @@ namespace BookHeaven.Models
                 }
             }
         }
+
+        public static SearchResults SQLSearch(SearchResults searchResults) //by name, book id
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM Books WHERE name LIKE @searchQuery;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@searchQuery", searchResults.searchQuery);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Book book = new Book(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4),
+                                reader.GetString(5), reader.GetInt32(6), reader.GetInt32(7), reader.GetString(8), reader.GetInt32(9), reader.GetInt32(10));
+                            searchResults.books.Add(book);
+                        }
+                    }
+                }
+            }
+            return searchResults;
+        }
     }
 }
+
