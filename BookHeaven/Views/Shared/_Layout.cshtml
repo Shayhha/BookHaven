@@ -107,8 +107,10 @@
         <div class="navbar">
             <div class="site-title"><a href="/UserHome/showUserHome">BookHeaven</a></div>
             <div class="search-container">
-                <input type="text" placeholder="Search..">
-                <button type="submit">🔍</button>
+                <form id="searchForm" action="/SearchResults/showSearchResults" method="get">
+                    <input type="text" name="searchQuery" placeholder="Search..">
+                    <button type="button" onclick="handleSearchButtonClick()">🔍</button>
+                </form>
             </div>
             <div class="auth-links">
                 <a href="/UserHome/showLoginView" id="loginButton">Login</a>
@@ -123,6 +125,15 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function handleSearchButtonClick() {
+            var searchQuery = document.getElementsByName("searchQuery")[0].value;
+            // Pass the search query to your C# code (you may need AJAX or other methods depending on your setup)
+            // For simplicity, let's assume there's a hidden form input to send the search query to the server
+            document.getElementById("searchForm").submit();
+        }
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
