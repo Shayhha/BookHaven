@@ -70,6 +70,11 @@ namespace BookHeaven.Models
             }
         }
 
+        /// <summary>
+        /// Function for login, searches the database for matching user and returns its unique id, else returns empty string
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
         public static string SQLLogin(Login login)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -97,6 +102,11 @@ namespace BookHeaven.Models
             }
         }
 
+        /// <summary>
+        /// Function for signup, adds a new user to Users and UserInfo tables and returns its unique id, else returns empty string
+        /// </summary>
+        /// <param name="signup"></param>
+        /// <returns></returns>
         public static string SQLSignup(Signup signup)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -129,12 +139,22 @@ namespace BookHeaven.Models
             }
         }
 
-        public static SearchResults SQLSearch(SearchResults searchResults) //by name, book id
+        /// <summary>
+        /// Function for searching books in the database, returns an initialized SearchResults object with the list of books
+        /// </summary>
+        /// <param name="searchResults"></param>
+        /// <param name="isName"></param>
+        /// <returns></returns>
+        public static SearchResults SQLSearchBook(SearchResults searchResults, bool isName=true) 
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM Books WHERE name LIKE @searchQuery;";
+                string query;
+                if (isName) //if true we search by book name
+                    query = "SELECT * FROM Books WHERE name LIKE @searchQuery;";
+                else //else we search by book id
+                    query = "SELECT * FROM Books WHERE bookId = @searchQuery;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -153,6 +173,7 @@ namespace BookHeaven.Models
             }
             return searchResults;
         }
+
     }
 }
 
