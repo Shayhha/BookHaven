@@ -1,0 +1,90 @@
+﻿.container {
+    padding-top: 10px;
+}
+
+.genre_container {
+    flex-grow: 1;
+    background-color: burlywood;
+    padding: 5px 50px 10px 50px;
+    margin-bottom: 20px;
+    width: 100%; /* Ensure the div covers the entire width */
+}
+
+
+.rectangle {
+    cursor: pointer;
+    background-color: #ADD8E6;
+    padding: 10px 20px;
+    height: 100px;
+    border-radius: 15px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow effect */
+}
+
+    .rectangle:hover {
+        transform: scale(1.05);
+    }
+
+    .rectangle:active {
+        transform: scale(0.95); /* Make the item slightly smaller when clicked */
+    }
+
+
+.item {
+    cursor: pointer;
+    width: 250px;
+    height: 355px;
+    margin: 10px 10px 20px 10px;
+    border-radius: 10px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    background-color: #ADD8E6;
+    overflow: hidden; /* Ensure that the image doesn't overflow the container */
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow effect */
+}
+
+    .item:hover {
+        transform: scale(1.05);
+    }
+
+    .item:active {
+        transform: scale(0.95); /* Make the item slightly smaller when clicked */
+    }
+
+    .item img {
+        width: 170px; /* Set the width to the specified size */
+        height: 230px; /* Set the height to the specified size */
+        aspect-ratio: 16 / 9;
+        margin-top: 8px;
+        margin-bottom: 5px;
+    }
+
+    .item .item-title {
+        display: block;
+        margin: -3px;
+        font-size: 16px;
+        font-weight: bold;
+        overflow: hidden;
+        white-space: pre-wrap;
+        width: 250px; /* Same width as the image */
+        padding: 0px 15px;
+        line-height: 1.2; /* Ensure enough line height for two lines */
+        max-height: 3.6em; /* Set the maximum height to fit two lines */
+    }
+
+
+    .item p {
+        margin: -3px;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 250px; /* Same width as the image */
+        padding: 0px 20px;
+    }
