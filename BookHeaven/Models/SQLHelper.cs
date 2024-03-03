@@ -182,14 +182,14 @@ namespace BookHeaven.Models
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@searchQuery", searchResults.searchQuery);
+                    command.Parameters.AddWithValue("@searchQuery", "%" + searchResults.searchQuery + "%");
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             Book book = new Book(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4),
-                                reader.GetString(5), reader.GetInt32(6), reader.GetInt32(7), reader.GetString(8), reader.GetInt32(9), reader.GetInt32(10));
+                                reader.GetString(5), reader.GetFloat(6), reader.GetInt32(7), reader.GetString(8), reader.GetInt32(9), reader.GetFloat(10));
                             searchResults.books.Add(book);
                         }
                     }
