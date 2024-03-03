@@ -16,14 +16,14 @@
 <body>
     <div class="genre_container">
         <div class="row">
-            <div class="col rectangle">Fiction</div>
-            <div class="col rectangle">Science Fiction</div>
-            <div class="col rectangle">Mystery</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fiction</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Science Fiction</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Mystery</div>
         </div>
         <div class="row">
-            <div class="col rectangle">Fantasy</div>
-            <div class="col rectangle">Biography</div>
-            <div class="col rectangle">Thriller</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fantasy</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Biography</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Thriller</div>
         </div>
     </div>
 
@@ -256,5 +256,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function handleCategoryButtonClick(element) {
+            var searchQuery = element.textContent.trim();
+            window.location.href = '/SearchResults/showCategoryResults?searchQuery=' + encodeURIComponent(searchQuery);
+        }
+    </script>
 </body>
 </html>

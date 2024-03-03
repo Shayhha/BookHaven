@@ -182,7 +182,7 @@ namespace BookHeaven.Models
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@searchQuery", "%" + searchResults.searchQuery + "%");
+                    command.Parameters.AddWithValue("@searchQuery", searchResults.searchQuery);
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
