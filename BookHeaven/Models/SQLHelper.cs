@@ -114,8 +114,7 @@ namespace BookHeaven.Models
                 connection.Open();
                 string query = @"
                     INSERT INTO UserInfo(email, fname, lname) VALUES(@email, @fname, @lname);
-                    INSERT INTO Users(email, password) VALUES(@email, @password);
-                    SELECT SCOPE_IDENTITY();";
+                    INSERT INTO Users(email, password) OUTPUT INSERTED.UserId VALUES(@email, @password);";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -124,17 +123,12 @@ namespace BookHeaven.Models
                     command.Parameters.AddWithValue("@fname", signup.firstName);
                     command.Parameters.AddWithValue("@lname", signup.lastName);
 
-                    int numOfRowsEffected = command.ExecuteNonQuery();
-                    if (numOfRowsEffected > 0) // successfully inserted user into tables
-                    {
-                        object result = command.ExecuteScalar(); //get the userId from table
-                        if (result != null)
-                            return result.ToString();
-                        else
-                            return ""; // else we failed inserting
-                    }
+                    // Execute the command and retrieve the UserId directly
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                        return result.ToString(); // Return the UserId if the user is successfully inserted
                     else
-                        return ""; // else we failed inserting
+                        return ""; // Return empty string if insertion failed
                 }
             }
         }
