@@ -11,6 +11,7 @@
 *.sln.docstates
 
 BookHeaven/appsettings.json
+appsettings.json
 
 *.DS_Store
 .DS_Store
