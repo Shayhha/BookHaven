@@ -14,7 +14,7 @@
             background-color: #333;
             display: flex;
             justify-content: space-between;
-            padding: 0px 10px;
+            padding: 10px 10px;
         }
 
             .navbar a {
@@ -65,20 +65,20 @@
                 margin-right: 10px;
                 font-size: 17px;
                 border: none;
-                width: 300px; /* Adjust the width of the search bar */
+                width: 300px;
                 border-radius: 10px;
             }
 
             .navbar .search-container button {
-                float: right;
                 padding: 6px 10px;
                 margin-right: 16px;
                 background: #ddd;
                 font-size: 17px;
                 border: none;
                 cursor: pointer;
-                border-radius: 5px; /* Add border radius */
+                border-radius: 5px;
             }
+
 
                 .navbar .search-container button:hover {
                     background: #ccc;
@@ -99,6 +99,23 @@
             padding-right: 0; /* Remove right padding */
         }
 
+        .searchButton {
+            width: 40px;
+            height: 40px;
+            transition: all 0.3s ease-in-out; /* Add this line to enable smooth animation */
+            margin: 0 5px; /* Add some space between the buttons */
+            padding: 14px 16px;
+        }
+
+            .searchButton:hover {
+                transform: scale(1.1); /* Increase size to 110% when hovered */
+            }
+
+        .searchForm {
+            position: relative; /* Ensure the form stays in its position relative to its container */
+            display: inline-block; /* Ensure the form occupies only the necessary space */
+        }
+
     </style>
 
 </head>
@@ -109,7 +126,7 @@
             <div class="search-container">
                 <form id="searchForm" action="/SearchResults/showSearchResults" method="get">
                     <input type="text" name="searchQuery" placeholder="Search..">
-                    <button type="button" onclick="handleSearchButtonClick()">🔍</button>
+                    <button class="searchButton" type="button" onclick="handleSearchButtonClick()">🔍</button>
                 </form>
             </div>
             <div class="auth-links">
