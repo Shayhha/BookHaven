@@ -140,7 +140,7 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
-        /// Function for searching books in the database, returns an initialized SearchResults object with the list of books
+        /// Function for searching books by name or id in the database, returns an initialized SearchResults object with the list of books
         /// </summary>
         /// <param name="searchResults"></param>
         /// <param name="isName"></param>
@@ -155,6 +155,36 @@ namespace BookHeaven.Models
                     query = "SELECT * FROM Books WHERE name LIKE @searchQuery;";
                 else //else we search by book id
                     query = "SELECT * FROM Books WHERE bookId = @searchQuery;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@searchQuery", searchResults.searchQuery);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Book book = new Book(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4),
+                                reader.GetString(5), reader.GetInt32(6), reader.GetInt32(7), reader.GetString(8), reader.GetInt32(9), reader.GetInt32(10));
+                            searchResults.books.Add(book);
+                        }
+                    }
+                }
+            }
+            return searchResults;
+        }
+
+        /// <summary>
+        /// Function for searching books by category in the database, returns an initialized SearchResults object with the list of books
+        /// </summary>
+        /// <param name="searchResults"></param>
+        /// <returns></returns>
+        public static SearchResults SQLSearchCategory(SearchResults searchResults)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM Books WHERE category = @searchQuery;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
