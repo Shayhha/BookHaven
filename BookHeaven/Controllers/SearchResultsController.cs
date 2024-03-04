@@ -8,6 +8,8 @@ namespace BookHeaven.Controllers
     {
         public IActionResult showSearchResults(string searchQuery)
         {
+            if (searchQuery == null) return StatusCode(204); // tells the browser that the request was successful but there is no content to display.
+
             SearchResults searchResults = new SearchResults(searchQuery);
 
             if (isSearchQueryBookId(searchQuery))
