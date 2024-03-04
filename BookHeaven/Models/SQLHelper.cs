@@ -146,13 +146,13 @@ namespace BookHeaven.Models
                 connection.Open();
                 string query;
                 if (isName) //if true we search by book name
-                    query = "SELECT * FROM Books WHERE name LIKE @searchQuery;";
+                    query = "SELECT * FROM Books WHERE name LIKE '%' + @searchQuery + '%';";
                 else //else we search by book id
                     query = "SELECT * FROM Books WHERE bookId = @searchQuery;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@searchQuery", "%" + searchResults.searchQuery + "%");
+                    command.Parameters.AddWithValue("@searchQuery", searchResults.searchQuery);
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -178,11 +178,11 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM Books WHERE category LIKE @searchQuery;";
+                string query = "SELECT * FROM Books WHERE category LIKE '%' + @searchQuery + '%';";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@searchQuery", "%" + searchResults.searchQuery + "%");
+                    command.Parameters.AddWithValue("@searchQuery", searchResults.searchQuery);
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
