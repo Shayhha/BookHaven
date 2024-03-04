@@ -17,15 +17,18 @@
 </head>
 <body>
     <div class="genre_container">
+        <p class="title">Categories</p>
+
         <div class="row">
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fiction</div>
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Science Fiction</div>
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Mystery</div>
-        </div>
-        <div class="row">
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fantasy</div>
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Biography</div>
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Thriller</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Drama</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Comedy</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Romance</div>
         </div>
     </div>
 
@@ -52,236 +55,6 @@
 
         </div>
     </div>
-
-    @*<div class="container">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="https://embed.cdn.pais.scholastic.com/v1/products/identifiers/isbn/9780590353403/primary/renditions/600?useMissingImage=true" alt="Image" class="img-fluid">
-                        <span class="item-title">Harry Potter and the Philosopher's Stone</span>
-                        <p>Genre: Fiction</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $10.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="https://images.booksense.com/images/014/130/9781594130014.jpg" alt="Image" class="img-fluid">
-                        <span class="item-title">Harry Potter and the Chamber of Secrets</span>
-                        <p>Genre: Science Fiction</p>
-                        <p>Stock: 2365</p>
-                        <p>Price: $12.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="https://images.booksense.com/images/358/136/9780439136358.jpg" alt="Image" class="img-fluid">
-                        <span class="item-title">Harry Potter and the Prisoner of Azkaban</span>
-                        <p>Genre: Mystery</p>
-                        <p>Stock: 6</p>
-                        <p>Price: $9.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="https://images.booksense.com/images/595/139/9780439139595.jpg" alt="Image" class="img-fluid">
-                        <span class="item-title">Harry Potter and the Goblet of Fire</span>
-                        <p>Genre: Fantasy</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $11.99</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="https://images.booksense.com/images/064/358/9780439358064.jpg" alt="Image" class="img-fluid">
-                        <span class="item-title">Harry Potter and the Order of the Phoenix</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="https://prodimage.images-bn.com/pimages/9780439785969_p0_v3_s1200x630.jpg" alt="Image" class="img-fluid">
-                        <span class="item-title">Harry Potter and the Half-Blood Prince</span>
-                        <p>Genre: Thriller</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="https://m.media-amazon.com/images/I/811t1pfIZXL._AC_UF1000,1000_QL80_.jpg" alt="Image" class="img-fluid">
-                        <span class="item-title">Harry Potter and the Deathly Hallows</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Thriller</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Thriller</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Thriller</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Thriller</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Thriller</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Thriller</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Thriller</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Thriller</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Biography</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $14.99</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="item">
-                        <img src="#" alt="Image" class="img-fluid">
-                        <span class="item-title">Name: Book Title</span>
-                        <p>Genre: Thriller</p>
-                        <p>Stock: 123</p>
-                        <p>Price: $13.99</p>
-                    </div>
-                </div>
-            </div>
-        </div>*@
 
     <script>function handleCategoryButtonClick(element) {
             var searchQuery = element.textContent.trim();
