@@ -5,28 +5,44 @@
 .genre_container {
     flex-grow: 1;
     background-color: burlywood;
-    padding: 5px 50px 10px 50px;
-    margin-bottom: 20px;
+    padding: 10px 20px 10px 20px;
+    margin-bottom: 10px;
     width: 100%; /* Ensure the div covers the entire width */
+/*    overflow-x: auto;*/
 }
 
+/*
+.row {
+    display: flex;
+}*/
+
+.title {
+    text-align: center;
+    font-weight:700;
+    cursor: default; /* Remove the pointer cursor */
+    font-size: 24px; /* Increase the font size */
+    margin-bottom: 0px;
+}
 
 .rectangle {
     cursor: pointer;
     background-color: #ADD8E6;
-    padding: 10px 20px;
-    height: 100px;
+    padding: 10px 10px;
+    height: 70px;
     border-radius: 15px;
     font-weight: bold;
     text-align: center;
-    margin: 20px;
+    margin: 10px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow effect */
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Horizontally center the text */
+    align-items: center; /* Vertically center the text */
 }
 
     .rectangle:hover {
-        transform: scale(1.05);
+        transform: scale(1.2);
     }
 
     .rectangle:active {
