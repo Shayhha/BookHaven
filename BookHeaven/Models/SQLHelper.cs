@@ -198,6 +198,278 @@ namespace BookHeaven.Models
             return searchResults;
         }
 
+        /// <summary>
+        /// Returns an address for the userId, if didn't find any it will return "null"
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static Address? SQLSearchAddress(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM Address WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                            return new Address(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4));
+                        else
+                            return null;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for adding address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public static bool SQLAddAddress(Address address)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"INSERT INTO Address(userId, country, city, street, apartNum) VALUES(@userId, @country, @city, @street, @apartNum);";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", address.userId);
+                    command.Parameters.AddWithValue("@country", address.country);
+                    command.Parameters.AddWithValue("@city", address.city);
+                    command.Parameters.AddWithValue("@street", address.street);
+                    command.Parameters.AddWithValue("@apartNum", address.apartNum);
+
+                    // Execute the command and check if we added the address 
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; // Address successfully added
+                    else
+                        return false; // Failed to add the address
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for updating current user's address
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public static bool SQLUpdateAddress(Address address)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"UPDATE Address SET country = @country, city = @city, street = @street, apartNum = @apartNum WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", address.userId);
+                    command.Parameters.AddWithValue("@country", address.country);
+                    command.Parameters.AddWithValue("@city", address.city);
+                    command.Parameters.AddWithValue("@street", address.street);
+                    command.Parameters.AddWithValue("@apartNum", address.apartNum);
+
+                    // Execute the command and check if we updated the address 
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; // Address successfully added
+                    else
+                        return false; // Failed to add the address
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for deleting current user's address
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static bool SQLDeleteAddress(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"DELETE FROM Address WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    // Execute the command and check if we updated the address 
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; // Address successfully added
+                    else
+                        return false; // Failed to add the address
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for searching user's saved credit card
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static CreditCard? SQLSearchCreditCard(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM CreditCard WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                            return new CreditCard(reader.GetInt32(0), reader.GetInt64(1), reader.GetString(2), reader.GetInt32(3));
+                        else
+                            return null;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for adding credit card for a user
+        /// </summary>
+        /// <param name="creditCard"></param>
+        /// <returns></returns>
+        public static bool SQLAddCreditCard(CreditCard creditCard)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"INSERT INTO CreditCard(userId, number, date, ccv) VALUES(@userId, @number, @date, @ccv);";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", creditCard.userId);
+                    command.Parameters.AddWithValue("@number", creditCard.number);
+                    command.Parameters.AddWithValue("@date", creditCard.date);
+                    command.Parameters.AddWithValue("@ccv", creditCard.ccv);
+
+                    // Execute the command and check if we added the credit card
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; // credit card successfully added
+                    else
+                        return false; // Failed to add the credit card
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for updating user's credit card info 
+        /// </summary>
+        /// <param name="creditCard"></param>
+        /// <returns></returns>
+        public static bool SQLUpdateCreditCard(CreditCard creditCard)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"UPDATE CreditCard SET number = @number, date = @date, ccv = @ccv WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", creditCard.userId);
+                    command.Parameters.AddWithValue("@number", creditCard.number);
+                    command.Parameters.AddWithValue("@date", creditCard.date);
+                    command.Parameters.AddWithValue("@ccv", creditCard.ccv);
+
+                    // Execute the command and check if we added the credit card
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; // credit card successfully added
+                    else
+                        return false; // Failed to add the credit card
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for deleting user's credit card
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static bool SQLDeleteCreditCard(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"DELETE FROM CreditCard WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    // Execute the command and check if we updated the address 
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; // Address successfully added
+                    else
+                        return false; // Failed to add the address
+                }
+            }
+        }
+
+        public static bool SQLUpdateUserInfo(User user)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"
+                    UPDATE UserInfo SET email = @email, fname = @fname, lname = @lname WHERE userId = @userId;
+                    UPDATE Users SET email = @email WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", user.userId);
+                    command.Parameters.AddWithValue("@email", user.email);
+                    command.Parameters.AddWithValue("@fname", user.fname);
+                    command.Parameters.AddWithValue("@lname", user.lname);
+
+                    // Execute the command and check if we added the credit card
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; // credit card successfully added
+                    else
+                        return false; // Failed to add the credit card
+                }
+            }
+        }
+
+        public static bool SQLUpdatePassword(int userId, string oldPassword, string newPassword)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"UPDATE Users SET password = @newPassword WHERE userId = @userId AND password = @oldPassword";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+                    command.Parameters.AddWithValue("@oldPassword", ToSHA256(oldPassword));
+                    command.Parameters.AddWithValue("@newPassword", ToSHA256(newPassword));
+
+                    // Execute the command and check if we updated the password
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; // password successfully changed
+                    else
+                        return false; // Failed to change password, maybe because the old password doesn't match
+                }
+            }
+        }
     }
 }
 
