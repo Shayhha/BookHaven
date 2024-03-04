@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookHeaven.Models;
+using System.Text.RegularExpressions;
 
 namespace BookHeaven.Controllers
 {
@@ -8,7 +9,11 @@ namespace BookHeaven.Controllers
         public IActionResult showSearchResults(string searchQuery)
         {
             SearchResults searchResults = new SearchResults(searchQuery);
-            searchResults = SQLHelper.SQLSearchBook(searchResults);
+
+            if (isSearchQueryBookId(searchQuery))
+                searchResults = SQLHelper.SQLSearchBook(searchResults, false);
+            else
+                searchResults = SQLHelper.SQLSearchBook(searchResults);
 
             return View("SearchResultsView", searchResults);
         }
@@ -19,6 +24,12 @@ namespace BookHeaven.Controllers
             searchResults = SQLHelper.SQLSearchCategory(searchResults);
 
             return View("SearchResultsView", searchResults);
+        }
+
+        private bool isSearchQueryBookId(string searchQuery)
+        {
+            string pattern = "^[0-9]+$";
+            return Regex.IsMatch(searchQuery, pattern);
         }
     }
 }
