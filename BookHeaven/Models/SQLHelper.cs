@@ -178,11 +178,11 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM Books WHERE category = @searchQuery;";
+                string query = "SELECT * FROM Books WHERE category LIKE @searchQuery;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@searchQuery", searchResults.searchQuery);
+                    command.Parameters.AddWithValue("@searchQuery", "%" + searchResults.searchQuery + "%");
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
