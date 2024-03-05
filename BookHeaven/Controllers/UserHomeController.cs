@@ -6,14 +6,20 @@ namespace BookHeaven.Controllers
 {
     public class UserHomeController : Controller
     {
+        // this part is for the session variables
+        private readonly IHttpContextAccessor _contx;
+
+        public UserHomeController(IHttpContextAccessor contx)
+        {
+            _contx = contx;
+        }
+        // # # #
+
+
         public IActionResult showUserHome()
         {
             //Console.WriteLine(SQLHelper.ToSHA256("Shay1234"));
-
-            SearchResults searchResults = new SearchResults("");
-            searchResults = SQLHelper.SQLSearchBook(searchResults);
-
-            return View("UserHomeView", searchResults);
+            return View("UserHomeView", initHomeBooks());
         }
 
         public IActionResult showLoginView()
@@ -33,10 +39,10 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (SQLHelper.SQLLogin(login) != "")
-                {
-                    // User found in the database
-                    return View("UserHomeView");
+                if (SQLHelper.SQLLogin(login) != "") // User found in the database
+                { 
+                    _contx.HttpContext.Session.SetString("isLoggedIn", "true");
+                    return View("UserHomeView", initHomeBooks());
                 }
                 else
                 {
@@ -56,7 +62,7 @@ namespace BookHeaven.Controllers
             {
                 if (SQLHelper.SQLSignup(signup) != "")
                 {
-                    return View("UserHomeView", signup);
+                    return View("UserHomeView", initHomeBooks());
                 }
                 else
                 {
@@ -69,7 +75,12 @@ namespace BookHeaven.Controllers
             }
         }
 
-
+        private SearchResults initHomeBooks()
+        {
+            SearchResults searchResults = new SearchResults("");
+            searchResults = SQLHelper.SQLSearchBook(searchResults);
+            return searchResults;
+        }
 
         //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         //public IActionResult Error()
