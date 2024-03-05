@@ -11,9 +11,6 @@
 <head>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="~/css/homePage.css">
-
-    @*also create a searchResultsView using C# to show the results from database*@
-
 </head>
 <body>
     <div class="genre_container">
@@ -56,9 +53,11 @@
         </div>
     </div>
 
-    <script>function handleCategoryButtonClick(element) {
+    <script>
+        function handleCategoryButtonClick(element) {
             var searchQuery = element.textContent.trim();
             window.location.href = '/SearchResults/showCategoryResults?searchQuery=' + encodeURIComponent(searchQuery);
-        }</script>
+        }
+    </script>
 </body>
 </html>

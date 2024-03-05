@@ -1,9 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@*@{
+        var isLoggedIn = ViewBag.IsLoggedIn ?? false;
+    }*@
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BookHaven</title>
+    <title>@ViewData["Title"] - BookHeaven</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BookHaven.styles.css" asp-append-version="true" />
@@ -19,8 +29,16 @@
                 <button class="searchButton" type="button" onclick="handleSearchButtonClick()">🔍</button>
             </div>
             <div class="auth-links">
-                <a href="/UserHome/showLoginView" id="loginButton">Login</a>
-                <a href="/UserHome/showSignupView" id="signupButton">Sign Up</a>
+                <a href="#" class="btn" id="cartButton">🛒</a>
+                @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+                {
+                    <a href="/UserHome/showSignupView" id="helloUserHeader">Hello User</a>
+                }
+                else
+                {
+                    <a href="/UserHome/showLoginView" id="loginButton">Login</a>
+                    <a href="/UserHome/showSignupView" id="signupButton">Sign Up</a>
+                }
             </div>
         </div>
     </header>
