@@ -1,4 +1,6 @@
-﻿namespace BookHeaven.Models
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace BookHeaven.Models
 {
     public class User
     {

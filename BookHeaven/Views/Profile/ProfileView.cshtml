@@ -3,3 +3,154 @@
 *@
 @{
 }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="~/css/userInfo.css">
+</head>
+<body>
+    <div class="container2">
+        <h1>User Profile</h1>
+        <button class="edit-button" onclick="editProfile()">Edit</button>
+        <div class="profile-info">
+            <h2>User Information</h2>
+            <p><strong>Email:</strong> <span id="email">user@example.com</span></p>
+            <p><strong>First Name:</strong> <span id="firstName">John</span></p>
+            <p><strong>Last Name:</strong> <span id="lastName">Doe</span></p>
+            <div id="address">
+                <p><strong>Address:</strong> <span id="addressText">123 Main St, City, Country</span> <button class="delete-button" onclick="deleteAddress()">🗑️</button></p>
+            </div>
+            <div id="creditCard">
+                <p><strong>Credit Card:</strong> <span id="creditCardText">**** **** **** 1234</span> <button class="delete-button" onclick="deleteCreditCard()">🗑️</button></p>
+            </div>
+        </div>
+        <div class="purchase-history">
+            <h2>Purchase History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Quantity</th>
+                        <th>Price Paid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>The Great Gatsby</td>
+                        <td>2</td>
+                        <td>$20.00</td>
+                    </tr>
+                    <tr>
+                        <td>To Kill a Mockingbird</td>
+                        <td>1</td>
+                        <td>$15.00</td>
+                    </tr>
+                    <!-- Add more rows for additional purchases -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function editProfile() {
+            // Update email, first name, and last name with input fields
+            document.getElementById('email').innerHTML = '<input type="email" class="input-field" id="emailInput" value="' + document.getElementById('email').textContent + '">';
+            document.getElementById('firstName').innerHTML = '<input type="text" class="input-field" id="firstNameInput" value="' + document.getElementById('firstName').textContent + '">';
+            document.getElementById('lastName').innerHTML = '<input type="text" class="input-field" id="lastNameInput" value="' + document.getElementById('lastName').textContent + '">';
+
+            // Show input fields for address
+            var address = document.getElementById('addressText').textContent.split(', ');
+            document.getElementById('address').innerHTML += '<input type="text" placeholder="Country" class="input-field" id="countryInput" value="' + address[2] + '"> <input type="text" placeholder="City" class="input-field" id="cityInput" value="' + address[1] + '"> <input type="text" placeholder="Street" class="input-field" id="streetInput" value="' + address[0] + '"> <input type="text" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" value="' + address[3] + '">';
+
+            // Show input fields for credit card
+            var creditCard = document.getElementById('creditCardText').textContent.split(', ');
+            document.getElementById('creditCard').innerHTML += '<input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" value="' + creditCard[0] + '"> <input type="text" placeholder="Expiration Date (MM/YY)" class="input-field small-input" id="expirationInput" value="' + creditCard[1] + '"> <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" value="' + creditCard[2] + '">';
+
+            // Hide delete buttons
+            document.querySelectorAll('.delete-button').forEach(button => button.classList.add('hidden'));
+
+            // Change edit button to save button
+            document.querySelector('.edit-button').innerHTML = 'Save';
+            document.querySelector('.edit-button').setAttribute('onclick', 'saveProfile()');
+        }
+
+        function saveProfile() {
+            // Update email, first name, and last name with their respective input values
+            document.getElementById('email').textContent = document.getElementById('emailInput').value;
+            document.getElementById('firstName').textContent = document.getElementById('firstNameInput').value;
+            document.getElementById('lastName').textContent = document.getElementById('lastNameInput').value;
+
+            // Concatenate address input values and update address text
+            var country = document.getElementById('countryInput').value;
+            var city = document.getElementById('cityInput').value;
+            var street = document.getElementById('streetInput').value;
+            var apartment = document.getElementById('apartmentInput').value;
+            document.getElementById('addressText').textContent = street + ', ' + city + ', ' + country + ', ' + apartment;
+
+            // Concatenate credit card input values and update credit card text
+            var cardNumber = document.getElementById('cardNumberInput').value;
+            var expiration = document.getElementById('expirationInput').value;
+            var ccv = document.getElementById('ccvInput').value;
+            document.getElementById('creditCardText').textContent = cardNumber + ', ' + expiration + ', ' + ccv;
+
+            // Show delete buttons
+            document.querySelectorAll('.delete-button').forEach(button => button.classList.remove('hidden'));
+
+            // Remove address and credit card input fields
+            document.getElementById('address').innerHTML = '<p><strong>Address:</strong> <span id="addressText">' + document.getElementById('addressText').textContent + '</span> <button class="delete-button" onclick="deleteAddress()">🗑️</button></p>';
+            document.getElementById('creditCard').innerHTML = '<p><strong>Credit Card:</strong> <span id="creditCardText">' + document.getElementById('creditCardText').textContent + '</span> <button class="delete-button" onclick="deleteCreditCard()">🗑️</button></p>';
+
+            // Change save button back to edit button
+            document.querySelector('.edit-button').innerHTML = 'Edit';
+            document.querySelector('.edit-button').setAttribute('onclick', 'editProfile()');
+        }
+
+        function deleteAddress() {
+            // AJAX request to delete credit card information
+            fetch('DeleteAddress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    console.log('Address deleted');
+                    document.getElementById('addressText').innerHTML = '<span></span>';
+                    document.querySelectorAll('.delete-button').forEach(button => button.classList.remove('hide'));
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+        function deleteCreditCard() {
+            // AJAX request to delete credit card information
+            fetch('DeleteCreditCard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    console.log('Credit Card deleted');
+                    document.getElementById('creditCardText').innerHTML = '<span></span>';
+                    document.querySelectorAll('.delete-button').forEach(button => button.classList.remove('hide'));
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }</script>
+</body>
+</html>
+

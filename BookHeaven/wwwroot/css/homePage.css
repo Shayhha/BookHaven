@@ -8,7 +8,7 @@
     padding: 10px 20px 10px 20px;
     margin-bottom: 10px;
     width: 100%; /* Ensure the div covers the entire width */
-/*    overflow-x: auto;*/
+    overflow-x: auto;
 }
 
 /*
@@ -93,7 +93,6 @@
         line-height: 1.2; /* Ensure enough line height for two lines */
         max-height: 3.6em; /* Set the maximum height to fit two lines */
     }
-
 
     .item p {
         margin: -3px;
