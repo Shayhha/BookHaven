@@ -11,6 +11,11 @@ namespace BookHeaven.Controllers
             return View("ProfileView");
         }
 
+        public IActionResult showSettingsView()
+        {
+            return View("SettingsView");
+        }
+
         [HttpPost]
         public IActionResult DeleteCreditCard()
         {
