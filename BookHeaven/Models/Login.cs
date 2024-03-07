@@ -6,12 +6,12 @@ namespace BookHeaven.Models
     public class Login
     {
         [Required(ErrorMessage = "email is required")]
-        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "email must follow a generic email pattern.")]
+        [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", ErrorMessage = "email is incorrect.")]
         public string email { get; set; }
 
         [Required(ErrorMessage = "password is required")] 
         [RegularExpression("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d!@#$%^&*()-_=+{}\\[\\]|;:'\",.<>?]{6,12}$",
-            ErrorMessage = "password must have at-least one capital letter, at-least one number and be between 6 and 12 chars long.")]
+            ErrorMessage = "password is incorrect")]
         public string password { get; set; }
 
         public Login() { }
