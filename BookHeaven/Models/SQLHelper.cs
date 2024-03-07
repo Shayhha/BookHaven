@@ -112,23 +112,42 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"
-                    INSERT INTO UserInfo(email, fname, lname) VALUES(@email, @fname, @lname);
-                    INSERT INTO Users(email, password) OUTPUT INSERTED.UserId VALUES(@email, @password);";
 
-                using (SqlCommand command = new SqlCommand(query, connection))
+                SqlTransaction transaction = connection.BeginTransaction(); //begin a transaction
+
+                try
                 {
-                    command.Parameters.AddWithValue("@email", signup.email);
-                    command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
-                    command.Parameters.AddWithValue("@fname", signup.firstName);
-                    command.Parameters.AddWithValue("@lname", signup.lastName);
+                    string query = @"
+                        INSERT INTO Users(email, password) OUTPUT INSERTED.UserId VALUES(@email, @password);
+                        INSERT INTO UserInfo(email, fname, lname) VALUES(@email, @fname, @lname);";
 
-                    // Execute the command and retrieve the UserId directly
-                    object result = command.ExecuteScalar();
-                    if (result != null)
-                        return result.ToString(); // Return the UserId if the user is successfully inserted
-                    else
-                        return ""; // Return empty string if insertion failed
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Transaction = transaction; //associate the command with the transaction
+
+                        command.Parameters.AddWithValue("@email", signup.email);
+                        command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
+                        command.Parameters.AddWithValue("@fname", signup.firstName);
+                        command.Parameters.AddWithValue("@lname", signup.lastName);
+
+                        //execute the command and retrieve the UserId directly
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            transaction.Commit(); //commit the transaction if both insertions are successful
+                            return result.ToString(); //return the UserId if the user is successfully inserted
+                        }
+                        else
+                        {
+                            transaction.Rollback(); //rollback the transaction if the second insertion fails
+                            return ""; //return empty string if insertion failed
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback(); //rollback the transaction in case of an exception
+                    throw ex; //rethrow the exception
                 }
             }
         }
@@ -245,12 +264,12 @@ namespace BookHeaven.Models
                     command.Parameters.AddWithValue("@street", address.street);
                     command.Parameters.AddWithValue("@apartNum", address.apartNum);
 
-                    // Execute the command and check if we added the address 
+                    //execute the command and check if we added the address 
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
-                        return true; // Address successfully added
+                        return true; //address successfully added
                     else
-                        return false; // Failed to add the address
+                        return false; //failed to add the address
                 }
             }
         }
@@ -275,12 +294,12 @@ namespace BookHeaven.Models
                     command.Parameters.AddWithValue("@street", address.street);
                     command.Parameters.AddWithValue("@apartNum", address.apartNum);
 
-                    // Execute the command and check if we updated the address 
+                    //execute the command and check if we updated the address 
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
-                        return true; // Address successfully added
+                        return true; //address successfully updated
                     else
-                        return false; // Failed to add the address
+                        return false; //failed to update the address
                 }
             }
         }
@@ -301,12 +320,12 @@ namespace BookHeaven.Models
                 {
                     command.Parameters.AddWithValue("@userId", userId);
 
-                    // Execute the command and check if we updated the address 
+                    //execute the command and check if we updated the address 
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
-                        return true; // Address successfully added
+                        return true; //address successfully deleted
                     else
-                        return false; // Failed to add the address
+                        return false; //failed to delete the address
                 }
             }
         }
@@ -357,12 +376,12 @@ namespace BookHeaven.Models
                     command.Parameters.AddWithValue("@date", creditCard.date);
                     command.Parameters.AddWithValue("@ccv", creditCard.ccv);
 
-                    // Execute the command and check if we added the credit card
+                    //execute the command and check if we added the credit card
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
-                        return true; // credit card successfully added
+                        return true; //credit card successfully added
                     else
-                        return false; // Failed to add the credit card
+                        return false; //failed to add the credit card
                 }
             }
         }
@@ -386,12 +405,12 @@ namespace BookHeaven.Models
                     command.Parameters.AddWithValue("@date", creditCard.date);
                     command.Parameters.AddWithValue("@ccv", creditCard.ccv);
 
-                    // Execute the command and check if we added the credit card
+                    //execute the command and check if we updated the credit card
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
-                        return true; // credit card successfully added
+                        return true; //credit card successfully updated
                     else
-                        return false; // Failed to add the credit card
+                        return false; //failed to update the credit card
                 }
             }
         }
@@ -412,12 +431,12 @@ namespace BookHeaven.Models
                 {
                     command.Parameters.AddWithValue("@userId", userId);
 
-                    // Execute the command and check if we updated the address 
+                    //execute the command and check if we deleted the credit card
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
-                        return true; // Address successfully added
+                        return true; //credit card successfully deleted
                     else
-                        return false; // Failed to add the address
+                        return false; //failed to delete the credit card
                 }
             }
         }
@@ -438,12 +457,12 @@ namespace BookHeaven.Models
                     command.Parameters.AddWithValue("@fname", user.fname);
                     command.Parameters.AddWithValue("@lname", user.lname);
 
-                    // Execute the command and check if we added the credit card
+                    //execute the command and check if we updated the userInfo
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
-                        return true; // credit card successfully added
+                        return true; //userInfo successfully updated
                     else
-                        return false; // Failed to add the credit card
+                        return false; //failed to update userInfo
                 }
             }
         }
@@ -461,12 +480,12 @@ namespace BookHeaven.Models
                     command.Parameters.AddWithValue("@oldPassword", ToSHA256(oldPassword));
                     command.Parameters.AddWithValue("@newPassword", ToSHA256(newPassword));
 
-                    // Execute the command and check if we updated the password
+                    //execute the command and check if we updated the password
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
-                        return true; // password successfully changed
+                        return true; //password successfully changed
                     else
-                        return false; // Failed to change password, maybe because the old password doesn't match
+                        return false; //failed to change password, maybe because the old password doesn't match
                 }
             }
         }
