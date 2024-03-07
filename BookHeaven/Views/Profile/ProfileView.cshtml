@@ -164,59 +164,101 @@
             editButton.setAttribute('onclick', (editButton.getAttribute('onclick') === 'editProfile()') ? 'saveProfile()' : 'editProfile()');
         }
 
-        function saveProfile() {
-            // Update email with input value
-            var emailSpan = document.getElementById('emailSpan');
-            var emailInput = document.getElementById('emailInput');
-            emailSpan.textContent = emailInput.value;
-
-            // Update first name with input value
-            var firstNameSpan = document.getElementById('firstNameSpan');
-            var firstNameInput = document.getElementById('firstNameInput');
-            firstNameSpan.textContent = firstNameInput.value;
-
-            // Update last name with input value
-            var lastNameSpan = document.getElementById('lastNameSpan');
-            var lastNameInput = document.getElementById('lastNameInput');
-            lastNameSpan.textContent = lastNameInput.value;
-
-            emailInput.style.display = 'none';
-            firstNameInput.style.display = 'none';
-            lastNameInput.style.display = 'none';
-
-            // Update address with input values
-            var addressSpan = document.getElementById('addressSpan');
+        async function saveProfile() {
+            var emailInput = document.getElementById('emailInput').value;
+            var firstNameInput = document.getElementById('firstNameInput').value;
+            var lastNameInput = document.getElementById('lastNameInput').value;
             var countryInput = document.getElementById('countryInput').value;
             var cityInput = document.getElementById('cityInput').value;
             var streetInput = document.getElementById('streetInput').value;
             var apartmentInput = document.getElementById('apartmentInput').value;
-            addressSpan.textContent = streetInput + ', ' + cityInput + ', ' + countryInput + ', ' + apartmentInput;
-            var addressInputs = document.getElementById('address').querySelectorAll('.input-field');
-            addressInputs.forEach(input => {
-                input.style.display = 'none';
-            });
-
-            // Update credit card with input values
-            var creditCardSpan = document.getElementById('creditCardSpan');
             var cardNumberInput = document.getElementById('cardNumberInput').value;
             var expirationInput = document.getElementById('expirationInput').value;
             var ccvInput = document.getElementById('ccvInput').value;
-            creditCardSpan.textContent = cardNumberInput + ' | ' + expirationInput + ' | ' + ccvInput;
-            var creditCardInputs = document.getElementById('creditCard').querySelectorAll('.input-field');
-            creditCardInputs.forEach(input => {
-                input.style.display = 'none';
-            });
 
-            // Show delete buttons
-            var deleteButtons = document.querySelectorAll('.delete-button');
-            deleteButtons.forEach(button => {
-                button.style.display = 'inline-block';
-            });
+            var data = {
+                email: emailInput,
+                firstName: firstNameInput,
+                lastName: lastNameInput,
+                address: {
+                    country: countryInput,
+                    city: cityInput,
+                    street: streetInput,
+                    apartment: apartmentInput
+                },
+                creditCard: {
+                    cardNumber: cardNumberInput,
+                    expiration: expirationInput,
+                    ccv: ccvInput
+                }
+            };
 
-            // Change save button back to edit button
-            var editButton = document.querySelector('.edit-button');
-            editButton.innerHTML = 'Edit';
-            editButton.setAttribute('onclick', 'editProfile()');
+            // Call the saveChanges function and await its result
+            const success = await saveChanges(data);
+
+            if (success) {
+                // Update email with input value
+                var emailSpan = document.getElementById('emailSpan');
+                emailSpan.textContent = emailInput;
+
+                // Update first name with input value
+                var firstNameSpan = document.getElementById('firstNameSpan');
+                firstNameSpan.textContent = firstNameInput;
+
+                // Update last name with input value
+                var lastNameSpan = document.getElementById('lastNameSpan');
+                lastNameSpan.textContent = lastNameInput;
+
+                // Hide input fields
+                document.getElementById('emailInput').style.display = 'none';
+                document.getElementById('firstNameInput').style.display = 'none';
+                document.getElementById('lastNameInput').style.display = 'none';
+
+                // Update address with input values
+                var addressSpan = document.getElementById('addressSpan');
+                addressSpan.textContent = streetInput + ', ' + cityInput + ', ' + countryInput + ', ' + apartmentInput;
+                var addressInputs = document.getElementById('address').querySelectorAll('.input-field');
+                addressInputs.forEach(input => {
+                    input.style.display = 'none';
+                });
+
+                // Update credit card with input values
+                var creditCardSpan = document.getElementById('creditCardSpan');
+                creditCardSpan.textContent = cardNumberInput + ' | ' + expirationInput + ' | ' + ccvInput;
+                var creditCardInputs = document.getElementById('creditCard').querySelectorAll('.input-field');
+                creditCardInputs.forEach(input => {
+                    input.style.display = 'none';
+                });
+
+                // Show delete buttons
+                var deleteButtons = document.querySelectorAll('.delete-button');
+                deleteButtons.forEach(button => {
+                    button.style.display = 'inline-block';
+                });
+
+                // Change save button back to edit button
+                var editButton = document.querySelector('.edit-button');
+                editButton.innerHTML = 'Edit';
+                editButton.setAttribute('onclick', 'editProfile()');
+            }
+        }
+
+        async function saveChanges(data) {
+            try {
+                const response = await fetch('/Profile/SaveChanges', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const responseData = await response.json();
+                return responseData.success; // Return true if success is true, otherwise false
+            } catch (error) {
+                console.error('Error:', error);
+                return false; // Return false in case of an error
+            }
         }
 
 
