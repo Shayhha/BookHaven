@@ -16,5 +16,12 @@
             this.ccv = ccv;
         }
 
+        public static bool checkCreditCard(CreditCard a, CreditCard b)
+        {
+            if (a.number == b.number && a.date == b.date && a.ccv == b.ccv)
+                return true;
+            else
+                return false;
+        }
     }
 }

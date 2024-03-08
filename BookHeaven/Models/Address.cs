@@ -18,5 +18,13 @@
             this.street = street;
             this.apartNum = apartNum;
         }
+
+        public static bool checkAddresses(Address a, Address b)
+        {
+            if (a.country == b.country && a.city == b.city && a.street == b.street && a.apartNum == b.apartNum)
+                return true;
+            else
+                return false;
+        }
     }
 }
