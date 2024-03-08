@@ -231,7 +231,7 @@ namespace BookHeaven.Models
         /// </summary>
         /// <param name="signup"></param>
         /// <returns></returns>
-        public static string SQLSignup(Signup signup)
+        public static User? SQLSignup(Signup signup)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -259,12 +259,12 @@ namespace BookHeaven.Models
                         if (result != null)
                         {
                             transaction.Commit(); //commit the transaction if both insertions are successful
-                            return result.ToString(); //return the UserId if the user is successfully inserted
+                            return new User(int.Parse(result.ToString()), signup.email, signup.firstName, signup.lastName);
                         }
                         else
                         {
                             transaction.Rollback(); //rollback the transaction if the second insertion fails
-                            return ""; //return empty string if insertion failed
+                            return null;
                         }
                     }
                 }
