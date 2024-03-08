@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookHeaven.Models;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -10,7 +11,7 @@ namespace BookHeaven.Controllers
     {
         public IActionResult showProfileView()
         {
-            return View("ProfileView");
+            return View("ProfileView", Models.User.currentUser);
         }
 
         public IActionResult showSettingsView()

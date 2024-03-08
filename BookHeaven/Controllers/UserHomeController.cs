@@ -39,9 +39,12 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (SQLHelper.SQLLogin(login) != "") // User found in the database
-                { 
-                    _contx.HttpContext.Session.SetString("isLoggedIn", "true");
+                User user = SQLHelper.SQLLogin(login); //try to login with user credentials, if succeed we get a user object
+                if (user != null) // User found in the database
+                {
+                    Models.User.currentUser = user; //set the user obj to be our static currentUser obj
+                    Console.WriteLine(user.fname + " " + user.lname); //print user name from the user object
+                    _contx.HttpContext.Session.SetString("isLoggedIn", "true"); //open new session for user
                     return View("UserHomeView", initHomeBooks());
                 }
                 else

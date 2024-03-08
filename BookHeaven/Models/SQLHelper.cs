@@ -47,7 +47,7 @@ namespace BookHeaven.Models
         /// <summary>
         /// Function for searching user in db and return true if he exists, else false
         /// </summary>
-        /// <param name="login"></param>
+        /// <param name="email"></param>
         /// <returns></returns>
         public static bool SQLCheckEmail(string email)
         {
@@ -71,11 +71,133 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
-        /// Function for login, searches the database for matching user and returns its unique id, else returns empty string
+        /// Function for searching address of user in db and return true if it exists, else false
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        private static bool SQLCheckAddress(int userId, SqlConnection connection)
+        {
+            string query = "SELECT COUNT(*) FROM Address WHERE userId = @userId;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@userId", userId);
+                int count = (int)command.ExecuteScalar();
+                return count > 0; //return true if the count is greater than 0, indicating the user has an address
+            }
+        }
+
+        /// <summary>
+        /// Function for initializing address object from db
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private static Address? SQLInitAddress(int userId, SqlConnection connection)
+        {
+            string query = "SELECT * FROM Address WHERE userId = @userId;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@userId", userId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        //initialize address object with database information
+                        return new Address(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4));
+                    }
+                }
+            }
+            return null; //return null if no address was found for the given userId
+        }
+
+        /// <summary>
+        /// Function for checking if user has credit card in db
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private static bool SQLCheckCreditCard(int userId, SqlConnection connection)
+        {
+            string query = "SELECT COUNT(*) FROM CreditCards WHERE userId = @userId;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@userId", userId);
+                int count = (int)command.ExecuteScalar();
+                return count > 0; //return true if the count is greater than 0, indicating the user has a credit card
+            }
+        }
+
+        /// <summary>
+        /// Function for creating credit card object from db
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private static CreditCard? SQLInitCreditCard(int userId, SqlConnection connection)
+        {
+            string query = "SELECT * FROM CreditCards WHERE userId = @userId;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@userId", userId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        //initialize credit card object with database information
+                        return new CreditCard(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetInt32(3));
+                    }
+                }
+            }
+            return null; //return null if no credit card was found for the given userId
+        }
+
+        /// <summary>
+        /// Function for creating user object for our use later in the website
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        public static User? SQLCreateUserObj(int userId, SqlConnection connection)
+        {
+            string query = "SELECT * FROM UserInfo WHERE userId = @userId;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@userId", userId);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read()) //if true we found user in UserInfo table
+                    {
+                        User user = new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)); //create the user object from db
+                        reader.Close(); //we close our reader before next process to avoid open reader exceptions
+                        //now we check if user has address and credit card configured in his account
+                        if (SQLCheckAddress(userId, connection))
+                        {
+                            user.address = SQLInitAddress(userId, connection); //if the user has an address, initialize the address object
+                        }
+                        if (SQLCheckCreditCard(userId, connection))
+                        {
+                            user.creditCard = SQLInitCreditCard(userId, connection); //if the user has credit card, initialize the creditCard object
+                        }
+                        return user; //we return the initialized user object
+                    }
+                }
+            }
+            return null; //return null if no user was found for the given userId
+        }
+
+        /// <summary>
+        /// Function for login, searches the database for matching user and returns its unique object, else returns null
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        public static string SQLLogin(Login login)
+        public static User? SQLLogin(Login login)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -92,11 +214,13 @@ namespace BookHeaven.Models
                         if (reader.HasRows)
                         {
                             reader.Read(); // Read the first row
-                            string userId = reader["UserId"].ToString(); //get userId from Users table
-                            return string.IsNullOrEmpty(userId) ? "" : userId; ;// return user id if we found him
+                            int userId = reader.GetInt32(0); //get userId from Users table
+                            reader.Close(); //we close our reader before next process to avoid open reader exceptions
+                            User user = SQLCreateUserObj(userId, connection); //send userId and connection to our function to create user obj 
+                            return user != null ? user : null; //return user object if user is not null, else we return null indicating of an error finding user in db
                         }
                         else
-                            return ""; // else user was not found in the database
+                            return null; // else user was not found in the database
                     }
                 }
             }

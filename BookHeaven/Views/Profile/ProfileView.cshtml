@@ -52,7 +52,14 @@
             <div id="address">
                 <p>
                     <strong>Address:</strong>
-                    <span id="addressSpan">@Model.address.apartNum + ', ' + @Model.address.street + ', ' + @Model.address.city + ', ' + @Model.address.country</span>
+                    @if (@Model.address != null)
+                    {
+                        <span id="addressSpan">@Model.address.apartNum + ', ' + @Model.address.street + ', ' + @Model.address.city + ', ' + @Model.address.country</span>
+                    }
+                    else
+                    {
+                        <span id="addressSpan"></span>
+                    }
                     <button class="delete-button" onclick="deleteAddress()">🗑️</button>
 
                     <input type="text" placeholder="Country" class="input-field" id="countryInput" style="display: none;">
@@ -64,11 +71,24 @@
 
             <!-- Credit card input fields -->
             <div id="creditCard">
-                <p><strong>Credit Card:</strong> <span id="creditCardSpan">@Model.creditCard.number + ' | ' +  @Model.creditCard.date + ' | ' + @Model.creditCard.ccv</span> <button class="delete-button" onclick="deleteCreditCard()">🗑️</button></p>
 
-                <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" style="display: none;">
-                <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" style="display: none;">
-                <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" style="display: none;">
+                <p>
+                    <strong>Credit Card:</strong>
+                    @if (@Model.creditCard != null)
+                    {
+                        <span id="creditCardSpan">@Model.creditCard.number + ' | ' +  @Model.creditCard.date + ' | ' + @Model.creditCard.ccv</span> }
+                    else
+                    {
+                        <span id="creditCardSpan"></span>
+                    }
+                    <button class="delete-button" onclick="deleteCreditCard()">🗑️</button>
+
+                    <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" style="display: none;">
+                    <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" style="display: none;">
+                    <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" style="display: none;">
+                </p>
+
+                
             </div>
 
 
