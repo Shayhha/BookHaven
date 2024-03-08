@@ -4,6 +4,8 @@
 @{
 }
 
+@model BookHeaven.Models.User;
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +25,7 @@
             <div id="email">
                 <p>
                     <strong>Email:</strong>
-                    <span id="emailSpan">user@example.com</span>
+                    <span id="emailSpan">@Model.email</span>
                     <input type="email" class="input-field" id="emailInput" style="display: none;">
                 </p>
             </div>
@@ -32,7 +34,7 @@
             <div id="firstName">
                 <p>
                     <strong>First Name:</strong>
-                    <span id="firstNameSpan">John</span>
+                    <span id="firstNameSpan">@Model.fname</span>
                     <input type="text" class="input-field" id="firstNameInput" style="display: none;">
                 </p>
             </div>
@@ -41,7 +43,7 @@
             <div id="lastName">
                 <p>
                     <strong>Last Name:</strong>
-                    <span id="lastNameSpan">Doe</span>
+                    <span id="lastNameSpan">@Model.lname</span>
                     <input type="text" class="input-field" id="lastNameInput" style="display: none;">
                 </p>
             </div>
@@ -50,7 +52,14 @@
             <div id="address">
                 <p>
                     <strong>Address:</strong>
-                    <span id="addressSpan">123, Main St, City, Country</span>
+                    @if (@Model.address != null)
+                    {
+                        <span id="addressSpan">@Model.address.apartNum + ', ' + @Model.address.street + ', ' + @Model.address.city + ', ' + @Model.address.country</span>
+                    }
+                    else
+                    {
+                        <span id="addressSpan"></span>
+                    }
                     <button class="delete-button" onclick="deleteAddress()">🗑️</button>
 
                     <input type="text" placeholder="Country" class="input-field" id="countryInput" style="display: none;">
@@ -62,250 +71,106 @@
 
             <!-- Credit card input fields -->
             <div id="creditCard">
-                <p><strong>Credit Card:</strong> <span id="creditCardSpan">**** **** **** 1234 | 04/25 | 745</span> <button class="delete-button" onclick="deleteCreditCard()">🗑️</button></p>
 
-                <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" style="display: none;">
-                <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" style="display: none;">
-                <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" style="display: none;">
+                <p>
+                    <strong>Credit Card:</strong>
+                    @if (@Model.creditCard != null)
+                    {
+                        <span id="creditCardSpan">@Model.creditCard.number + ' | ' +  @Model.creditCard.date + ' | ' + @Model.creditCard.ccv</span> }
+                    else
+                    {
+                        <span id="creditCardSpan"></span>
+                    }
+                    <button class="delete-button" onclick="deleteCreditCard()">🗑️</button>
+
+                    <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" style="display: none;">
+                    <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" style="display: none;">
+                    <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" style="display: none;">
+                </p>
+
+                
             </div>
 
 
         </div>
         <div class="purchase-history">
-            <h2>Purchase History</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Book Name</th>
-                        <th>Quantity</th>
-                        <th>Price Paid</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>The Great Gatsby</td>
-                        <td>2</td>
-                        <td>$20.00</td>
-                    </tr>
-                    <tr>
-                        <td>To Kill a Mockingbird</td>
-                        <td>1</td>
-                        <td>$15.00</td>
-                    </tr>
-                    <!-- Add more rows for additional purchases -->
-                </tbody>
-            </table>
+            <h1>Purchase History</h1>
+
+            <div class="order-details">
+                <div class="order-info">
+                    <div class="left-info">
+                        <h5>Order Id: 4124</h5>
+                        <h5>Shipping Date: dd/mm/yyyy</h5>
+                    </div>
+                    <div class="right-info">
+                        <h5>Total Price: $125</h5>
+                        <h5>Tracking Number: 1d2d19h39</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="purchase-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book Name</th>
+                            <th>Quantity</th>
+                            <th>Price Per Book</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>The Great Gatsby</td>
+                            <td>2</td>
+                            <td>$10.00</td>
+                        </tr>
+                        <tr>
+                            <td>To Kill a Mockingbird</td>
+                            <td>1</td>
+                            <td>$15.00</td>
+                        </tr>
+                        <!-- Add more rows for additional purchases -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="order-details">
+                <div class="order-info">
+                    <div class="left-info">
+                        <h5>Order Id: 9023</h5>
+                        <h5>Shipping Date: dd/mm/yyyy</h5>
+                    </div>
+                    <div class="right-info">
+                        <h5>Total Price: $552</h5>
+                        <h5>Tracking Number: s12sdfc5</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="purchase-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book Name</th>
+                            <th>Quantity</th>
+                            <th>Price Per Book</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>The Great Gatsby</td>
+                            <td>2</td>
+                            <td>$10.00</td>
+                        </tr>
+                        <tr>
+                            <td>To Kill a Mockingbird</td>
+                            <td>1</td>
+                            <td>$15.00</td>
+                        </tr>
+                        <!-- Add more rows for additional purchases -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <script>
-        function editProfile() {
-            // Toggle visibility of email input field
-            var emailSpan = document.getElementById('emailSpan');
-            var emailInput = document.getElementById('emailInput');
-            emailInput.value = emailSpan.textContent;
-            emailSpan.textContent = '';
-            emailInput.style.display = (emailInput.style.display === 'none') ? 'block' : 'none';
-
-            // Toggle visibility of first name input field
-            var firstNameSpan = document.getElementById('firstNameSpan');
-            var firstNameInput = document.getElementById('firstNameInput');
-            firstNameInput.value = firstNameSpan.textContent;
-            firstNameSpan.textContent = '';
-            firstNameInput.style.display = (firstNameInput.style.display === 'none') ? 'block' : 'none';
-
-            // Toggle visibility of last name input field
-            var lastNameSpan = document.getElementById('lastNameSpan');
-            var lastNameInput = document.getElementById('lastNameInput');
-            lastNameInput.value = lastNameSpan.textContent;
-            lastNameSpan.textContent = '';
-            lastNameInput.style.display = (lastNameInput.style.display === 'none') ? 'block' : 'none';
-
-            // Toggle visibility of address input fields
-            var addressSpan = document.getElementById('addressSpan');
-            var addressParts = addressSpan.textContent.split(', ');
-            addressSpan.textContent = '';
-
-            // Assign values to respective input fields
-            document.getElementById('countryInput').value = addressParts.pop(); // Last part is country
-            document.getElementById('cityInput').value = addressParts.pop(); // Next part is city
-            document.getElementById('streetInput').value = addressParts.pop(); // Next part is street
-            document.getElementById('apartmentInput').value = addressParts.pop(); // First part is apartment number
-
-            var addressInputs = document.getElementById('address').querySelectorAll('.input-field');
-            addressInputs.forEach(input => {
-                input.style.display = (input.style.display === 'none') ? 'block' : 'none';
-            });
-
-
-            // Toggle visibility of credit card input fields
-            var creditCardSpan = document.getElementById('creditCardSpan');
-            var creditCardParts = creditCardSpan.textContent.split(' | ');
-            creditCardSpan.textContent = '';
-
-            // Assign values to respective input fields
-            document.getElementById('ccvInput').value = creditCardParts.pop(); // Last part is country
-            document.getElementById('expirationInput').value = creditCardParts.pop(); // Next part is city
-            document.getElementById('cardNumberInput').value = creditCardParts.pop(); // Next part is street
-
-            var creditCardInputs = document.getElementById('creditCard').querySelectorAll('.input-field');
-            creditCardInputs.forEach(input => {
-                input.style.display = (input.style.display === 'none') ? 'block' : 'none';
-            });
-
-            // Toggle visibility of delete buttons
-            var deleteButtons = document.querySelectorAll('.delete-button');
-            deleteButtons.forEach(button => {
-                button.style.display = (button.style.display === 'none') ? 'block' : 'none';
-            });
-
-            // Change edit button to save button
-            var editButton = document.querySelector('.edit-button');
-            editButton.innerHTML = (editButton.innerHTML === 'Edit') ? 'Save' : 'Edit';
-            editButton.setAttribute('onclick', (editButton.getAttribute('onclick') === 'editProfile()') ? 'saveProfile()' : 'editProfile()');
-        }
-
-        async function saveProfile() {
-            var emailInput = document.getElementById('emailInput').value;
-            var firstNameInput = document.getElementById('firstNameInput').value;
-            var lastNameInput = document.getElementById('lastNameInput').value;
-            var countryInput = document.getElementById('countryInput').value;
-            var cityInput = document.getElementById('cityInput').value;
-            var streetInput = document.getElementById('streetInput').value;
-            var apartmentInput = document.getElementById('apartmentInput').value;
-            var cardNumberInput = document.getElementById('cardNumberInput').value;
-            var expirationInput = document.getElementById('expirationInput').value;
-            var ccvInput = document.getElementById('ccvInput').value;
-
-            var data = {
-                email: emailInput,
-                firstName: firstNameInput,
-                lastName: lastNameInput,
-                address: {
-                    country: countryInput,
-                    city: cityInput,
-                    street: streetInput,
-                    apartment: apartmentInput
-                },
-                creditCard: {
-                    cardNumber: cardNumberInput,
-                    expiration: expirationInput,
-                    ccv: ccvInput
-                }
-            };
-
-            // Call the saveChanges function and await its result
-            const success = await saveChanges(data);
-
-            if (success) {
-                // Update email with input value
-                var emailSpan = document.getElementById('emailSpan');
-                emailSpan.textContent = emailInput;
-
-                // Update first name with input value
-                var firstNameSpan = document.getElementById('firstNameSpan');
-                firstNameSpan.textContent = firstNameInput;
-
-                // Update last name with input value
-                var lastNameSpan = document.getElementById('lastNameSpan');
-                lastNameSpan.textContent = lastNameInput;
-
-                // Hide input fields
-                document.getElementById('emailInput').style.display = 'none';
-                document.getElementById('firstNameInput').style.display = 'none';
-                document.getElementById('lastNameInput').style.display = 'none';
-
-                // Update address with input values
-                var addressSpan = document.getElementById('addressSpan');
-                addressSpan.textContent = streetInput + ', ' + cityInput + ', ' + countryInput + ', ' + apartmentInput;
-                var addressInputs = document.getElementById('address').querySelectorAll('.input-field');
-                addressInputs.forEach(input => {
-                    input.style.display = 'none';
-                });
-
-                // Update credit card with input values
-                var creditCardSpan = document.getElementById('creditCardSpan');
-                creditCardSpan.textContent = cardNumberInput + ' | ' + expirationInput + ' | ' + ccvInput;
-                var creditCardInputs = document.getElementById('creditCard').querySelectorAll('.input-field');
-                creditCardInputs.forEach(input => {
-                    input.style.display = 'none';
-                });
-
-                // Show delete buttons
-                var deleteButtons = document.querySelectorAll('.delete-button');
-                deleteButtons.forEach(button => {
-                    button.style.display = 'inline-block';
-                });
-
-                // Change save button back to edit button
-                var editButton = document.querySelector('.edit-button');
-                editButton.innerHTML = 'Edit';
-                editButton.setAttribute('onclick', 'editProfile()');
-            }
-        }
-
-        async function saveChanges(data) {
-            try {
-                const response = await fetch('/Profile/SaveChanges', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const responseData = await response.json();
-                return responseData.success; // Return true if success is true, otherwise false
-            } catch (error) {
-                console.error('Error:', error);
-                return false; // Return false in case of an error
-            }
-        }
-
-
-        function deleteAddress() {
-            // AJAX request to delete credit card information
-            fetch('DeleteAddress', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({}),
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    console.log('Address deleted');
-                    document.getElementById('addressSpan').innerHTML = '<span></span>';
-                    document.querySelectorAll('.delete-button').forEach(button => button.classList.remove('hide'));
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-        }
-
-        function deleteCreditCard() {
-            // AJAX request to delete credit card information
-            fetch('DeleteCreditCard', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({}),
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    console.log('Credit Card deleted');
-                    document.getElementById('creditCardSpan').innerHTML = '<span></span>';
-                    document.querySelectorAll('.delete-button').forEach(button => button.classList.remove('hide'));
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-        }
-    </script>
 </body>
 </html>
 

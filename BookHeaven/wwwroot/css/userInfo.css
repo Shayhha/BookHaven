@@ -72,21 +72,49 @@
     width: calc(25% - 10px);
 }
 
+
 .purchase-history {
-    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
 }
 
-    .purchase-history table {
-        width: 100%;
+.order-details {
+    background-color: #333; /* Contrasting color */
+    color: white;
+    padding: 10px 20px;
+    text-align: center; /* Center aligning the content */
+}
+
+.order-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-info {
+    text-align: center;
+}
+
+.right-info {
+    text-align: center;
+}
+
+.purchase-table {
+    padding-bottom: 20px;
+}
+
+    .purchase-table table {
         border-collapse: collapse;
+        width: 100%;
     }
 
-    .purchase-history th, .purchase-history td {
-        padding: 10px;
+    .purchase-table th,
+    .purchase-table td {
         border: 1px solid #ddd;
+        padding: 8px;
         text-align: left;
     }
 
-    .purchase-history th {
+    .purchase-table th {
         background-color: #f2f2f2;
     }
