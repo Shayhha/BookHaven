@@ -220,3 +220,7 @@ function deleteCreditCard() {
 function userLogout() {
     window.location.href = '/UserHome/userLogout';
 }
+
+function confirmDelete() {
+    return confirm("Are you sure you want to delete this item?");
+}
