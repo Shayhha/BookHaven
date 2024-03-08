@@ -3,6 +3,11 @@
 
 // Write your JavaScript code.
 
+function handleSearchButtonClick() {
+    var searchQuery = document.getElementsByName("searchQuery")[0].value;
+    window.location.href = '/SearchResults/showSearchResults?searchQuery=' + encodeURIComponent(searchQuery);
+}
+
 function editProfile() {
     // Toggle visibility of email input field
     var emailSpan = document.getElementById('emailSpan');
@@ -209,4 +214,9 @@ function deleteCreditCard() {
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
+}
+
+
+function userLogout() {
+    window.location.href = '/UserHome/userLogout';
 }

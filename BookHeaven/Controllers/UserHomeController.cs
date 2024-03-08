@@ -63,8 +63,15 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (SQLHelper.SQLSignup(signup) != "")
+                if (!SQLHelper.SQLCheckEmail(signup.email))
+                    return View("SignupView", signup);
+
+                User user = SQLHelper.SQLSignup(signup); //try to login with user credentials, if succeed we get a user object
+                if (user != null) // User found in the database
                 {
+                    Models.User.currentUser = user; //set the user obj to be our static currentUser obj
+                    Console.WriteLine(user.fname + " " + user.lname); //print user name from the user object
+                    _contx.HttpContext.Session.SetString("isLoggedIn", "true"); //open new session for user
                     return View("UserHomeView", initHomeBooks());
                 }
                 else
@@ -76,6 +83,14 @@ namespace BookHeaven.Controllers
             {
                 return View("SignupView", signup);
             }
+        }
+
+        public IActionResult userLogout()
+        {
+            Console.WriteLine(Models.User.currentUser.fname + " has logged out"); //print user name from the user object
+            Models.User.currentUser = null;
+            _contx.HttpContext.Session.SetString("isLoggedIn", "false");
+            return RedirectToAction("showUserHome");
         }
 
         private SearchResults initHomeBooks()
