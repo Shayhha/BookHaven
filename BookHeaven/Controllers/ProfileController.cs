@@ -33,8 +33,8 @@ namespace BookHeaven.Controllers
                     // Here we check what data needs to be updated and call the appropriate sql methods
 
                     // You can access the data like so:
-                    //string email = data.email;
-                    //Console.WriteLine("email = " + email);
+                    string email = data.email;
+                    Console.WriteLine("email = " + email);
 
 
                     return Json(new { success = true });

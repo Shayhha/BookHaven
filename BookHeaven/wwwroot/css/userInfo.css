@@ -100,8 +100,7 @@
 }
 
 .purchase-table {
-    padding: 0 0 20px 0 !important;
-    color: red;
+    padding-bottom: 20px;
 }
 
     .purchase-table table {
