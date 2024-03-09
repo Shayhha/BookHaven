@@ -6,6 +6,11 @@
 
 @model BookHeaven.Models.Signup;
 
+@if (ViewBag.ShowEmailTakenMessage != null && ViewBag.ShowEmailTakenMessage)
+{
+    <script>alert("This email is already taken. Please choose another one.");</script>
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,19 +26,19 @@
 
         <form action="tryToSignup" method="post">
             <div class="mb-3">
-                <input type="text" class="form-control formInput" name="firstName" placeholder="First Name">
+                <input type="text" class="form-control formInput" name="firstName" placeholder="First Name" value="@Model.firstName">
                 <span class="validation-error">@Html.ValidationMessageFor(x => x.firstName)</span>
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control formInput" name="lastName" placeholder="Last Name">
+                <input type="text" class="form-control formInput" name="lastName" placeholder="Last Name" value="@Model.lastName">
                 <span class="validation-error">@Html.ValidationMessageFor(x => x.lastName)</span>
             </div>
             <div class="mb-3">
-                <input type="text" class="form-control formInput" name="email" placeholder="Email">
+                <input type="text" class="form-control formInput" name="email" placeholder="Email" value="@Model.email">
                 <span class="validation-error">@Html.ValidationMessageFor(x => x.email)</span>
             </div>
             <div class="mb-3">
-                <input type="password" class="form-control formInput" name="password" placeholder="Password">
+                <input type="password" class="form-control formInput" name="password" placeholder="Password" value="@Model.password">
                 <span class="validation-error">@Html.ValidationMessageFor(x => x.password)</span>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Signup</button>
