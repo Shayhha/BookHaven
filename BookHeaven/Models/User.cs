@@ -92,5 +92,25 @@ namespace BookHeaven.Models
             return true;
         }
 
+        public bool deleteAddress()
+        {
+            if (SQLHelper.SQLDeleteAddress(this.userId) == true) //means we successfully deleted the address
+            {
+                this.address = null; //set the address in our currentUser object to be null indicating used doesn't have address anymore
+                return true;
+            }
+            return false;
+        }
+
+        public bool deleteCreditCard()
+        {
+            if (SQLHelper.SQLDeleteCreditCard(this.userId) == true) //means we successfully deleted the credit card
+            {
+                this.address = null; //set the creditCard in our currentUser object to be null indicating used doesn't have credit card anymore
+                return true;
+            }
+            return false;
+        }
+
     }
 }

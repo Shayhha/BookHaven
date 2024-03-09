@@ -76,29 +76,29 @@ function editProfile() {
 
 async function saveProfile() {
     var emailInput = document.getElementById('emailInput').value;
-    var firstNameInput = document.getElementById('firstNameInput').value;
-    var lastNameInput = document.getElementById('lastNameInput').value;
+    var fnameInput = document.getElementById('firstNameInput').value;
+    var lnameInput = document.getElementById('lastNameInput').value;
     var countryInput = document.getElementById('countryInput').value;
     var cityInput = document.getElementById('cityInput').value;
     var streetInput = document.getElementById('streetInput').value;
-    var apartmentInput = document.getElementById('apartmentInput').value;
-    var cardNumberInput = document.getElementById('cardNumberInput').value;
-    var expirationInput = document.getElementById('expirationInput').value;
+    var apartNumInput = document.getElementById('apartmentInput').value;
+    var numberInput = document.getElementById('cardNumberInput').value;
+    var dateInput = document.getElementById('expirationInput').value;
     var ccvInput = document.getElementById('ccvInput').value;
 
     var data = {
         email: emailInput,
-        firstName: firstNameInput,
-        lastName: lastNameInput,
+        fname: fnameInput,
+        lname: lnameInput,
         address: {
             country: countryInput,
             city: cityInput,
             street: streetInput,
-            apartment: apartmentInput
+            apartNum: apartNumInput
         },
         creditCard: {
-            cardNumber: cardNumberInput,
-            expiration: expirationInput,
+            number: numberInput,
+            date: dateInput,
             ccv: ccvInput
         }
     };
@@ -113,11 +113,11 @@ async function saveProfile() {
 
         // Update first name with input value
         var firstNameSpan = document.getElementById('firstNameSpan');
-        firstNameSpan.textContent = firstNameInput;
+        firstNameSpan.textContent = fnameInput;
 
         // Update last name with input value
         var lastNameSpan = document.getElementById('lastNameSpan');
-        lastNameSpan.textContent = lastNameInput;
+        lastNameSpan.textContent = lnameInput;
 
         // Hide input fields
         document.getElementById('emailInput').style.display = 'none';
@@ -126,7 +126,7 @@ async function saveProfile() {
 
         // Update address with input values
         var addressSpan = document.getElementById('addressSpan');
-        addressSpan.textContent = streetInput + ', ' + cityInput + ', ' + countryInput + ', ' + apartmentInput;
+        addressSpan.textContent = streetInput + ', ' + cityInput + ', ' + countryInput + ', ' + apartNumInput;
         var addressInputs = document.getElementById('address').querySelectorAll('.input-field');
         addressInputs.forEach(input => {
             input.style.display = 'none';
@@ -134,7 +134,7 @@ async function saveProfile() {
 
         // Update credit card with input values
         var creditCardSpan = document.getElementById('creditCardSpan');
-        creditCardSpan.textContent = cardNumberInput + ' | ' + expirationInput + ' | ' + ccvInput;
+        creditCardSpan.textContent = numberInput + ' | ' + dateInput + ' | ' + ccvInput;
         var creditCardInputs = document.getElementById('creditCard').querySelectorAll('.input-field');
         creditCardInputs.forEach(input => {
             input.style.display = 'none';
