@@ -61,7 +61,7 @@
                     {
                         <span id="addressSpan"></span>
                     }
-                    <button class="delete-button" onclick="deleteAddress()">🗑️</button>
+                    <button class="delete-button" onclick="if(confirmDelete()) deleteAddress()">🗑️</button>
 
                     <input type="text" placeholder="Country" class="input-field" id="countryInput" style="display: none;">
                     <input type="text" placeholder="City" class="input-field" id="cityInput" style="display: none;">
@@ -82,7 +82,7 @@
                     {
                         <span id="creditCardSpan"></span>
                     }
-                    <button class="delete-button" onclick="deleteCreditCard()">🗑️</button>
+                    <button class="delete-button" onclick="if(confirmDelete()) deleteCreditCard()">🗑️</button>
 
                     <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" style="display: none;">
                     <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" style="display: none;">

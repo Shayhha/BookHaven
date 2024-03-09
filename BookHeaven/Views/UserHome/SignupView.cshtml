@@ -6,6 +6,11 @@
 
 @model BookHeaven.Models.Signup;
 
+@if (ViewBag.ShowEmailTakenMessage != null && ViewBag.ShowEmailTakenMessage)
+{
+    <script>alert("This email is already taken. Please choose another one.");</script>
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
