@@ -11,10 +11,11 @@ namespace BookHeaven.Models
         public string lname { get; set; }
         public Address? address { get; set; }
         public CreditCard? creditCard { get; set; }
+        public bool isAdmin { get; set; }
 
         public User() { }
 
-        public User(int userId, string email, string fname, string lname)
+        public User(int userId, string email, string fname, string lname, bool isAdmin = false)
         {
             this.userId = userId;
             this.email = email;
@@ -22,11 +23,12 @@ namespace BookHeaven.Models
             this.lname = lname;
             this.address = null;
             this.creditCard = null;
+            this.isAdmin = isAdmin;
         }
 
         public static bool checkUsers(User a, User b)
         {
-            if(a.email == b.email && a.fname == b.fname && a.lname == b.lname)
+            if(a.email == b.email && a.fname == b.fname && a.lname == b.lname && a.isAdmin == b.isAdmin)
                 return true;
             else
                 return false;
@@ -94,20 +96,28 @@ namespace BookHeaven.Models
 
         public bool deleteAddress()
         {
-            if (SQLHelper.SQLDeleteAddress(this.userId) == true) //means we successfully deleted the address
+            if (this.address != null)
             {
-                this.address = null; //set the address in our currentUser object to be null indicating used doesn't have address anymore
-                return true;
+                if (SQLHelper.SQLDeleteAddress(this.userId) == true) //means we successfully deleted the address
+                {
+                    this.address = null; //set the address in our currentUser object to be null indicating used doesn't have address anymore
+                    return true;
+                }
+                return false;
             }
             return false;
         }
 
         public bool deleteCreditCard()
         {
-            if (SQLHelper.SQLDeleteCreditCard(this.userId) == true) //means we successfully deleted the credit card
+            if (this.creditCard != null)
             {
-                this.address = null; //set the creditCard in our currentUser object to be null indicating used doesn't have credit card anymore
-                return true;
+                if (SQLHelper.SQLDeleteCreditCard(this.userId) == true) //means we successfully deleted the credit card
+                {
+                    this.creditCard = null; //set the creditCard in our currentUser object to be null indicating used doesn't have credit card anymore
+                    return true;
+                }
+                return false;
             }
             return false;
         }

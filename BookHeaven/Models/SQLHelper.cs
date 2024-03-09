@@ -174,7 +174,7 @@ namespace BookHeaven.Models
                 {
                     if (reader.Read()) //if true we found user in UserInfo table
                     {
-                        User user = new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)); //create the user object from db
+                        User user = new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetBoolean(4)); //create the user object from db
                         reader.Close(); //we close our reader before next process to avoid open reader exceptions
                         //now we check if user has address and credit card configured in his account
                         if (SQLCheckAddress(userId, connection))
