@@ -31,13 +31,38 @@ namespace BookHeaven.Controllers
 
                 if (data != null)
                 {
-                    // Here we check what data needs to be updated and call the appropriate sql methods
-
-                    // You can access the data like so:
+                    //set all parameters from dict
                     string email = data.email;
-                    Console.WriteLine("email = " + email);
+                    string fname = data.fname;
+                    string lname = data.lname;
+                    //address
+                    string country = data.address.country;
+                    string city = data.address.city;
+                    string street = data.address.street;
+                    string apartNum = data.address.apartNum;
+                    //credit card
+                    string number = data.creditCard.number;
+                    string date = data.creditCard.date;
+                    string ccv = data.creditCard.ccv;
 
+                    // Here we check what data needs to be updated and call the appropriate sql methods
+                    //if (Models.User.currentUser.email != email)
+                    //{
+                    //    if (SQLHelper.SQLCheckEmail(email)) //means the email is being used by another user
+                    //        return Json(new { success = false, failure = "Email is assigned to another user, please provide valid email." }); //return false indicating of an error assigning this email to the current user
+                    //}
 
+                    //User tempUser = new User(Models.User.currentUser.userId, email, fname, lname);
+                    //if (country != "" && city != "" && street != "")
+                    //{
+                    //    tempUser.address = new Address(Models.User.currentUser.userId, country, city, street, int.Parse(apartNum));
+
+                    //}
+                    //if (number != "")
+                    //{
+                    //    tempUser.creditCard = new CreditCard(Models.User.currentUser.userId, long.Parse(data.creditCard.number), data.creditCard.date, int.Parse(data.creditCard.ccv));
+
+                    //}
                     return Json(new { success = true });
                 }
                 else
