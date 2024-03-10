@@ -20,7 +20,7 @@
     border: none;
     padding: 8px 16px;
     border-radius: 5px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .logout_button {
@@ -55,7 +55,7 @@
 }
 
     .profile-info h2 {
-        margin-bottom: 10px;
+        margin-bottom: 40px;
     }
 
 .delete-button {

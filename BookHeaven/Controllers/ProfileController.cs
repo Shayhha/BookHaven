@@ -1,9 +1,7 @@
-﻿using BookHeaven.Models;
+﻿using System.Net;
+using System.Text.RegularExpressions;
+using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BookHeaven.Controllers
 {
@@ -19,58 +17,182 @@ namespace BookHeaven.Controllers
             return View("SettingsView");
         }
 
-
-
-        [HttpPost]
-        public async Task<IActionResult> SaveChanges()
+        public IActionResult showEditProfileView()
         {
-            using (StreamReader reader = new StreamReader(Request.Body))
+
+            return View("EditProfileView", Models.User.currentUser);
+        }
+
+
+        private bool userAddressValidation(Address address)
+        {
+            if (address.country != "" && address.city != "" && address.street != "" && address.apartNum != 0)
             {
-                string jsonString = await reader.ReadToEndAsync();
-                dynamic data = JsonConvert.DeserializeObject(jsonString);
+                int flag = 0;
+                string errorMessage = "";
 
-                if (data != null)
+                if (address.country == null || !Regex.IsMatch(address.country, @"^[a-zA-Z]{2,25}$"))
                 {
-                    //set all parameters from dict
-                    string email = data.email;
-                    string fname = data.fname;
-                    string lname = data.lname;
-                    //address
-                    string country = data.address.country;
-                    string city = data.address.city;
-                    string street = data.address.street;
-                    string apartNum = data.address.apartNum;
-                    //credit card
-                    string number = data.creditCard.number;
-                    string date = data.creditCard.date;
-                    string ccv = data.creditCard.ccv;
+                    errorMessage += "Invalid Country. ";
+                    flag = 1;
+                }
 
-                    // Here we check what data needs to be updated and call the appropriate sql methods
-                    //if (Models.User.currentUser.email != email)
-                    //{
-                    //    if (SQLHelper.SQLCheckEmail(email)) //means the email is being used by another user
-                    //        return Json(new { success = false, failure = "Email is assigned to another user, please provide valid email." }); //return false indicating of an error assigning this email to the current user
-                    //}
+                if (address.city == null || !Regex.IsMatch(address.city, @"^[a-zA-Z]{2,25}$")) {
+                    errorMessage += "Invalid City. ";
+                    flag = 1;
+                }
 
-                    //User tempUser = new User(Models.User.currentUser.userId, email, fname, lname);
-                    //if (country != "" && city != "" && street != "")
-                    //{
-                    //    tempUser.address = new Address(Models.User.currentUser.userId, country, city, street, int.Parse(apartNum));
+                if (address.street == null || !Regex.IsMatch(address.street, @"^[a-zA-Z]{2,25}$")) {
+                    errorMessage += "Invalid Street. ";
+                    flag = 1;
+                }
 
-                    //}
-                    //if (number != "")
-                    //{
-                    //    tempUser.creditCard = new CreditCard(Models.User.currentUser.userId, long.Parse(data.creditCard.number), data.creditCard.date, int.Parse(data.creditCard.ccv));
+                if (address.apartNum == 0)
+                {
+                    errorMessage += "Invalid Apartment Number. ";
+                    flag = 1;
+                }
 
-                    //}
-                    return Json(new { success = true });
+                if (flag == 1)
+                {
+                    ModelState.AddModelError("address", errorMessage);
+                    return false;
                 }
                 else
                 {
-                    return Json(new { success = false });
+                    address.userId = Models.User.currentUser.userId;
+                    return true;
                 }
             }
 
+            if ((address.country == "" || address.country == null) &&
+                (address.city == "" || address.city == null) &&
+                (address.street == "" || address.street == null) &&
+                address.apartNum == 0)
+            {
+                if (Models.User.currentUser.address != null)
+                {
+                    ModelState.AddModelError("address", "You can't delete the address in this page.");
+                    return false;
+                }
+
+                address.userId = Models.User.currentUser.userId;
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool userCreditCardValidation(CreditCard creditCard)
+        {
+            int flag = 0;
+            string errorMessage = "";
+
+            if (creditCard.number != 0 && creditCard.date != "" && creditCard.ccv != 0)
+            {
+                if (!Regex.IsMatch(creditCard.number.ToString(), @"^\d{16}$"))
+                {
+                    errorMessage += "Invalid Card Number. ";
+                    flag = 1;
+                }
+
+                if (!Regex.IsMatch(creditCard.date, @"^(0[1-9]|1[0-2])\/\d{2}$"))
+
+                {
+                    errorMessage += "Invalid Experation Date. ";
+                    flag = 1;
+                }
+
+                if (!Regex.IsMatch(creditCard.ccv.ToString(), @"^[1-9]\d{2}$"))
+                {
+                    errorMessage += "Invalid CCV Number. ";
+                    flag = 1;
+                }
+
+                if (flag == 1)
+                {
+                    ModelState.AddModelError("creditCard", errorMessage);
+                    return false;
+                }
+                else
+                {
+                    creditCard.userId = Models.User.currentUser.userId;
+                    return true;
+                }
+            }
+
+            if (creditCard.number == 0 && (creditCard.date == "" || creditCard.date == null) && creditCard.ccv == 0)
+            {
+                if (Models.User.currentUser.creditCard != null)
+                {
+                    ModelState.AddModelError("creditCard", "You can't delete the credit card in this page.");
+                    return false;
+                }
+
+                creditCard.userId = Models.User.currentUser.userId;
+                return true;
+            }
+
+            return false;
+        }
+
+        public IActionResult CheckUsersInput(User user)
+        {
+            ModelState.Clear();
+            user.userId = Models.User.currentUser.userId;
+
+            // Perform custom user info validation
+            if (user.email == null || !Regex.IsMatch(user.email, @"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$"))
+                ModelState.AddModelError("email", "Email can't be null.");
+
+            if (user.fname == null || !Regex.IsMatch(user.fname, @"^[a-zA-Z]{2,20}$"))
+                ModelState.AddModelError("fname", "First can't be null.");
+
+            if (user.lname == null || !Regex.IsMatch(user.lname, @"^[a-zA-Z]{2,20}$"))
+                ModelState.AddModelError("lname", "Last can't be null.");
+
+            // Perform custom address validation
+            if (!userAddressValidation(user.address))
+            {
+                ModelState.AddModelError("address", "Address validation failed. ");
+            }
+
+            // Perform custom credit card validation
+            if (!userCreditCardValidation(user.creditCard))
+            {
+                ModelState.AddModelError("creditCard", "Credit card validation failed. ");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("EditProfileView", user);
+            }
+
+            if (SaveUserData(user))
+                return View("ProfileView", user);
+            else
+            {
+                ViewBag.generalErrorMessage = "Unable to save the changes, something went wrong please try again.";
+                return View("EditProfileView", user);
+            }
+        }
+
+        public bool SaveUserData(User user)
+        {
+            if ((user.address.country == "" || user.address.country == null) &&
+                (user.address.city == "" || user.address.city == null) &&
+                (user.address.street == "" || user.address.street == null) &&
+                user.address.apartNum == 0)
+            {
+                user.address = null;
+            }
+
+            if (user.creditCard.number == 0 && (user.creditCard.date == "" || user.creditCard.date == null) && user.creditCard.ccv == 0)
+            {
+                user.creditCard = null;
+            }
+
+            return Models.User.currentUser.updateInfo(user);
         }
 
         [HttpPost]

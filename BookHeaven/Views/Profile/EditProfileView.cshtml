@@ -1,0 +1,124 @@
+﻿
+@model BookHeaven.Models.User;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile Page</title>
+    <link rel="stylesheet" href="~/css/userInfo.css">
+</head>
+<body>
+
+    <div class="container2 profile-info">
+        <h2>User Information</h2>
+        @if (!string.IsNullOrEmpty(ViewBag.generalErrorMessage))
+        {
+            <span id="generalErrorMessage">@ViewBag.generalErrorMessage</span>
+        }
+        <a href="showProfileView" class="logout_button">Cancel</a>
+
+        <form action="CheckUsersInput" method="post">
+
+            <div id="email">
+                <p>
+                    <strong>Email:</strong>
+                    <span id="emailSpan" class="validation-error">@Html.ValidationMessageFor(x => x.email)</span>
+                    <input type="email" class="input-field" id="emailInput" name="email" value="@Model.email">
+                </p>
+            </div>
+
+            <div id="firstName">
+                <p>
+                    <strong>First Name:</strong>
+                    <span id="fnameSpan" class="validation-error">@Html.ValidationMessageFor(x => x.fname)</span>
+                    <input type="text" class="input-field" id="firstNameInput" name="fname" value="@Model.fname">
+                </p>
+            </div>
+
+            <div id="lastName">
+                <p>
+                    <strong>Last Name:</strong>
+                    <span id="lnameSpan" class="validation-error">@Html.ValidationMessageFor(x => x.lname)</span>
+                    <input type="text" class="input-field" id="lastNameInput" name="lname" value="@Model.lname">
+                </p>
+            </div>
+
+            <div id="address">
+                <p>
+                    <strong>Address: (all fields empty or all fields full)</strong>
+                    <span id="addressSpan" class="validation-error">@Html.ValidationMessageFor(x => x.address)</span>
+
+                    @if (Model.address == null)
+                    {
+                        <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="">
+                        <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="">
+                        <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="">
+                        <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="">
+                    }
+                    else
+                    {
+                        <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="@Model.address.country">
+                        <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="@Model.address.city">
+                        <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="@Model.address.street">
+
+                        @if (Model.address.apartNum == 0)
+                        {
+                            <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="">
+                        }
+                        else
+                        {
+                            <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="@Model.address.apartNum">
+                        }
+                    }
+
+
+                </p>
+            </div>
+
+            <div id="creditCard">
+                <p>
+                    <strong>Credit Card: (all fields empty or all fields full)</strong>
+                    <span id="creditCardSpan" class="validation-error">@Html.ValidationMessageFor(x => x.creditCard)</span>
+
+                    @if (Model.creditCard == null)
+                    {
+                        <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
+                        <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="">
+                        <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
+                    }
+                    else
+                    {
+                        @if (Model.creditCard.number == 0)
+                        {
+                            <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
+                        }
+                        else
+                        {
+                            <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="@Model.creditCard.number">
+                        }
+
+                        <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="@Model.creditCard.date">
+
+                        @if (Model.creditCard.ccv == 0)
+                        {
+                            <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
+                        }
+                        else
+                        {
+                            <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="@Model.creditCard.ccv">
+                        }
+                    }
+
+                </p>
+            </div>
+
+            <button class="edit-button" type="submit">Save</button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

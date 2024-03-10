@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BookHeaven.Models
 {
@@ -9,6 +9,7 @@ namespace BookHeaven.Models
         public string email { get; set; }
         public string fname { get; set; }
         public string lname { get; set; }
+
         public Address? address { get; set; }
         public CreditCard? creditCard { get; set; }
         public bool isAdmin { get; set; }
@@ -25,6 +26,25 @@ namespace BookHeaven.Models
             this.creditCard = null;
             this.isAdmin = isAdmin;
         }
+
+
+        public User(int userId, string email, string fname, string lname, string country, string city, string street, int apartNum, long number, string date, int ccv)
+        {
+            this.userId = userId;
+            this.email = email;
+            this.fname = fname;
+            this.lname = lname;
+            if (country == "" && city == "" && street == "" && apartNum == 0)
+                this.address = null;
+            else
+                this.address = new Address(userId, country, city, street, apartNum);
+
+            if (number == 0 && date == "" && ccv == 0)
+                this.creditCard = new CreditCard(userId, number, date, ccv);
+            else
+                this.creditCard = null;
+        }
+
 
         public static bool checkUsers(User a, User b)
         {
@@ -62,13 +82,13 @@ namespace BookHeaven.Models
                 {
                     if (Address.checkAddresses(this.address, updatedUser.address) == false)
                     {
-                        if (SQLHelper.SQLUpdateAddress(updatedUser.address))
+                        if (SQLHelper.SQLUpdateAddress(updatedUser.address) == false)
                             return false;
                     }
                 }
                 else
                 {
-                    if (SQLHelper.SQLAddAddress(updatedUser.address))
+                    if (SQLHelper.SQLAddAddress(updatedUser.address) == false)
                         return false;
                 }
                 this.address = updatedUser.address;
@@ -80,13 +100,13 @@ namespace BookHeaven.Models
                 {
                     if (CreditCard.checkCreditCard(this.creditCard, updatedUser.creditCard) == false)
                     {
-                        if (SQLHelper.SQLUpdateCreditCard(updatedUser.creditCard))
+                        if (SQLHelper.SQLUpdateCreditCard(updatedUser.creditCard) == false)
                             return false;
                     }
                 }
                 else
                 {
-                    if (SQLHelper.SQLAddCreditCard(updatedUser.creditCard))
+                    if (SQLHelper.SQLAddCreditCard(updatedUser.creditCard) == false)
                         return false;
                 }
                 this.creditCard = updatedUser.creditCard;
