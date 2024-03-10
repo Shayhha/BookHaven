@@ -18,7 +18,7 @@
     <div class="container2">
         <h1>User Profile</h1>
         <button class="logout_button" onclick="userLogout()">Logout</button>
-        <button class="edit-button" onclick="editProfile()">Edit</button>
+        <button class="edit-button" onclick="editUserInfoButtonClick()">Edit</button>
         <div class="profile-info">
             <h2>User Information</h2>
 
@@ -27,7 +27,6 @@
                 <p>
                     <strong>Email:</strong>
                     <span id="emailSpan">@Model.email</span>
-                    <input type="email" class="input-field" id="emailInput" style="display: none;">
                 </p>
             </div>
 
@@ -36,7 +35,6 @@
                 <p>
                     <strong>First Name:</strong>
                     <span id="firstNameSpan">@Model.fname</span>
-                    <input type="text" class="input-field" id="firstNameInput" style="display: none;">
                 </p>
             </div>
 
@@ -45,7 +43,6 @@
                 <p>
                     <strong>Last Name:</strong>
                     <span id="lastNameSpan">@Model.lname</span>
-                    <input type="text" class="input-field" id="lastNameInput" style="display: none;">
                 </p>
             </div>
 
@@ -55,44 +52,45 @@
                     <strong>Address:</strong>
                     @if (@Model.address != null)
                     {
-                        <span id="addressSpan">@Model.address.apartNum + ', ' + @Model.address.street + ', ' + @Model.address.city + ', ' + @Model.address.country</span>
+                        if (Model.address.country != "" && Model.address.city != "" && Model.address.street != "" && Model.address.apartNum != 0)
+                        {
+                            <span id="addressSpan">@(Model.address.apartNum + ", " + @Model.address.street + ", " + @Model.address.city + ", " + @Model.address.country)</span>
+                        }
+                        else
+                        {
+                            <span id="addressSpan"></span>
+                        }
                     }
                     else
                     {
                         <span id="addressSpan"></span>
                     }
                     <button class="delete-button" onclick="if(confirmDelete()) deleteAddress()">🗑️</button>
-
-                    <input type="text" placeholder="Country" class="input-field" id="countryInput" style="display: none;">
-                    <input type="text" placeholder="City" class="input-field" id="cityInput" style="display: none;">
-                    <input type="text" placeholder="Street" class="input-field" id="streetInput" style="display: none;">
-                    <input type="text" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" style="display: none;">
                 </p>
             </div>
 
             <!-- Credit card input fields -->
             <div id="creditCard">
-
                 <p>
                     <strong>Credit Card:</strong>
                     @if (@Model.creditCard != null)
                     {
-                        <span id="creditCardSpan">@Model.creditCard.number + ' | ' +  @Model.creditCard.date + ' | ' + @Model.creditCard.ccv</span> }
+                        if (Model.creditCard.number != 0 && Model.creditCard.date != "" && Model.creditCard.ccv != 0)
+                        {
+                            <span id="creditCardSpan">@(Model.creditCard.number + " | " + @Model.creditCard.date + " | " + @Model.creditCard.ccv)</span>
+                        }
+                        else
+                        {
+                            <span id="creditCardSpan"></span>
+                        }
+                    }
                     else
                     {
                         <span id="creditCardSpan"></span>
                     }
                     <button class="delete-button" onclick="if(confirmDelete()) deleteCreditCard()">🗑️</button>
-
-                    <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" style="display: none;">
-                    <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" style="display: none;">
-                    <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" style="display: none;">
                 </p>
-
-
             </div>
-
-
         </div>
         <div class="purchase-history">
             <h1>Purchase History</h1>

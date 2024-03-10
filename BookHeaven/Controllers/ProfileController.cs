@@ -1,9 +1,6 @@
-﻿using BookHeaven.Models;
+﻿using System.Text.RegularExpressions;
+using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BookHeaven.Controllers
 {
@@ -19,33 +16,144 @@ namespace BookHeaven.Controllers
             return View("SettingsView");
         }
 
-
-
-        [HttpPost]
-        public async Task<IActionResult> SaveChanges()
+        public IActionResult showEditProfileView()
         {
-            using (StreamReader reader = new StreamReader(Request.Body))
+
+            return View("EditProfileView", Models.User.currentUser);
+        }
+
+
+        private bool userAddressValidation(Address address)
+        {
+            if (address.country != "" && address.city != "" && address.street != "" && address.apartNum != 0)
             {
-                string jsonString = await reader.ReadToEndAsync();
-                dynamic data = JsonConvert.DeserializeObject(jsonString);
+                int flag = 0;
+                string errorMessage = "";
 
-                if (data != null)
+                if (!Regex.IsMatch(address.country, @"^[a-zA-Z]{2,25}$"))
                 {
-                    // Here we check what data needs to be updated and call the appropriate sql methods
-
-                    // You can access the data like so:
-                    string email = data.email;
-                    Console.WriteLine("email = " + email);
-
-
-                    return Json(new { success = true });
+                    errorMessage += "Invalid Country. ";
+                    flag = 1;
                 }
-                else
+
+                if (!Regex.IsMatch(address.city, @"^[a-zA-Z]{2,25}$")) {
+                    errorMessage += "Invalid City. ";
+                    flag = 1;
+                }
+
+                if (!Regex.IsMatch(address.street, @"^[a-zA-Z]{2,25}$")) {
+                    errorMessage += "Invalid Street. ";
+                    flag = 1;
+                }
+
+                if (address.apartNum == 0)
                 {
-                    return Json(new { success = false });
+                    errorMessage += "Invalid Apartment Number. ";
+                    flag = 1;
                 }
+
+
+                if (flag == 1)
+                {
+                    ModelState.AddModelError("address", errorMessage);
+                    return false;
+                }
+
+                return true;
             }
 
+            if ((address.country == "" || address.country == null) &&
+                (address.city == "" || address.city == null) &&
+                (address.street == "" || address.street == null) &&
+                address.apartNum == 0)
+                return true;
+
+            return false;
+        }
+
+        private bool userCreditCardValidation(CreditCard creditCard)
+        {
+            int flag = 0;
+            string errorMessage = "";
+
+            if (creditCard.number != 0 && creditCard.date != "" && creditCard.ccv != 0)
+            {
+                if (!Regex.IsMatch(creditCard.number.ToString(), @"^\d{16}$"))
+                {
+                    errorMessage += "Invalid Card Number. ";
+                    flag = 1;
+                }
+
+                if (!Regex.IsMatch(creditCard.date, @"^(0[1-9]|1[0-2])\/\d{2}$"))
+
+                {
+                    errorMessage += "Invalid Experation Date. ";
+                    flag = 1;
+                }
+
+                if (!Regex.IsMatch(creditCard.ccv.ToString(), @"^[1-9]\d{2}$"))
+                {
+                    errorMessage += "Invalid CCV Number. ";
+                    flag = 1;
+                }
+
+                if (flag == 1)
+                {
+                    ModelState.AddModelError("creditCard", errorMessage);
+                    return false;
+                }
+                return true;
+            }
+
+            if (creditCard.number == 0 && (creditCard.date == "" || creditCard.date == null) && creditCard.ccv == 0)
+                return true;
+
+            return false;
+        }
+
+        public IActionResult CheckUsersInput(User user)
+        {
+            ModelState.Clear();
+
+            // Perform custom user info validation
+            if (user.email == null || !Regex.IsMatch(user.email, @"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$"))
+                ModelState.AddModelError("email", "Email can't be null.");
+
+            if (user.fname == null || !Regex.IsMatch(user.fname, @"^[a-zA-Z]{2,20}$"))
+                ModelState.AddModelError("fname", "First can't be null.");
+
+            if (user.lname == null || !Regex.IsMatch(user.lname, @"^[a-zA-Z]{2,20}$"))
+                ModelState.AddModelError("lname", "Last can't be null.");
+
+            // Perform custom address validation
+            if (!userAddressValidation(user.address))
+            {
+                ModelState.AddModelError("address", "Address validation failed. ");
+            }
+
+            // Perform custom credit card validation
+            if (!userCreditCardValidation(user.creditCard))
+            {
+                ModelState.AddModelError("creditCard", "Credit card validation failed. ");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("EditProfileView", user);
+            }
+
+            if (SaveUserData(user))
+                return View("ProfileView", user);
+            else
+            {
+                ViewBag.generalErrorMessage = "Unable to save the changes, something went wrong please try again.";
+                return View("EditProfileView", user);
+            }
+        }
+
+        public bool SaveUserData(User user)
+        {
+            return true;
         }
 
         [HttpPost]

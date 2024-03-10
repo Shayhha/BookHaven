@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BookHeaven.Models
 {
@@ -9,8 +9,9 @@ namespace BookHeaven.Models
         public string email { get; set; }
         public string fname { get; set; }
         public string lname { get; set; }
-        public Address? address { get; set; }
-        public CreditCard? creditCard { get; set; }
+
+        public Address address { get; set; }
+        public CreditCard creditCard { get; set; }
 
         public User() { }
 
@@ -23,6 +24,25 @@ namespace BookHeaven.Models
             this.address = null;
             this.creditCard = null;
         }
+
+
+        public User(int userId, string email, string fname, string lname, string country, string city, string street, int apartNum, long number, string date, int ccv)
+        {
+            this.userId = userId;
+            this.email = email;
+            this.fname = fname;
+            this.lname = lname;
+            if (country == "" && city == "" && street == "" && apartNum == 0)
+                this.address = null;
+            else
+                this.address = new Address(userId, country, city, street, apartNum);
+
+            if (number == 0 && date == "" && ccv == 0)
+                this.creditCard = new CreditCard(userId, number, date, ccv);
+            else
+                this.creditCard = null;
+        }
+
 
         public static bool checkUsers(User a, User b)
         {
