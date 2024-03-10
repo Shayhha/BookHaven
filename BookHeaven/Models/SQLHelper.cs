@@ -150,7 +150,7 @@ namespace BookHeaven.Models
                     if (reader.Read())
                     {
                         //initialize credit card object with database information
-                        return new CreditCard(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetInt32(3));
+                        return new CreditCard(reader.GetInt32(0), reader.GetInt64(1), reader.GetString(2), reader.GetInt32(3));
                     }
                 }
             }
@@ -491,7 +491,7 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"INSERT INTO CreditCard(userId, number, date, ccv) VALUES(@userId, @number, @date, @ccv);";
+                string query = @"INSERT INTO CreditCards(userId, number, date, ccv) VALUES(@userId, @number, @date, @ccv);";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -520,7 +520,7 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"UPDATE CreditCard SET number = @number, date = @date, ccv = @ccv WHERE userId = @userId;";
+                string query = @"UPDATE CreditCards SET number = @number, date = @date, ccv = @ccv WHERE userId = @userId;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {

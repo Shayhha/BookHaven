@@ -50,18 +50,30 @@
                     <strong>Address: (all fields empty or all fields full)</strong>
                     <span id="addressSpan" class="validation-error">@Html.ValidationMessageFor(x => x.address)</span>
 
-                    <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="@Model.address.country">
-                    <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="@Model.address.city">
-                    <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="@Model.address.street">
-
-                    @if (Model.address.apartNum == 0)
+                    @if (Model.address == null)
                     {
+                        <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="">
+                        <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="">
+                        <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="">
                         <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="">
                     }
                     else
                     {
-                        <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="@Model.address.apartNum">
+                        <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="@Model.address.country">
+                        <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="@Model.address.city">
+                        <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="@Model.address.street">
+
+                        @if (Model.address.apartNum == 0)
+                        {
+                            <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="">
+                        }
+                        else
+                        {
+                            <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="@Model.address.apartNum">
+                        }
                     }
+
+
                 </p>
             </div>
 
@@ -70,25 +82,35 @@
                     <strong>Credit Card: (all fields empty or all fields full)</strong>
                     <span id="creditCardSpan" class="validation-error">@Html.ValidationMessageFor(x => x.creditCard)</span>
 
-                    @if (Model.creditCard.number == 0)
+                    @if (Model.creditCard == null)
                     {
                         <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
-                    }
-                    else
-                    {
-                        <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="@Model.creditCard.number">
-                    }
-
-                    <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="@Model.creditCard.date">
-
-                    @if (Model.creditCard.ccv == 0)
-                    {
+                        <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="">
                         <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
                     }
                     else
                     {
-                        <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="@Model.creditCard.ccv">
+                        @if (Model.creditCard.number == 0)
+                        {
+                            <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
+                        }
+                        else
+                        {
+                            <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="@Model.creditCard.number">
+                        }
+
+                        <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="@Model.creditCard.date">
+
+                        @if (Model.creditCard.ccv == 0)
+                        {
+                            <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
+                        }
+                        else
+                        {
+                            <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="@Model.creditCard.ccv">
+                        }
                     }
+
                 </p>
             </div>
 

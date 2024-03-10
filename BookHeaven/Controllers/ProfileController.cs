@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Net;
+using System.Text.RegularExpressions;
 using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,18 +31,18 @@ namespace BookHeaven.Controllers
                 int flag = 0;
                 string errorMessage = "";
 
-                if (!Regex.IsMatch(address.country, @"^[a-zA-Z]{2,25}$"))
+                if (address.country == null || !Regex.IsMatch(address.country, @"^[a-zA-Z]{2,25}$"))
                 {
                     errorMessage += "Invalid Country. ";
                     flag = 1;
                 }
 
-                if (!Regex.IsMatch(address.city, @"^[a-zA-Z]{2,25}$")) {
+                if (address.city == null || !Regex.IsMatch(address.city, @"^[a-zA-Z]{2,25}$")) {
                     errorMessage += "Invalid City. ";
                     flag = 1;
                 }
 
-                if (!Regex.IsMatch(address.street, @"^[a-zA-Z]{2,25}$")) {
+                if (address.street == null || !Regex.IsMatch(address.street, @"^[a-zA-Z]{2,25}$")) {
                     errorMessage += "Invalid Street. ";
                     flag = 1;
                 }
@@ -58,15 +59,27 @@ namespace BookHeaven.Controllers
                     ModelState.AddModelError("address", errorMessage);
                     return false;
                 }
-
-                return true;
+                else
+                {
+                    address.userId = Models.User.currentUser.userId;
+                    return true;
+                }
             }
 
             if ((address.country == "" || address.country == null) &&
                 (address.city == "" || address.city == null) &&
                 (address.street == "" || address.street == null) &&
                 address.apartNum == 0)
+            {
+                if (Models.User.currentUser.address != null)
+                {
+                    ModelState.AddModelError("address", "You can't delete the address in this page.");
+                    return false;
+                }
+
+                address.userId = Models.User.currentUser.userId;
                 return true;
+            }
 
             return false;
         }
@@ -102,11 +115,24 @@ namespace BookHeaven.Controllers
                     ModelState.AddModelError("creditCard", errorMessage);
                     return false;
                 }
-                return true;
+                else
+                {
+                    creditCard.userId = Models.User.currentUser.userId;
+                    return true;
+                }
             }
 
             if (creditCard.number == 0 && (creditCard.date == "" || creditCard.date == null) && creditCard.ccv == 0)
+            {
+                if (Models.User.currentUser.creditCard != null)
+                {
+                    ModelState.AddModelError("creditCard", "You can't delete the credit card in this page.");
+                    return false;
+                }
+
+                creditCard.userId = Models.User.currentUser.userId;
                 return true;
+            }
 
             return false;
         }
@@ -114,6 +140,7 @@ namespace BookHeaven.Controllers
         public IActionResult CheckUsersInput(User user)
         {
             ModelState.Clear();
+            user.userId = Models.User.currentUser.userId;
 
             // Perform custom user info validation
             if (user.email == null || !Regex.IsMatch(user.email, @"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$"))
@@ -153,7 +180,20 @@ namespace BookHeaven.Controllers
 
         public bool SaveUserData(User user)
         {
-            return true;
+            if ((user.address.country == "" || user.address.country == null) &&
+                (user.address.city == "" || user.address.city == null) &&
+                (user.address.street == "" || user.address.street == null) &&
+                user.address.apartNum == 0)
+            {
+                user.address = null;
+            }
+
+            if (user.creditCard.number == 0 && (user.creditCard.date == "" || user.creditCard.date == null) && user.creditCard.ccv == 0)
+            {
+                user.creditCard = null;
+            }
+
+            return Models.User.currentUser.updateInfo(user);
         }
 
         [HttpPost]

@@ -80,13 +80,13 @@ namespace BookHeaven.Models
                 {
                     if (Address.checkAddresses(this.address, updatedUser.address) == false)
                     {
-                        if (SQLHelper.SQLUpdateAddress(updatedUser.address))
+                        if (SQLHelper.SQLUpdateAddress(updatedUser.address) == false)
                             return false;
                     }
                 }
                 else
                 {
-                    if (SQLHelper.SQLAddAddress(updatedUser.address))
+                    if (SQLHelper.SQLAddAddress(updatedUser.address) == false)
                         return false;
                 }
                 this.address = updatedUser.address;
@@ -98,13 +98,13 @@ namespace BookHeaven.Models
                 {
                     if (CreditCard.checkCreditCard(this.creditCard, updatedUser.creditCard) == false)
                     {
-                        if (SQLHelper.SQLUpdateCreditCard(updatedUser.creditCard))
+                        if (SQLHelper.SQLUpdateCreditCard(updatedUser.creditCard) == false)
                             return false;
                     }
                 }
                 else
                 {
-                    if (SQLHelper.SQLAddCreditCard(updatedUser.creditCard))
+                    if (SQLHelper.SQLAddCreditCard(updatedUser.creditCard) == false)
                         return false;
                 }
                 this.creditCard = updatedUser.creditCard;
