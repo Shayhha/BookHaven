@@ -33,5 +33,10 @@ namespace BookHeaven.Controllers
             string pattern = "^[0-9]+$";
             return Regex.IsMatch(searchQuery, pattern);
         }
+
+        public IActionResult showBookDetails(int bookId)
+        {
+            return RedirectToAction("showBookEdit", "Book", new { bookId = bookId });
+        }
     }
 }

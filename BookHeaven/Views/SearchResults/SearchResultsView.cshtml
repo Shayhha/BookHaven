@@ -1,16 +1,120 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-@model BookHeaven.Models.SearchResults
+﻿@model BookHeaven.Models.SearchResults
 
 <!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="~/css/homePage.css">
+
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid black; /* Updated border */
+            border-radius: 10px; /* Rounded edges */
+            padding: 20px;
+            z-index: 1000;
+            width: 70%; /* Increased width */
+            max-width: 600px; /* Set maximum width */
+        }
+
+        .popup-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+            .popup-buttons button,
+            .popup-buttons a{
+                display: block;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                border: 1px solid #f2f2f2; /* Add border to the buttons */
+                margin: 0 10px; /*Add some space between the buttons */
+                border-radius: 5px; /*Add border radius */
+                transition: all 0.3s ease-in-out; /*Add this line to enable smooth animation*/
+            }
+
+
+                .popup-buttons button:hover,
+                .popup-buttons a:hover {
+                    background-color: #ddd;
+                    color: black;
+                    transform: scale(1.1); /*Increase size to 110% when hovered */
+                }
+
+        #bookAddToCartButton {
+            background-color: #FFA500;
+            border: 1px solid #FFA500; /* Add border to the buttons 4CAF50*/
+        }
+
+        #bookEditButton {
+            background-color: #007bff;
+            border: 1px solid #007bff; /* Add border to the buttons 4CAF50*/
+        }
+
+        #bookBuyNowButton {
+            background-color: #4CAF50;
+            border: 1px solid #4CAF50; /* Add border to the buttons */
+        }
+
+        #bookNotifyMeButton {
+            background-color: #4CAF50;
+            border: 1px solid #4CAF50; /* Add border to the buttons */
+        }
+
+        .popup-content {
+            display: flex;
+        }
+
+        .popup-image {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+            .popup-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Ensure image fills the container */
+            }
+
+        .popup-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+            .popup-details p {
+                margin-top: 0;
+                text-align: left; /* Center the text horizontally */
+            }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
 
@@ -18,27 +122,66 @@
 
     <div class="container">
         <div class="row">
-
             @foreach (var index in Enumerable.Range(0, Model.books.Count / 4 + (Model.books.Count % 4 == 0 ? 0 : 1)))
             {
                 <div class="row">
                     @foreach (Book book in Model.books.Skip(index * 4).Take(4))
                     {
+                        string sanitizedName = book.name.Replace("'", "\\'"); // Replace single quote with escaped single quote
                         <div class="col-md-3">
                             <div class="item">
-                                <img src="@book.imageUrl" alt="Image" class="img-fluid">
+                                <img src="@book.imageUrl" alt="Image" class="img-fluid"
+                                     onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', @book.price, @book.stock, @book.salePrice)">
                                 <span class="item-title">@book.name</span>
                                 <p>Genre: @book.category</p>
                                 <p>Stock: @book.stock</p>
-                                <p>Price: $@book.price</p>
+                                @if (book.price != book.salePrice && book.salePrice != 0)
+                                {
+                                    <p>Price: <strong>@book.salePrice</strong> <strike>$@book.price</strike></p>
+                                }
+                                else
+                                {
+                                    <p>Price: $@book.price</p>
+
+                                }
                             </div>
                         </div>
                     }
                 </div>
             }
-
         </div>
     </div>
 
+    <div class="overlay" id="overlay"></div>
+
+    <div class="popup" id="popup">
+        <span class="close" onclick="closePopup()">❌</span>
+        <div class="popup-content">
+            <div class="popup-image">
+                <img id="popup-image" src="" alt="Book Image">
+            </div>
+            <div class="popup-details">
+                <h2 id="popup-title"></h2>
+                <p>Author: <span id="popup-author"></span></p>
+                <p>Release Date: <span id="popup-date"></span></p>
+                <p>Book Id: <span id="popup-bookId"></span></p>
+                <p>Category: <span id="popup-category"></span></p>
+                <p>Format: <span id="popup-format"></span></p>
+                <p>Price: $<span id="popup-price"></span></p>
+                <p>In-Stock: <span id="popup-stock"></span></p>
+            </div>
+        </div>
+        <div class="popup-buttons">
+            <button id="bookNotifyMeButton">Notify Me</button>
+            <button id="bookAddToCartButton">Add to Cart</button>
+            <button id="bookBuyNowButton" onclick="buyBook()">Buy Now</button>
+            <button id="bookEditButton" onclick="editBook()">Edit</button>
+        </div>
+    </div>
+
+
+
+    <script src="~/js/site.js"></script>
 </body>
 </html>
+
