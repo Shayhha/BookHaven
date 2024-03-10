@@ -1,18 +1,56 @@
-﻿namespace BookHeaven.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BookHeaven.Models
 {
     public class Book
     {
-        public string name {  get; set; }
-        public string author { get; set; }
-        public string date { get; set; }
+
         public int bookId { get; set; }
+
+        [Required(ErrorMessage = "Name is required")]
+        [RegularExpression("^[A-Za-z]+$", ErrorMessage = "Name must only contain letters")]
+        [MaxLength(255, ErrorMessage = "Name must be between 1 and 255 characters")]
+        public string name { get; set; }
+
+        [Required(ErrorMessage = "Author is required")]
+        [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Author must only contain letters and spaces")]
+        [MaxLength(255, ErrorMessage = "Author must be between 1 and 255 characters")]
+        public string author { get; set; }
+
+        [Required(ErrorMessage = "Date is required")]
+        [RegularExpression(@"^\d{2}/\d{2}/\d{4}$", ErrorMessage = "Invalid date format. Please use dd/mm/yyyy")]
+        public string date { get; set; }
+
+        [Required(ErrorMessage = "Category is required")]
+        [RegularExpression("^([A-Za-z]+(,\\s*|$))+$", ErrorMessage = "Category must only contain letters separated by commas")]
         public string category { get; set; }
+
+        [Required(ErrorMessage = "Format is required")]
+        [RegularExpression("^[A-Za-z]+$", ErrorMessage = "Format must only contain letters")]
+        [MaxLength(255, ErrorMessage = "Format must be between 1 and 255 characters")]
         public string format { get; set; }
+
+        [Required(ErrorMessage = "Price is required")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Price must be above 0")]
         public float price { get; set; }
+
+        [Required(ErrorMessage = "Sale Price is required")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Sale Price must be above 0")]
+        public float salePrice { get; set; }
+
+        [Required(ErrorMessage = "Stock is required")]
+        [Range(0, 1000, ErrorMessage = "Stock must be between 0 and 1000")]
         public int stock { get; set; }
+
+        [Required(ErrorMessage = "Image URL is required")]
+        [MaxLength(500, ErrorMessage = "Image URL must be between 1 and 500 characters")]
         public string imageUrl { get; set; }
+
+        [Required(ErrorMessage = "Age limitation is required")]
+        [Range(0, 120, ErrorMessage = "Age limitation must be between 0 and 120")]
         public int ageLimitation { get; set; }
-        public float salePrice {  get; set; }
+
+
 
         public Book() { }
 

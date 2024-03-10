@@ -312,6 +312,38 @@ namespace BookHeaven.Models
             return searchResults;
         }
 
+
+        /// <summary>
+        /// Function for searching for a SINGLE BOOK by it's bookId in the database, returns an initialized Book object with all of the information about the book from the database
+        /// </summary>
+        /// <param name="bookId"></param>
+        /// <returns>Might return null if the book was not found. Otherwise returns an initialized Book object</returns>
+        public static Book SQLSearchBookById(int bookId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM Books WHERE bookId = @searchQuery;";
+      
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@searchQuery", bookId);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Book(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4),
+                                reader.GetString(5), reader.GetFloat(6), reader.GetInt32(7), reader.GetString(8), reader.GetInt32(9), reader.GetFloat(10));
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+
         /// <summary>
         /// Function for searching books by category in the database, returns an initialized SearchResults object with the list of books
         /// </summary>

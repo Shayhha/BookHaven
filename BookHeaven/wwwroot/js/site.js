@@ -8,6 +8,51 @@ function handleSearchButtonClick() {
     window.location.href = '/SearchResults/showSearchResults?searchQuery=' + encodeURIComponent(searchQuery);
 }
 
+function handleCategoryButtonClick(element) {
+    var searchQuery = element.textContent.trim();
+    window.location.href = '/SearchResults/showCategoryResults?searchQuery=' + encodeURIComponent(searchQuery);
+}
+
+
+function showPopup(url, name, author, date, bookId, category, format, price, stock, salePrice) {
+    document.getElementById('popup-image').setAttribute('src', url);
+    document.getElementById('popup-title').innerHTML = name;
+    document.getElementById('popup-bookId').innerHTML = bookId;
+    document.getElementById('popup-author').innerHTML = author;
+    document.getElementById('popup-date').innerHTML = date;
+    document.getElementById('popup-category').innerHTML = category;
+    document.getElementById('popup-format').innerHTML = format;
+    document.getElementById('popup-stock').innerHTML = stock;
+
+    if (salePrice != 0 && price != salePrice)
+        document.getElementById('popup-price').innerHTML = '<strong>' + salePrice + '</strong> <strike>$' + price + '</strike>';
+    else
+        document.getElementById('popup-price').innerHTML = price;
+
+
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('popup').style.display = 'block';
+}
+
+function closePopup() {
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('popup').style.display = 'none';
+}
+
+
+function editBook() {
+    var bookId = document.getElementById("popup-bookId").textContent;
+    var editUrl = "/SearchResults/showBookDetails?bookId=" + bookId;
+    window.location.href = editUrl;
+}
+
+function buyBook() {
+    var bookId = document.getElementById("popup-bookId").textContent;
+    var editUrl = "/Payment/showPaymentView?bookId=" + bookId;
+    window.location.href = editUrl;
+}
+
+
 function deleteAddress() {
     // AJAX request to delete credit card information
     fetch('DeleteAddress', {
