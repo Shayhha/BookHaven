@@ -53,7 +53,6 @@ namespace BookHeaven.Controllers
                     flag = 1;
                 }
 
-
                 if (flag == 1)
                 {
                     ModelState.AddModelError("address", errorMessage);

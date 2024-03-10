@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml.Linq;
 
 namespace BookHeaven.Models
 {
@@ -174,7 +175,7 @@ namespace BookHeaven.Models
                 {
                     if (reader.Read()) //if true we found user in UserInfo table
                     {
-                        User user = new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)); //create the user object from db
+                        User user = new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetBoolean(4)); //create the user object from db
                         reader.Close(); //we close our reader before next process to avoid open reader exceptions
                         //now we check if user has address and credit card configured in his account
                         if (SQLCheckAddress(userId, connection))
@@ -565,6 +566,11 @@ namespace BookHeaven.Models
             }
         }
 
+        /// <summary>
+        /// Function for updating user info in UserInfo db
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static bool SQLUpdateUserInfo(User user)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -591,6 +597,13 @@ namespace BookHeaven.Models
             }
         }
 
+        /// <summary>
+        /// Function for changing password for user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="oldPassword"></param>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
         public static bool SQLUpdatePassword(int userId, string oldPassword, string newPassword)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -613,6 +626,167 @@ namespace BookHeaven.Models
                 }
             }
         }
+
+        /// <summary>
+        /// Function for adding book into the Books db
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
+        public static bool SQLAddBook(Book book)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"INSERT INTO Books(name, author, date, category, format, price, stock, imageUrl, ageLimitation, salePrice)
+                                 VALUES(@name, @author, @date, @category, @format, @price, @stock, @imageUrl, @ageLimitation, @salePrice);";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@name", book.name);
+                    command.Parameters.AddWithValue("@author", book.author);
+                    command.Parameters.AddWithValue("@date", book.date);
+                    command.Parameters.AddWithValue("@category", book.category);
+                    command.Parameters.AddWithValue("@format", book.format);
+                    command.Parameters.AddWithValue("@price", book.price);
+                    command.Parameters.AddWithValue("@stock", book.stock);
+                    command.Parameters.AddWithValue("@imageUrl", book.imageUrl);
+                    command.Parameters.AddWithValue("@ageLimitation", book.ageLimitation);
+                    command.Parameters.AddWithValue("@salePrice", book.salePrice);
+
+                    //execute the command and check if we added the book
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; //book successfully added
+                    else
+                        return false; //failed to add the book
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for deleting a book from the Books db
+        /// </summary>
+        /// <param name="bookId"></param>
+        /// <returns></returns>
+        public static bool SQLDeleteBook(int bookId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"DELETE FROM Books WHERE bookId = @bookId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@bookId", bookId);
+
+                    //execute the command and check if we deleted the book
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; //book successfully deleted
+                    else
+                        return false; //failed to delete the book
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for updating book price or salePrice in Books db
+        /// To update salePrice, set isSale to true
+        /// </summary>
+        /// <param name="bookId"></param>
+        /// <param name="newPrice"></param>
+        /// <param name="isSale"></param>
+        /// <returns></returns>
+        public static bool SQLUpdateBookPrice(int bookId, float newPrice, bool isSale = false)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query;
+                if(!isSale)
+                    query = @"UPDATE Books SET price = @price WHERE bookId = @bookId";
+                else
+                    query = @"UPDATE Books SET salePrice = @price WHERE bookId = @bookId";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@price", newPrice);
+                    command.Parameters.AddWithValue("@bookId", bookId);
+
+                    //execute the command and check if we updated the book price
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; //price successfully changed
+                    else
+                        return false; //failed to change price
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for adding more stock to a certain book in Books db
+        /// If we want to restock this specific book, we give it true for admin to add more stock
+        /// </summary>
+        /// <param name="bookId"></param>
+        /// <param name="stock"></param>
+        /// <param name="isRestock"></param>
+        /// <returns></returns>
+        public static bool SQLUpdateBookStock(int bookId, int stock, bool isRestock = false)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query;
+                if (isRestock)
+                    query = @"UPDATE Books SET stock += @stock WHERE bookId = @bookId";
+                else
+                    query = @"UPDATE Books SET stock -= @stock WHERE bookId = @bookId";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@stock", stock);
+                    command.Parameters.AddWithValue("@bookId", bookId);
+
+                    //execute the command and check if we updated the book stock
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; //stock successfully changed
+                    else
+                        return false; //failed to change stock
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for updating book's category in Books db
+        /// </summary>
+        /// <param name="bookId"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public static bool SQLUpdateBookCategory(int bookId, string category)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"UPDATE Books SET category = @category WHERE bookId = @bookId";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@category", category);
+                    command.Parameters.AddWithValue("@bookId", bookId);
+
+                    //execute the command and check if we updated the book category
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; //category successfully changed
+                    else
+                        return false; //failed to change category
+                }
+            }
+        }
+
     }
 }
+
+
 
