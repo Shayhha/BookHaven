@@ -26,13 +26,22 @@
                 <button class="searchButton" type="button" onclick="handleSearchButtonClick()">🔍</button>
             </div>
             <div class="auth-links">
-                <a href="#" class="btn" id="cartButton">🛒</a>
                 @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
                 {
-                    <a href="/Profile/showProfileView" id="helloUserHeader">Hello @BookHeaven.Models.User.currentUser.fname</a>
+                    @if (BookHeaven.Models.User.currentUser.isAdmin == false)
+                    {
+                        <a href="#" class="btn" id="cartButton">🛒</a>
+                        <a href="/Profile/showProfileView" id="helloUserHeader">Hello @BookHeaven.Models.User.currentUser.fname</a>
+                    }
+                    else
+                    {
+                        <a href="#" class="btn" id="logoutButton" onclick="userLogout()">Logout</a>
+                    }
                 }
                 else
                 {
+                    <a href="#" class="btn" id="cartButton">🛒</a>
+
                     <a href="/UserHome/showLoginView" id="loginButton">Login</a>
                     <a href="/UserHome/showSignupView" id="signupButton">Sign Up</a>
                 }

@@ -6,13 +6,19 @@
 
 @model BookHeaven.Models.SearchResults;
 
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
+}
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Home Page</title>
-    <link rel="stylesheet" href="~/css/homePage.css">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=1">
 
     <style>
         .popup {
@@ -140,6 +146,18 @@
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Romance</div>
         </div>
     </div>
+
+
+    @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+    {
+        @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+        {
+            <div class="adminButtons">
+                <a href="/Book/showAddNewBook" id="addNewBookButton" class="">Add New Book</a>
+            </div>
+        }
+    }
+
 
     <div class="container">
         <div class="row">

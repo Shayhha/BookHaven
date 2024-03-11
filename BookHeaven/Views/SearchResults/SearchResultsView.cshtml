@@ -1,5 +1,12 @@
 ﻿@model BookHeaven.Models.SearchResults
 
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
+}
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +36,7 @@
         }
 
             .popup-buttons button,
-            .popup-buttons a{
+            .popup-buttons a {
                 display: block;
                 color: #f2f2f2;
                 text-align: center;
@@ -119,6 +126,14 @@
 <body>
 
     <p class="fw-bold display-5 mb-4 px-3 py-2">You searched for: @Model.searchQuery</p>
+
+    @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+    {
+        @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+        {
+            <a href="/Book/showAddNewBook" id="addNewBookButton" class="button addBookButton">Add New Book</a>
+        }
+    }
 
     <div class="container">
         <div class="row">
