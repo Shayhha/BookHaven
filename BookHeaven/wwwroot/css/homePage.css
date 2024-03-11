@@ -98,3 +98,27 @@
         width: 250px; /* Same width as the image */
         padding: 0px 20px;
     }
+
+.adminButtons {
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+    .adminButtons a {
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        background-color: #4CAF50;
+        border: 1px solid #4CAF50; /* Add border to the buttons */
+        margin: 0 5px; /*Add some space between the buttons */
+        border-radius: 5px; /*Add border radius */
+        transition: all 0.3s ease-in-out; /*Add this line to enable smooth animation*/
+    }
+
+        .adminButtons a:hover {
+            transform: scale(1.1); /*Increase size to 110% when hovered */
+        }

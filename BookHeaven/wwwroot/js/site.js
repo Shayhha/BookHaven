@@ -14,7 +14,7 @@ function handleCategoryButtonClick(element) {
 }
 
 
-function showPopup(url, name, author, date, bookId, category, format, price, stock, salePrice) {
+function showPopup(url, name, author, date, bookId, category, format, ageLimitation, price, stock, salePrice) {
     document.getElementById('popup-image').setAttribute('src', url);
     document.getElementById('popup-title').innerHTML = name;
     document.getElementById('popup-bookId').innerHTML = bookId;
@@ -22,12 +22,13 @@ function showPopup(url, name, author, date, bookId, category, format, price, sto
     document.getElementById('popup-date').innerHTML = date;
     document.getElementById('popup-category').innerHTML = category;
     document.getElementById('popup-format').innerHTML = format;
+    document.getElementById('popup-age').innerHTML = ageLimitation; 
     document.getElementById('popup-stock').innerHTML = stock;
 
     if (salePrice != 0 && price != salePrice)
-        document.getElementById('popup-price').innerHTML = '<strong>' + salePrice + '</strong> <strike>$' + price + '</strike>';
+        document.getElementById('popup-price').innerHTML = '<strong>$' + salePrice + '</strong> <strike>$' + price + '</strike>';
     else
-        document.getElementById('popup-price').innerHTML = price;
+        document.getElementById('popup-price').innerHTML = '$' + price;
 
 
     document.getElementById('overlay').style.display = 'block';

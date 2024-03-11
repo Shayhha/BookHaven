@@ -6,13 +6,19 @@
 
 @model BookHeaven.Models.SearchResults;
 
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
+}
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Home Page</title>
-    <link rel="stylesheet" href="~/css/homePage.css">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=1">
 
     <style>
         .popup {
@@ -141,6 +147,18 @@
         </div>
     </div>
 
+
+    @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+    {
+        @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+        {
+            <div class="adminButtons">
+                <a href="/Book/showAddNewBook" id="addNewBookButton" class="">Add New Book</a>
+            </div>
+        }
+    }
+
+
     <div class="container">
         <div class="row">
 
@@ -150,10 +168,9 @@
                     @foreach (Book book in Model.books.Skip(index * 4).Take(4))
                     {
                         string sanitizedName = book.name.Replace("'", "\\'"); // Replace single quote with escaped single quote
-                        <div class="col-md-3">
+                        <div class="col-md-3" onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', '@book.ageLimitation', @book.price, @book.stock, @book.salePrice)">
                             <div class="item">
-                                <img src="@book.imageUrl" alt="Image" class="img-fluid"
-                                     onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', @book.price, @book.stock, @book.salePrice)">
+                                <img src="@book.imageUrl" alt="Image" class="img-fluid">
                                 <span class="item-title">@book.name</span>
                                 <p>Genre: @book.category</p>
                                 <p>Stock: @book.stock</p>
@@ -187,13 +204,14 @@
             </div>
             <div class="popup-details">
                 <h2 id="popup-title"></h2>
-                <p>Author: <span id="popup-author"></span></p>
-                <p>Release Date: <span id="popup-date"></span></p>
-                <p>Book Id: <span id="popup-bookId"></span></p>
-                <p>Category: <span id="popup-category"></span></p>
-                <p>Format: <span id="popup-format"></span></p>
-                <p>Price: $<span id="popup-price"></span></p>
-                <p>In-Stock: <span id="popup-stock"></span></p>
+                <p><strong>Author: </strong><span id="popup-author"></span></p>
+                <p><strong>Release Date: </strong><span id="popup-date"></span></p>
+                <p><strong>Book Id: </strong><span id="popup-bookId"></span></p>
+                <p><strong>Category: </strong><span id="popup-category"></span></p>
+                <p><strong>Format: </strong><span id="popup-format"></span></p>
+                <p><strong>Age Limitation: </strong><span id="popup-age"></span></p>
+                <p><strong>Price: </strong><span id="popup-price"></span></p>
+                <p><strong>In-Stock: </strong><span id="popup-stock"></span></p>
             </div>
         </div>
         <div class="popup-buttons">
