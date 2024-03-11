@@ -128,10 +128,9 @@
                     @foreach (Book book in Model.books.Skip(index * 4).Take(4))
                     {
                         string sanitizedName = book.name.Replace("'", "\\'"); // Replace single quote with escaped single quote
-                        <div class="col-md-3">
+                        <div class="col-md-3" onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', @book.price, @book.stock, @book.salePrice)">
                             <div class="item">
-                                <img src="@book.imageUrl" alt="Image" class="img-fluid"
-                                     onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', @book.price, @book.stock, @book.salePrice)">
+                                <img src="@book.imageUrl" alt="Image" class="img-fluid">
                                 <span class="item-title">@book.name</span>
                                 <p>Genre: @book.category</p>
                                 <p>Stock: @book.stock</p>
