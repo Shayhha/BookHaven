@@ -110,6 +110,32 @@ function deleteBook() {
 }
 
 
+function addBookToCart() {
+    var bookId = document.getElementById("popup-bookId").textContent;
+    console.log(bookId)
+    // Make an AJAX request to call the addBookToCart method
+    fetch(`/Cart/addBookToCart?bookId=${bookId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Book added to cart successfully!');
+                // Optionally, you can update the cart display on the page
+                // Here, you can reload the page or update the cart information dynamically
+                // For example, you could update the total price, the number of items in the cart, etc.
+                // window.location.reload(); // Reload the page
+                // updateCartInformation(); // Update the cart information dynamically
+            } else {
+                alert('Failed to add book to cart. Please try again later.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding the book to cart. Please try again later.');
+        });
+}
+
+
+
 function editUserInfoButtonClick() {
     window.location.href = '/Profile/showEditProfileView';
 }

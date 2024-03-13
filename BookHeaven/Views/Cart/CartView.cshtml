@@ -1,5 +1,159 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        .container3 {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+            .cart-item img {
+                width: 150px;
+                margin-right: 20px;
+            }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-price {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .quantity-input {
+            width: 50px;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container3">
+        <h1>Shopping Cart</h1>
+
+        @foreach (Book book in Cart.listOfBooks)
+        {
+            <div class="cart-item">
+                <img src="@book.imageUrl" alt="Book Image">
+                <div class="cart-item-details">
+                    <h3><strong>@book.name</strong></h3>
+                    <p><strong>Author: </strong>@book.author</p>
+                    <p class="bookId"><strong>Book Id: </strong>@book.bookId</p>
+                    <p><strong>Quantity: </strong><input class="quantity-input" type="number" value="1" min="0" max="100" onkeydown="return event.keyCode >= 37 && event.keyCode <= 40" onchange="checkQuantity(this)"></p>
+                </div>
+
+                @if (book.price != book.salePrice && book.salePrice != 0)
+                {
+                    <div class="cart-item-price"><strong>$@book.salePrice</strong> <strike>$@book.price</strike></div>
+                    <p class="pricePerBook" style="display: none;">@book.salePrice</p>
+                }
+                else
+                {
+                    <div class="cart-item-price">$@book.price</div>
+                    <p class="pricePerBook" style="display: none;">@book.price</p>
+                }
+
+                <button class="delete-btn">Delete</button>
+            </div>
+        }
+
+        <!-- Total price -->
+        <div style="text-align: right; margin-top: 20px;">
+            <h3>Total: <span class="total-price">$149.98</span></h3>
+            <button>Checkout</button>
+        </div>
+    </div>
+
+    <script>// Function to update total price
+        function checkQuantity(input) {
+            const quantity = parseInt(input.value);
+            if (quantity === 0) {
+                if (confirmDelete()) {
+                    deleteItem(input.closest('.cart-item'));
+                } else {
+                    // If user cancels deletion, reset quantity to 1 and update the price
+                    input.value = 1;
+                    updateQuantity({ target: input });
+                }
+            }
+        }
+
+
+        function updateTotalPrice() {
+            const totalPriceElements = document.querySelectorAll('.cart-item-price');
+            let totalPrice = 0;
+            totalPriceElements.forEach(element => {
+                totalPrice += parseFloat(element.textContent.replace('$', ''));
+            });
+            document.querySelector('.total-price').textContent = `$${totalPrice.toFixed(2)}`;
+        }
+
+        // Function to update quantity
+        function updateQuantity(event) {
+            const priceElement = event.target.closest('.cart-item').querySelector('.cart-item-price');
+            const quantity = parseInt(event.target.value);
+            const pricePerBookElements = document.querySelectorAll('.pricePerBook');
+            let pricePerItem = 0;
+
+            pricePerBookElements.forEach(element => {
+                pricePerItem = parseFloat(element.textContent);
+            });
+
+            const totalPrice = quantity * pricePerItem;
+            priceElement.textContent = `$${totalPrice.toFixed(2)}`;
+            updateTotalPrice();
+        }
+
+
+        // Function to delete an item
+        function deleteItem(cartItem) {
+            cartItem.remove();
+            updateTotalPrice();
+        }
+
+
+
+        // Event listener for quantity change
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        quantityInputs.forEach(input => {
+            input.addEventListener('input', updateQuantity);
+        });
+
+        // Event listener for delete button
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                if (confirmDelete())
+                    deleteItem(this.closest('.cart-item'));
+            });
+        });
+
+        // Initial total price calculation
+        updateTotalPrice();</script>
+</body>
+</html>
