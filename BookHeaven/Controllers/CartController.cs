@@ -4,9 +4,15 @@ namespace BookHeaven.Controllers
 {
     public class CartController : Controller
     {
-        public IActionResult Index()
+        public IActionResult showCartView()
         {
-            return View();
+            return View("CartView");
+        }
+
+        public IActionResult addBookToCart(int bookId)
+        {
+            bool success = Models.Cart.addBookToCart(bookId);
+            return Json(new { success = success });
         }
     }
 }

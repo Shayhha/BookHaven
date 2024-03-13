@@ -9,7 +9,7 @@ namespace BookHeaven.Models
 
         public Book book;
         public List<Book> books;
-        public Cart cart;
+        //public Cart cart;
 
         public SearchResults() { }
 
@@ -18,7 +18,7 @@ namespace BookHeaven.Models
             searchQuery = _searchQuery;
             book = new Book();
             books = new List<Book>();
-            cart = new Cart();
+            //cart = new Cart();
         }
 
         // here there will be more functions of adding items to cart, searching for items maybe? 
