@@ -23,14 +23,23 @@ namespace BookHeaven.Controllers
 
         public IActionResult addBook(Book newBook)
         {
-            // do some logic here
-            return RedirectToAction("showUserHome", "UserHome"); // this is temporary
+            // some SQL logic to add the book to the database.
+            Console.WriteLine("The book " + newBook.name + " has been added to the website.");
+            return RedirectToAction("showUserHome", "UserHome"); 
         }
 
         public IActionResult updateBook(Book updatedBook)
         {
-            // do some logic here
-            return RedirectToAction("showUserHome", "UserHome"); // this is temporary
+            // some SQL logic to update a book in the database.
+            Console.WriteLine("The book " + updatedBook.name + " has been updated.");
+            return RedirectToAction("showUserHome", "UserHome"); // this is temporary?
+        }
+
+        public IActionResult deleteBook(int bookId)
+        {
+            // some SQL logic to delete the book form the database.
+            Console.WriteLine("The book with id = " + bookId + " has been deleted form the website.");
+            return RedirectToAction("showUserHome", "UserHome"); 
         }
     }
 }

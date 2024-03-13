@@ -100,6 +100,15 @@ function confirmDelete() {
     return confirm("Are you sure you want to delete this item?");
 }
 
+function deleteBook() {
+    var bookId = document.getElementById("popup-bookId").textContent;
+    var editUrl = "/Book/deleteBook?bookId=" + bookId;
+
+    closePopup();
+
+    window.location.href = editUrl;
+}
+
 
 function editUserInfoButtonClick() {
     window.location.href = '/Profile/showEditProfileView';
