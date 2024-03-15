@@ -69,12 +69,15 @@
 
                 @if (book.price != book.salePrice && book.salePrice != 0)
                 {
-                    <div class="cart-item-price"><strong>$@book.salePrice</strong> <strike>$@book.price</strike></div>
+                    <div>
+                        <div class="cart-item-price"><strong><span class="cart-item-price-span">$@book.salePrice</span></strong></div>
+                        <p>Original Price Per Book: <strike>$@book.price</strike></p>
+                    </div>
                     <p class="pricePerBook" style="display: none;">@book.salePrice</p>
                 }
                 else
                 {
-                    <div class="cart-item-price">$@book.price</div>
+                    <div class="cart-item-price cart-item-price-span">$@book.price</div>
                     <p class="pricePerBook" style="display: none;">@book.price</p>
                 }
 
@@ -103,9 +106,8 @@
             }
         }
 
-
         function updateTotalPrice() {
-            const totalPriceElements = document.querySelectorAll('.cart-item-price');
+            const totalPriceElements = document.querySelectorAll('.cart-item-price-span');
             let totalPrice = 0;
             totalPriceElements.forEach(element => {
                 totalPrice += parseFloat(element.textContent.replace('$', ''));
@@ -115,7 +117,7 @@
 
         // Function to update quantity
         function updateQuantity(event) {
-            const priceElement = event.target.closest('.cart-item').querySelector('.cart-item-price');
+            const priceElement = event.target.closest('.cart-item').querySelector('.cart-item-price-span');
             const quantity = parseInt(event.target.value);
             const pricePerBookElements = document.querySelectorAll('.pricePerBook');
             let pricePerItem = 0;
@@ -129,13 +131,11 @@
             updateTotalPrice();
         }
 
-
         // Function to delete an item
         function deleteItem(cartItem) {
             cartItem.remove();
             updateTotalPrice();
         }
-
 
 
         // Event listener for quantity change

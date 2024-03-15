@@ -187,10 +187,29 @@
             </div>
         </div>
         <div class="popup-buttons">
-            <button id="bookNotifyMeButton">Notify Me</button>
-            <button id="bookAddToCartButton">Add to Cart</button>
-            <button id="bookBuyNowButton" onclick="buyBook()">Buy Now</button>
-            <button id="bookEditButton" onclick="editBook()">Edit</button>
+            <div class="popup-buttons">
+                @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+                {
+                    @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+                    {
+                        <button id="bookEditButton" onclick="editBook()">Edit</button>
+                        <button id="bookDeleteButton" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
+                    }
+                    else
+                    {
+                        <button id="bookNotifyMeButton">Notify Me</button>
+                        <button id="bookAddToCartButton" onclick="addBookToCart()">Add to Cart</button>
+                        <button id="bookBuyNowButton" onclick="buyBook()">Buy Now</button>
+                    }
+                }
+                else
+                {
+                    <button id="bookNotifyMeButton">Notify Me</button>
+                    <button id="bookAddToCartButton" onclick="addBookToCart()">Add to Cart</button>
+                    <button id="bookBuyNowButton" onclick="buyBook()">Buy Now</button>
+                }
+            </div>
+
         </div>
     </div>
 
