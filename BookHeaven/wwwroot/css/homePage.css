@@ -48,7 +48,7 @@
 .item {
     cursor: pointer;
     width: 250px;
-    height: 355px;
+    height: 390px;
     margin: 10px 10px 20px 10px;
     border-radius: 10px;
     display: inline-block;
@@ -70,7 +70,7 @@
 
     .item img {
         width: 170px; /* Set the width to the specified size */
-        height: 230px; /* Set the height to the specified size */
+        height: 255px; /* Set the height to the specified size */
         aspect-ratio: 16 / 9;
         margin-top: 8px;
         margin-bottom: 5px;
