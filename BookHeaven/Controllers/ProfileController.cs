@@ -198,25 +198,25 @@ namespace BookHeaven.Controllers
         [HttpPost]
         public IActionResult DeleteCreditCard()
         {
-            // Logic to delete credit card information from the database
-            // Example:
-            //var user = GetUserFromSession(); // Implement this according to your application's logic
-            //user.DeleteCreditCardInfo();
-            //SaveChanges(); // Assuming Entity Framework Core
-
-            return Ok(); // Return HTTP 200 OK status if successful
+            if (Models.User.currentUser.deleteCreditCard())
+            {
+                Models.User.currentUser.creditCard = null; //set the address to be null indicating that it has been deleted
+                return Ok(); //return HTTP 200 OK status if successful
+            }
+            else
+                return BadRequest(); //return badRequest indicating that we were unable to delete credit card
         }
 
         [HttpPost]
         public IActionResult DeleteAddress()
         {
-            // Logic to delete address information from the database
-            // Example:
-            // var user = GetUserFromSession(); // Implement this according to your application's logic
-            // user.DeleteAddressInfo();
-            // SaveChanges(); // Assuming Entity Framework Core
-
-            return Ok(); // Return HTTP 200 OK status if successful
+            if (Models.User.currentUser.deleteAddress())
+            {
+                Models.User.currentUser.address = null;
+                return Ok(); //return HTTP 200 OK status if successful
+            }
+            else
+                return BadRequest(); //return badRequest indicating that we were unable to delete address
         }
     }
 }
