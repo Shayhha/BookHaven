@@ -130,3 +130,7 @@
     .purchase-table th {
         background-color: #f2f2f2;
     }
+
+.validation-error {
+    color: red;
+}

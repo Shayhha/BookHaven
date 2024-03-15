@@ -12,43 +12,39 @@
             <input type="hidden" name="bookId" value="@Model.bookId" />
             <div class="form-group">
                 <label for="name">Name:</label>
-                <input type="text" class="form-control" id="name" name="name" value="@Model.name" required>
+                <input type="text" class="form-control" id="name" name="name" value="@Model.name" >
             </div>
             <div class="form-group">
                 <label for="author">Author:</label>
-                <input type="text" class="form-control" id="author" name="author" value="@Model.author" required>
+                <input type="text" class="form-control" id="author" name="author" value="@Model.author" >
             </div>
             <div class="form-group">
                 <label for="date">Date:</label>
-                <input type="text" class="form-control" id="date" name="date" value="@Model.date" required>
+                <input type="text" class="form-control" id="date" name="date" value="@Model.date" >
             </div>
             <div class="form-group">
                 <label for="category">Category:</label>
-                <input type="text" class="form-control" id="category" name="category" value="@Model.category" required>
+                <input type="text" class="form-control" id="category" name="category" value="@Model.category" >
             </div>
             <div class="form-group">
                 <label for="format">Format:</label>
-                <input type="text" class="form-control" id="format" name="format" value="@Model.format" required>
+                <input type="text" class="form-control" id="format" name="format" value="@Model.format" >
             </div>
             <div class="form-group">
                 <label for="price">Price:</label>
-                <input type="number" class="form-control" id="price" name="price" value="@Model.price" required>
+                <input type="number" class="form-control" id="price" name="price" value="@Model.price" >
             </div>
             <div class="form-group">
                 <label for="stock">Stock:</label>
-                <input type="number" class="form-control" id="stock" name="stock" value="@Model.stock" required>
+                <input type="number" class="form-control" id="stock" name="stock" value="@Model.stock" disabled>
             </div>
             <div class="form-group">
                 <label for="imageUrl">Image URL:</label>
-                <input type="text" class="form-control" id="imageUrl" name="imageUrl" value="@Model.imageUrl" required>
+                <input type="text" class="form-control" id="imageUrl" name="imageUrl" value="@Model.imageUrl" >
             </div>
             <div class="form-group">
                 <label for="ageLimitation">Age Limitation:</label>
-                <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" value="@Model.ageLimitation" required>
-            </div>
-            <div class="form-group">
-                <label for="salePrice">Sale Price:</label>
-                <input type="number" class="form-control" id="salePrice" name="salePrice" value="@Model.salePrice" required>
+                <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" value="@Model.ageLimitation" >
             </div>
             <button type="submit" class="btn btn-primary">Update</button>
         </form>

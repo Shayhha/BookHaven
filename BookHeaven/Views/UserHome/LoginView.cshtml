@@ -22,12 +22,16 @@
         <form action="tryToLogin" method="post">
             <div class="mb-3">
                 <input type="text" class="form-control formInput" name="email" placeholder="Email" value="@Model.email">
-                <span class="validation-error">@Html.ValidationMessageFor(x => x.email)</span>
             </div>
             <div class="mb-3">
                 <input type="password" class="form-control formInput" name="password" placeholder="Password" value="@Model.password">
-                <span class="validation-error">@Html.ValidationMessageFor(x => x.password)</span>
             </div>
+
+            @if (Html.ValidationMessageFor(x => x.email) != null)
+            {
+                <span class="validation-error">@Html.ValidationMessageFor(x => x.email)</span>
+            }
+
             <button type="submit" class="btn btn-primary btn-block">Login</button>
         </form>
 
