@@ -76,7 +76,7 @@
     }
 
     .item img {
-        width: 170px; /* Set the width to the specified size */
+        width: 159px; /* Set the width to the specified size */
         height: 255px; /* Set the height to the specified size */
         aspect-ratio: 16 / 9;
         margin-top: 8px;
@@ -208,9 +208,9 @@
 }
 
     .popup-image img {
-        width: 270px; /* Set width to 170 pixels */
-        height: 400px; /* Set height to 255 pixels */
-        object-fit: cover; /* Ensure image fills the container */
+        width: 259px; 
+        height: 420px; 
+        object-fit:fill;
     }
 
 .popup-details {
