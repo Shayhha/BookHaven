@@ -5,7 +5,9 @@
 }
 
 @model BookHeaven.Models.Book
-
+@{
+    string errorMessage = ViewBag.errorMessage;
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +16,10 @@
 <body>
     <div class="container mt-5">
         <h2>Add New Book</h2>
-
+        @if (errorMessage != null)
+        {
+            <span class="validation-error">@errorMessage</span>
+        }
         @*<input type="hidden" name="bookId" value="" />*@
         <span class="validation-error">@Html.ValidationMessageFor(x => x.name)</span>
         <span class="validation-error">@Html.ValidationMessageFor(x => x.author)</span>

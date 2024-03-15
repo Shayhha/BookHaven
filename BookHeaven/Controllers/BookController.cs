@@ -26,10 +26,15 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Models.Book.addBook(newBook)) ; //add the book to database 
+                if (Models.Book.addBook(newBook)) //add the book to database 
                 {
                     Console.WriteLine("The book " + newBook.name + " has been added to the website.");
                     return RedirectToAction("showUserHome", "UserHome");
+                }
+                else 
+                {
+                    ViewBag.errorMessage = "Book already exists.";
+                    return View("AddNewBookView", newBook);
                 }
             }
             else
