@@ -26,15 +26,24 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Models.Book.addBook(newBook)) ; //add the book to database 
+                if (Models.Book.checkBook(newBook)) //check if given book already exists
+                {
+                    ViewBag.errorMessage = "Book already exists.";
+                    return View("AddNewBookView", newBook);
+                }
+                if (Models.Book.addBook(newBook)) //add the book to database 
                 {
                     Console.WriteLine("The book " + newBook.name + " has been added to the website.");
                     return RedirectToAction("showUserHome", "UserHome");
                 }
+                else 
+                {
+                    ViewBag.errorMessage = "Unable to add book, try again later.";
+                    return View("AddNewBookView", newBook);
+                }
             }
             else
             {
-                Console.WriteLine("No");
                 return View("AddNewBookView", newBook);
             }
         }
@@ -48,9 +57,23 @@ namespace BookHeaven.Controllers
 
         public IActionResult deleteBook(int bookId)
         {
-            // some SQL logic to delete the book form the database.
-            Console.WriteLine("The book with id = " + bookId + " has been deleted form the website.");
-            return RedirectToAction("showUserHome", "UserHome"); 
+            if (ModelState.IsValid)
+            {
+                if (Models.Book.deleteBook(bookId)) //add the book to database 
+                {
+                    Console.WriteLine("The book with id = " + bookId + " has been deleted form the website.");
+                    return RedirectToAction("showUserHome", "UserHome");
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Unable to remove book, try again later.";
+                    return RedirectToAction("showUserHome", "UserHome");
+                }
+            }
+            else
+            {
+                return RedirectToAction("showUserHome", "UserHome");
+            }
         }
     }
 }
