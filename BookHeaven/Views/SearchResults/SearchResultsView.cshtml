@@ -10,142 +10,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results Page</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="~/css/homePage.css?Version=3">
-
-    <style>
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            border: 2px solid black; /* Updated border */
-            border-radius: 10px; /* Rounded edges */
-            padding: 20px;
-            z-index: 1000;
-            width: 70%; /* Increased width */
-            max-width: 600px; /* Set maximum width */
-        }
-
-        .popup-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-            .popup-buttons button,
-            .popup-buttons a {
-                display: block;
-                color: #f2f2f2;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-                border: 1px solid #f2f2f2; /* Add border to the buttons */
-                margin: 0 10px; /*Add some space between the buttons */
-                border-radius: 5px; /*Add border radius */
-                transition: all 0.3s ease-in-out; /*Add this line to enable smooth animation*/
-            }
-
-
-                .popup-buttons button:hover,
-                .popup-buttons a:hover {
-                    background-color: #ddd;
-                    color: black;
-                    transform: scale(1.1); /*Increase size to 110% when hovered */
-                }
-
-        /*#bookAddToCartButton {
-            background-color: #FFA500;
-            border: 1px solid #FFA500;*/ /* Add border to the buttons 4CAF50*/
-        /*}
-
-        #bookEditButton {
-            background-color: #007bff;
-            border: 1px solid #007bff;*/ /* Add border to the buttons 4CAF50*/
-        /*}
-
-        #bookBuyNowButton {
-            background-color: #4CAF50;
-            border: 1px solid #4CAF50;*/ /* Add border to the buttons */
-        /*}
-
-        #bookNotifyMeButton {
-            background-color: #4CAF50;
-            border: 1px solid #4CAF50;*/ /* Add border to the buttons */
-        /*}*/
-
-            .popup-buttons .buttonBlueColor {
-                background-color: #007bff;
-                border: 1px solid #007bff;
-            }
-
-                .popup-buttons .buttonBlueColor:hover {
-                    background-color: #4CAF50;
-                    border: 1px solid #4CAF50;
-                    color: black;
-                    transform: scale(1.1); /*Increase size to 110% when hovered */
-                }
-
-        .popup-content {
-            display: flex;
-        }
-
-        .popup-image {
-            flex: 1;
-            margin-right: 20px;
-        }
-
-            .popup-image img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover; /* Ensure image fills the container */
-            }
-
-        .popup-details {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-            .popup-details p {
-                margin-top: 0;
-                text-align: left; /* Center the text horizontally */
-            }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 24px;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/homePage.css?Version=4">
 </head>
 <body>
 
     <p class="fw-bold display-5 mb-4 px-3 py-2">You searched for: @Model.searchQuery</p>
 
+
     @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
     {
         @if (BookHeaven.Models.User.currentUser.isAdmin == true)
         {
-            <a href="/Book/showAddNewBook" id="addNewBookButton" class="button addBookButton">Add New Book</a>
+            <div class="adminButtons">
+                <a href="/Book/showAddNewBook" id="addNewBookButton" class="">Add New Book</a>
+            </div>
         }
     }
+
 
     <div class="container">
         <div class="row">
@@ -178,7 +63,7 @@
         </div>
     </div>
 
-    <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay" onclick="closePopup()"></div>
 
     <div class="popup" id="popup">
         <span class="close" onclick="closePopup()">❌</span>
@@ -198,26 +83,22 @@
                 <p><strong>In-Stock: </strong><span id="popup-stock"></span></p>
             </div>
         </div>
+
         <div class="popup-buttons">
-            <div class="popup-buttons">
-                @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+
+            @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+            {
+                @if (BookHeaven.Models.User.currentUser.isAdmin == true)
                 {
-                    @if (BookHeaven.Models.User.currentUser.isAdmin == true)
-                    {
-                        <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
-                        <button id="bookDeleteButton" class="buttonBlueColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
+                    <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
+                    <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
 
-                    }
                 }
-
-                <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
-
-            </div>
+            }
+            <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
 
         </div>
     </div>
-
-
 
     <script src="~/js/site.js"></script>
 </body>

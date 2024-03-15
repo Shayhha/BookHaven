@@ -1,0 +1,77 @@
+﻿.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.image-side {
+    flex: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .image-side img {
+        max-width: 100%;
+        max-height: 100%;
+        padding-right: 20px;
+    }
+
+.content-side {
+    flex: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.book-info p {
+    margin: 5px 0;
+}
+
+.buttons button {
+    margin-right: 10px;
+}
+
+
+.buttonBlueColor {
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    display: inline-flex;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    margin: 0 10px; /*Add some space between the buttons */
+    border-radius: 5px; /*Add border radius */
+    transition: all 0.3s ease-in-out; /*Add this line to enable smooth animation*/
+}
+
+    .buttonBlueColor:hover {
+        background-color: #4CAF50;
+        border: 1px solid #4CAF50;
+        color: black;
+        transform: scale(1.1); /*Increase size to 110% when hovered */
+    }
+
+.buttonRedColor {
+    background-color: #FFA500;
+    border: 1px solid #FFA500;
+    display: inline-flex;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    margin: 0 10px; /*Add some space between the buttons */
+    border-radius: 5px; /*Add border radius */
+    transition: all 0.3s ease-in-out; /*Add this line to enable smooth animation*/
+}
+
+    .buttonRedColor:hover {
+        background-color: #ff4500;
+        border: 1px solid #ff4500;
+        color: black;
+        transform: scale(1.1); /*Increase size to 110% when hovered */
+    }
