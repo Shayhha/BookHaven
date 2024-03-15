@@ -722,6 +722,43 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
+        /// Function for updating book information by Book object 
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
+        public static bool SQLUpdateBook(Book book)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"UPDATE Books SET name = @name, author = @author, date = @date, category = @category, format = @format, price = @price,
+                                stock = @stock, imageUrl = @imageUrl, ageLimitation = @ageLimitation, salePrice = @salePrice WHERE bookId = @bookId";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@name", book.name);
+                    command.Parameters.AddWithValue("@author", book.author);
+                    command.Parameters.AddWithValue("@date", book.date);
+                    command.Parameters.AddWithValue("@category", book.category);
+                    command.Parameters.AddWithValue("@format", book.format);
+                    command.Parameters.AddWithValue("@price", book.price);
+                    command.Parameters.AddWithValue("@stock", book.stock);
+                    command.Parameters.AddWithValue("@imageUrl", book.imageUrl);
+                    command.Parameters.AddWithValue("@ageLimitation", book.ageLimitation);
+                    command.Parameters.AddWithValue("@salePrice", book.salePrice);
+                    command.Parameters.AddWithValue("@bookId", book.bookId);
+
+                    //execute the command and check if we updated the book category
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; //category successfully changed
+                    else
+                        return false; //failed to change category
+                }
+            }
+        }
+
+        /// <summary>
         /// Function for updating book price or salePrice in Books db
         /// To update salePrice, set isSale to true
         /// </summary>

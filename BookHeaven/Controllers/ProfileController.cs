@@ -200,7 +200,7 @@ namespace BookHeaven.Controllers
         {
             if (Models.User.currentUser.deleteCreditCard())
             {
-                Models.User.currentUser.creditCard = null; //set the address to be null indicating that it has been deleted
+                Models.User.currentUser.creditCard = null; //set the credit card to be null indicating that it has been deleted
                 return Ok(); //return HTTP 200 OK status if successful
             }
             else
@@ -212,7 +212,7 @@ namespace BookHeaven.Controllers
         {
             if (Models.User.currentUser.deleteAddress())
             {
-                Models.User.currentUser.address = null;
+                Models.User.currentUser.address = null; //set the address to be null indicating that it has been deleted
                 return Ok(); //return HTTP 200 OK status if successful
             }
             else
