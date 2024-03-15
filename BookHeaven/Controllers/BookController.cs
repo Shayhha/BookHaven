@@ -26,6 +26,11 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (Models.Book.checkBook(newBook)) //check if given book already exists
+                {
+                    ViewBag.errorMessage = "Book already exists.";
+                    return View("AddNewBookView", newBook);
+                }
                 if (Models.Book.addBook(newBook)) //add the book to database 
                 {
                     Console.WriteLine("The book " + newBook.name + " has been added to the website.");
@@ -33,13 +38,12 @@ namespace BookHeaven.Controllers
                 }
                 else 
                 {
-                    ViewBag.errorMessage = "Book already exists.";
+                    ViewBag.errorMessage = "Unable to add book, try again later.";
                     return View("AddNewBookView", newBook);
                 }
             }
             else
             {
-                Console.WriteLine("No");
                 return View("AddNewBookView", newBook);
             }
         }

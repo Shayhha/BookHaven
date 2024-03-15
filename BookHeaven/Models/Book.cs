@@ -8,12 +8,12 @@ namespace BookHeaven.Models
         public int bookId { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
-        [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Name must only contain letters")]
+        [RegularExpression("^[A-Za-z]*$", ErrorMessage = "Name must only contain letters")]
         [MaxLength(255, ErrorMessage = "Name must be between 1 and 255 characters")]
         public string name { get; set; }
 
         [Required(ErrorMessage = "Author is required")]
-        [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Author must only contain letters and spaces")]
+        [RegularExpression("^[A-Za-z]*$", ErrorMessage = "Author must only contain letters and spaces")]
         [MaxLength(255, ErrorMessage = "Author must be between 1 and 255 characters")]
         public string author { get; set; }
 
@@ -26,7 +26,7 @@ namespace BookHeaven.Models
         public string category { get; set; }
 
         [Required(ErrorMessage = "Format is required")]
-        [RegularExpression("^[A-Za-z]+$", ErrorMessage = "Format must only contain letters")]
+        [RegularExpression("^[A-Za-z]*$", ErrorMessage = "Format must only contain letters")]
         [MaxLength(255, ErrorMessage = "Format must be between 1 and 255 characters")]
         public string format { get; set; }
 
@@ -35,7 +35,7 @@ namespace BookHeaven.Models
         public float price { get; set; }
 
         [Required(ErrorMessage = "Sale Price is required")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Sale Price must be above 0")]
+        [Range(0.0, double.MaxValue, ErrorMessage = "Sale Price must be above 0")]
         public float salePrice { get; set; }
 
         [Required(ErrorMessage = "Stock is required")]
@@ -89,20 +89,33 @@ namespace BookHeaven.Models
         //These functions are for admin for making changes in the books//
 
         /// <summary>
+        /// Function that check if book is already in database
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
+        public static bool checkBook(Book book)
+        {
+            if(book != null)
+            {
+                if(SQLHelper.SQLCheckBook(book.name, book.author, book.date))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Function for adding book, only for admin
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
         public static bool addBook(Book book)
         {
-            if (Models.User.currentUser.isAdmin == true)
+            if (Models.User.currentUser.isAdmin)
             {
                 if (book != null)
                 {
-                    if (SQLHelper.SQLAddBook(book) == true)
-                    {
+                    if (SQLHelper.SQLAddBook(book))
                         return true;
-                    }
                 }
             }
             return false;
@@ -115,12 +128,10 @@ namespace BookHeaven.Models
         /// <returns></returns>
         public static bool deleteBook(int bookId)
         {
-            if (Models.User.currentUser.isAdmin == true)
+            if (Models.User.currentUser.isAdmin)
             {
-                if (SQLHelper.SQLDeleteBook(bookId) == true)
-                {
+                if (SQLHelper.SQLDeleteBook(bookId))
                     return true;
-                }
             }
             return false;
         }
@@ -137,10 +148,8 @@ namespace BookHeaven.Models
         {
             if (Models.User.currentUser.isAdmin == true)
             {
-                if (SQLHelper.SQLUpdateBookPrice(bookId, newPrice, isSale) == true)
-                {
+                if (SQLHelper.SQLUpdateBookPrice(bookId, newPrice, isSale))
                     return true;
-                } 
             }
             return false;
         }
@@ -155,7 +164,7 @@ namespace BookHeaven.Models
         /// <returns></returns>
         public static bool updateBookStock(int bookId, int stock, bool isRestock = false)
         {
-            if (SQLHelper.SQLUpdateBookStock(bookId, stock, isRestock) == true)
+            if (SQLHelper.SQLUpdateBookStock(bookId, stock, isRestock))
             {
                 return true;
             }
@@ -170,12 +179,10 @@ namespace BookHeaven.Models
         /// <returns></returns>
         public static bool updateBookCategory(int bookId, string category)
         {
-            if (Models.User.currentUser.isAdmin == true)
+            if (Models.User.currentUser.isAdmin)
             {
-                if (SQLHelper.SQLUpdateBookCategory(bookId, category) == true)
-                {
+                if (SQLHelper.SQLUpdateBookCategory(bookId, category))
                     return true;
-                }
             }
             return false;
         }

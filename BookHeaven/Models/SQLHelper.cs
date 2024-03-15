@@ -374,6 +374,32 @@ namespace BookHeaven.Models
             return searchResults;
         }
 
+
+         /// <summary>
+         /// Function to check if book already exists
+         /// </summary>
+         /// <param name="userId"></param>
+         /// <param name="connection"></param>
+         /// <returns></returns>
+        public static bool SQLCheckBook(string bookName, string bookAuthor, string bookDate)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT COUNT(*) FROM Books WHERE name = @name AND author = @author AND date = @date;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@name", bookName);
+                    command.Parameters.AddWithValue("@author", bookAuthor);
+                    command.Parameters.AddWithValue("@date", bookDate);
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0; //return true if the count is greater than 0, indicating the book already exists
+                }
+            }
+        }
+
+
         /// <summary>
         /// Returns an address for the userId, if didn't find any it will return "null"
         /// </summary>
