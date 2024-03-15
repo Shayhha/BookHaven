@@ -16,28 +16,35 @@
         <h2>Add New Book</h2>
 
         @*<input type="hidden" name="bookId" value="" />*@
+        <span class="validation-error">@Html.ValidationMessageFor(x => x.name)</span>
+        <span class="validation-error">@Html.ValidationMessageFor(x => x.author)</span>
+        <span class="validation-error">@Html.ValidationMessageFor(x => x.date)</span>
+        <span class="validation-error">@Html.ValidationMessageFor(x => x.category)</span>
+        <span class="validation-error">@Html.ValidationMessageFor(x => x.format)</span>
+        <span class="validation-error">@Html.ValidationMessageFor(x => x.price)</span>
+        <span class="validation-error">@Html.ValidationMessageFor(x => x.stock)</span>
+        <span class="validation-error">@Html.ValidationMessageFor(x => x.imageUrl)</span>
+        <span class="validation-error">@Html.ValidationMessageFor(x => x.ageLimitation)</span>
 
         <form method="post" action="/Book/addBook">
             <div class="form-group">
-                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                <input type="text" class="form-control" value="@Model.name" id="name" name="name" placeholder="Name" >
 
-                <input type="text" class="form-control" id="author" name="author" placeholder="Author" required>
+                <input type="text" class="form-control" value="@Model.author" id="author" name="author" placeholder="Author" >
  
-                <input type="text" class="form-control" id="date" name="date" placeholder="Date" required>
+                <input type="text" class="form-control" value="@Model.date" id="date" name="date" placeholder="Date" >
 
-                <input type="text" class="form-control" id="category" name="category" placeholder="Category" required>
+                <input type="text" class="form-control" value="@Model.category" id="category" name="category" placeholder="Category" >
 
-                <input type="text" class="form-control" id="format" name="format" placeholder="Format" required>
+                <input type="text" class="form-control" value="@Model.format" id="format" name="format" placeholder="Format" >
   
-                <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
+                <input type="text" class="form-control" value="@Model.price" id="price" name="price" placeholder="Price" >
    
-                <input type="number" class="form-control" id="stock" name="stock" placeholder="Stock" required>
+                <input type="number" class="form-control" value="@Model.stock" id="stock" name="stock" placeholder="Stock" >
   
-                <input type="text" class="form-control" id="imageUrl" name="imageUrl" placeholder="Image URL" required>
+                <input type="text" class="form-control" value="@Model.imageUrl" id="imageUrl" name="imageUrl" placeholder="Image URL" >
 
-                <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" placeholder="Age Limitation" required>
-      
-                <input type="text" class="form-control" id="salePrice" name="salePrice" placeholder="Sale Price" required>
+                <input type="number" class="form-control" value="@Model.ageLimitation" id="ageLimitation" name="ageLimitation" placeholder="Age Limitation" >
             </div>
             <button type="submit" class="btn btn-primary">Add Book</button>
         </form>

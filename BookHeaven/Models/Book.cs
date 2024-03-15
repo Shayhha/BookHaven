@@ -8,7 +8,7 @@ namespace BookHeaven.Models
         public int bookId { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
-        [RegularExpression("^[A-Za-z]+$", ErrorMessage = "Name must only contain letters")]
+        [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Name must only contain letters")]
         [MaxLength(255, ErrorMessage = "Name must be between 1 and 255 characters")]
         public string name { get; set; }
 
