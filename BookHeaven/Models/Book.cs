@@ -8,12 +8,12 @@ namespace BookHeaven.Models
         public int bookId { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
-        [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Name must only contain letters")]
+        [RegularExpression("^[A-Za-z\\s:'-]*$", ErrorMessage = "Name must only contain letters")]
         [MaxLength(255, ErrorMessage = "Name must be between 1 and 255 characters")]
         public string name { get; set; }
 
         [Required(ErrorMessage = "Author is required")]
-        [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Author must only contain letters and spaces")]
+        [RegularExpression("^[A-Za-z\\s]*$", ErrorMessage = "Author must only contain letters and spaces")]
         [MaxLength(255, ErrorMessage = "Author must be between 1 and 255 characters")]
         public string author { get; set; }
 
@@ -22,11 +22,11 @@ namespace BookHeaven.Models
         public string date { get; set; }
 
         [Required(ErrorMessage = "Category is required")]
-        [RegularExpression("^([A-Za-z]+(,\\s*|$))+$", ErrorMessage = "Category must only contain letters separated by commas")]
+        [RegularExpression("^([A-Za-z]+(,\\s*|$))*$", ErrorMessage = "Category must only contain letters separated by commas")]
         public string category { get; set; }
 
         [Required(ErrorMessage = "Format is required")]
-        [RegularExpression("^[A-Za-z]+$", ErrorMessage = "Format must only contain letters")]
+        [RegularExpression("^[A-Za-z\\s]*$", ErrorMessage = "Format must only contain letters")]
         [MaxLength(255, ErrorMessage = "Format must be between 1 and 255 characters")]
         public string format { get; set; }
 

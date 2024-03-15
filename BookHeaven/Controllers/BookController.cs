@@ -57,9 +57,23 @@ namespace BookHeaven.Controllers
 
         public IActionResult deleteBook(int bookId)
         {
-            // some SQL logic to delete the book form the database.
-            Console.WriteLine("The book with id = " + bookId + " has been deleted form the website.");
-            return RedirectToAction("showUserHome", "UserHome"); 
+            if (ModelState.IsValid)
+            {
+                if (Models.Book.deleteBook(bookId)) //add the book to database 
+                {
+                    Console.WriteLine("The book with id = " + bookId + " has been deleted form the website.");
+                    return RedirectToAction("showUserHome", "UserHome");
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Unable to remove book, try again later.";
+                    return RedirectToAction("showUserHome", "UserHome");
+                }
+            }
+            else
+            {
+                return RedirectToAction("showUserHome", "UserHome");
+            }
         }
     }
 }
