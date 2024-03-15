@@ -13,13 +13,23 @@ namespace BookHeaven.Controllers
             {
                 return View("BookEditView", book);
             }
-            return View("UserHome/showUserHome");
+            return RedirectToAction("showUserHome", "UserHome");
         }
 
         public IActionResult showAddNewBook()
         {
             Book book = new Book();
             return View("AddNewBookView", book);
+        }
+
+        public IActionResult showBookInfoView(int bookId)
+        {
+            Book book = SQLHelper.SQLSearchBookById(bookId);
+            if (book != null)
+            {
+                return View("BookInfoView", book);
+            }
+            return RedirectToAction("showUserHome", "UserHome");
         }
 
         public IActionResult addBook(Book newBook)

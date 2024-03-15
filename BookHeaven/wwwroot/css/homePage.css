@@ -5,7 +5,7 @@
 .genre_container {
     flex-grow: 1;
     background-color: burlywood;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 50px 10px 50px;
     margin-bottom: 10px;
     width: 100%; /* Ensure the div covers the entire width */
     overflow-x: auto;

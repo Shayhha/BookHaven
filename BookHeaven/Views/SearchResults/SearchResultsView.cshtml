@@ -11,7 +11,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="~/css/homePage.css">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=3">
 
     <style>
         .popup {
@@ -56,25 +56,37 @@
                     transform: scale(1.1); /*Increase size to 110% when hovered */
                 }
 
-        #bookAddToCartButton {
+        /*#bookAddToCartButton {
             background-color: #FFA500;
-            border: 1px solid #FFA500; /* Add border to the buttons 4CAF50*/
-        }
+            border: 1px solid #FFA500;*/ /* Add border to the buttons 4CAF50*/
+        /*}
 
         #bookEditButton {
             background-color: #007bff;
-            border: 1px solid #007bff; /* Add border to the buttons 4CAF50*/
-        }
+            border: 1px solid #007bff;*/ /* Add border to the buttons 4CAF50*/
+        /*}
 
         #bookBuyNowButton {
             background-color: #4CAF50;
-            border: 1px solid #4CAF50; /* Add border to the buttons */
-        }
+            border: 1px solid #4CAF50;*/ /* Add border to the buttons */
+        /*}
 
         #bookNotifyMeButton {
             background-color: #4CAF50;
-            border: 1px solid #4CAF50; /* Add border to the buttons */
-        }
+            border: 1px solid #4CAF50;*/ /* Add border to the buttons */
+        /*}*/
+
+            .popup-buttons .buttonBlueColor {
+                background-color: #007bff;
+                border: 1px solid #007bff;
+            }
+
+                .popup-buttons .buttonBlueColor:hover {
+                    background-color: #4CAF50;
+                    border: 1px solid #4CAF50;
+                    color: black;
+                    transform: scale(1.1); /*Increase size to 110% when hovered */
+                }
 
         .popup-content {
             display: flex;
@@ -192,22 +204,14 @@
                 {
                     @if (BookHeaven.Models.User.currentUser.isAdmin == true)
                     {
-                        <button id="bookEditButton" onclick="editBook()">Edit</button>
-                        <button id="bookDeleteButton" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
-                    }
-                    else
-                    {
-                        <button id="bookNotifyMeButton">Notify Me</button>
-                        <button id="bookAddToCartButton" onclick="addBookToCart()">Add to Cart</button>
-                        <button id="bookBuyNowButton" onclick="buyBook()">Buy Now</button>
+                        <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
+                        <button id="bookDeleteButton" class="buttonBlueColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
+
                     }
                 }
-                else
-                {
-                    <button id="bookNotifyMeButton">Notify Me</button>
-                    <button id="bookAddToCartButton" onclick="addBookToCart()">Add to Cart</button>
-                    <button id="bookBuyNowButton" onclick="buyBook()">Buy Now</button>
-                }
+
+                <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
+
             </div>
 
         </div>
