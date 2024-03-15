@@ -53,6 +53,11 @@ function buyBook() {
     window.location.href = editUrl;
 }
 
+function goToBookInfoPage() {
+    var bookId = document.getElementById("popup-bookId").textContent;
+    var editUrl = "/Book/showBookInfoView?bookId=" + bookId;
+    window.location.href = editUrl;
+}
 
 function deleteAddress() {
     // AJAX request to delete credit card information
