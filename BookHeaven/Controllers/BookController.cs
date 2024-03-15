@@ -50,9 +50,24 @@ namespace BookHeaven.Controllers
 
         public IActionResult updateBook(Book updatedBook)
         {
-            // some SQL logic to update a book in the database.
-            Console.WriteLine("The book " + updatedBook.name + " has been updated.");
-            return RedirectToAction("showUserHome", "UserHome"); // this is temporary?
+            if (ModelState.IsValid)
+            {
+                if (Models.Book.updateBook(updatedBook)) //update the book to database 
+                {
+                    Console.WriteLine("The book with id = " + updatedBook.bookId + " has been updated.");
+                    //SQLHelper.SQLUpdateBookStock(updatedBook.bookId, 25, true);
+                    return RedirectToAction("showUserHome", "UserHome");
+                }
+                else
+                {
+                    ViewBag.errorMessage = "Unable to update book, try again later.";
+                    return View("BookEditView", updatedBook);
+                }
+            }
+            else
+            {
+                return View("BookEditView", updatedBook);
+            }
         }
 
         public IActionResult deleteBook(int bookId)
