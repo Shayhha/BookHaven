@@ -18,14 +18,25 @@ namespace BookHeaven.Controllers
 
         public IActionResult showAddNewBook()
         {
-            return View("AddNewBookView");
+            Book book = new Book();
+            return View("AddNewBookView", book);
         }
 
         public IActionResult addBook(Book newBook)
         {
-            // some SQL logic to add the book to the database.
-            Console.WriteLine("The book " + newBook.name + " has been added to the website.");
-            return RedirectToAction("showUserHome", "UserHome"); 
+            if (ModelState.IsValid)
+            {
+                if (Models.Book.addBook(newBook)) ; //add the book to database 
+                {
+                    Console.WriteLine("The book " + newBook.name + " has been added to the website.");
+                    return RedirectToAction("showUserHome", "UserHome");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No");
+                return View("AddNewBookView", newBook);
+            }
         }
 
         public IActionResult updateBook(Book updatedBook)
