@@ -107,8 +107,7 @@ namespace BookHeaven.Controllers
         {
             Console.WriteLine("Book id = " + bookId + ", restock amount = " + restockAmount);
 
-            // add 500 copies to the stock
-            if (true)
+            if (Book.updateBookStock(bookId, restockAmount, true))
             {
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }
@@ -123,8 +122,7 @@ namespace BookHeaven.Controllers
         {
             Console.WriteLine("Book id = " + bookId + ", sale price = " + salePrice);
 
-            // do some sql shit
-            if (true)
+            if (Book.updateBookPrice(bookId, salePrice, true))
             {
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }

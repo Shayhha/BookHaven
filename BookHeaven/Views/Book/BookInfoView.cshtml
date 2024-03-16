@@ -40,9 +40,9 @@
                         <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook2()">Delete Book</button>
 
                         <div style="display:inline-flex">
-                            <input type="number" class="bookViewInput" id="salePrice" name="salePrice" value="@Model.price">
+                            <input type="number" class="bookViewInput" id="salePrice" name="salePrice" value="@(Model.price - 0.05)">
                             <script>document.getElementById("salePrice").addEventListener("input", function () {
-                                    var max = parseFloat(@Model.price);
+                                    var max = parseFloat(@Model.price) - 0.05;
                                     if (parseFloat(this.value) > max) {
                                         this.value = max; // Set value to maximum if it exceeds the maximum allowed
                                     }
