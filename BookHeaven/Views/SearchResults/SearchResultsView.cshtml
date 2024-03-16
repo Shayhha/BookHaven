@@ -18,18 +18,56 @@
 </head>
 <body>
 
-    <p class="fw-bold display-5 mb-4 px-3 py-2">You searched for: @Model.searchQuery</p>
+    <p class="fw-bold display-5 mb-4 px-3 py-2">You searched for: <span id="searchQueryString">@Model.searchQuery</span></p>
 
 
-    @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
-    {
-        @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+    <div class="adminButtons">
+
+        @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
         {
-            <div class="adminButtons">
+            @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+            {
                 <a href="/Book/showAddNewBook" id="addNewBookButton" class="">Add New Book</a>
-            </div>
+            }
         }
-    }
+
+        <label for="filter" class="filter-label">Filter by:</label>
+        <select id="filter" class="filter-select">
+            <option value="A - Z" selected="@(ViewBag.SelectedFilter == "A - Z")">A - Z</option>
+            <option value="Z - A" selected="@(ViewBag.SelectedFilter == "Z - A")">Z - A</option>
+            <option value="Price Ascending" selected="@(ViewBag.SelectedFilter == "Price Ascending")">Price Ascending</option>
+            <option value="Price Descending" selected="@(ViewBag.SelectedFilter == "Price Descending")">Price Descending</option>
+            <option value="Most Popular" selected="@(ViewBag.SelectedFilter == "Most Popular")">Most Popular</option>
+        </select>
+
+        @{
+            <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var filterSelect = document.getElementById("filter");
+                var searchQuery = document.getElementById("searchQueryString").innerText;
+                var selectedValue = "@ViewBag.SelectedFilter"; // Get the selected filter option from ViewBag
+
+                // Set the selected value for the dropdown menu
+                for (var i = 0; i < filterSelect.options.length; i++) {
+                    if (filterSelect.options[i].value === selectedValue) {
+                        filterSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+
+                filterSelect.addEventListener("change", function () {
+                    selectedValue = filterSelect.value;
+                    console.log("Selected value: ", selectedValue);
+                    console.log("Search query: ", searchQuery);
+
+                    var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue + "&searchQuery=" + searchQuery;
+                    window.location.href = editUrl;
+                });
+            });
+            </script>
+        }
+
+    </div>
 
 
     <div class="container">
