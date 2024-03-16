@@ -318,7 +318,7 @@ namespace BookHeaven.Models
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns>Might return null if the book was not found. Otherwise returns an initialized Book object</returns>
-        public static Book SQLSearchBookById(int bookId)
+        public static Book? SQLSearchBookById(int bookId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -848,34 +848,6 @@ namespace BookHeaven.Models
                         return true; //stock successfully changed
                     else
                         return false; //failed to change stock
-                }
-            }
-        }
-
-        /// <summary>
-        /// Function for updating book's category in Books db
-        /// </summary>
-        /// <param name="bookId"></param>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public static bool SQLUpdateBookCategory(int bookId, string category)
-        {
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                string query = @"UPDATE Books SET category = @category WHERE bookId = @bookId";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@category", category);
-                    command.Parameters.AddWithValue("@bookId", bookId);
-
-                    //execute the command and check if we updated the book category
-                    int rowsAffected = command.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                        return true; //category successfully changed
-                    else
-                        return false; //failed to change category
                 }
             }
         }
