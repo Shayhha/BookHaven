@@ -28,7 +28,16 @@
                 <p><strong>Category: </strong>@Model.category</p>
                 <p><strong>Format: </strong>@Model.format</p>
                 <p><strong>Age Limitation: </strong>@Model.ageLimitation</p>
-                <p><strong>Price: </strong>@Model.price</p>
+
+                @if (Model.price != Model.salePrice && Model.salePrice != 0)
+                {
+                    <p><strong>Price: @Model.salePrice</strong> <strike>$@Model.price</strike></p>
+                }
+                else
+                {
+                    <p><strong>Price: </strong>$@Model.price</p>
+                }
+
                 <p><strong>In-Stock: </strong>@Model.stock</p>
             </div>
             <div class="buttons">
@@ -39,16 +48,26 @@
                         <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
                         <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook2()">Delete Book</button>
 
-                        <div style="display:inline-flex">
-                            <input type="number" class="bookViewInput" id="salePrice" name="salePrice" value="@(Model.price - 0.05)">
-                            <script>document.getElementById("salePrice").addEventListener("input", function () {
-                                    var max = parseFloat(@Model.price) - 0.05;
-                                    if (parseFloat(this.value) > max) {
-                                        this.value = max; // Set value to maximum if it exceeds the maximum allowed
-                                    }
-                                });</script>
-                            <button id="bookPutOnSaleButton" class="buttonBlueColor" onclick="putBookOnSale()">Put On Sale</button>
-                        </div>
+                        @if (Model.salePrice != 0)
+                        {
+                            <button id="bookRemoveFromSaleButton" class="buttonBlueColor" onclick="removeBookFromSale()">End Sale</button>
+                        }
+                        else
+                        {
+                            <div style="display:inline-flex">
+                                <input type="number" class="bookViewInput" id="salePrice" name="salePrice" value="@(Model.price - 0.05)">
+                                <script>
+                                    document.getElementById("salePrice").addEventListener("input", function () {
+                                        var max = parseFloat(@Model.price) - 0.05;
+                                        if (parseFloat(this.value) > max) {
+                                            this.value = max; // Set value to maximum if it exceeds the maximum allowed
+                                        }
+                                    });
+                                </script>
+                                <button id="bookPutOnSaleButton" class="buttonBlueColor" onclick="putBookOnSale()">Put On Sale</button>
+                            </div>
+                        }
+                        
 
                         if (Model.stock < 200)
                         {
@@ -59,8 +78,7 @@
                                         if (parseFloat(this.value) > max) {
                                             this.value = max; // Set value to maximum if it exceeds the maximum allowed
                                         }
-                                    });
-                                </script>
+                                    });</script>
                                 <button id="bookRestockButton" class="buttonBlueColor" onclick="restockBook()">Restock</button>
                             </div>
                         }
