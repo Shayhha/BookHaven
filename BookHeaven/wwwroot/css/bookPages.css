@@ -131,3 +131,7 @@
     transform: translateY(-50%);
     max-width: 350px;
 }
+
+.bookViewInput {
+    width: 50px;
+}

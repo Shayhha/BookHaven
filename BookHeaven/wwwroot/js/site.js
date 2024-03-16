@@ -60,6 +60,22 @@ function goToBookInfoPage() {
     window.location.href = editUrl;
 }
 
+function restockBook() {
+    var bookId = document.getElementById("popup-bookId").innerText;
+    var restockAmount = document.getElementById("restockAmount").value; // Use value instead of textContent
+    var editUrl = "/Book/restockBook?bookId=" + bookId + "&restockAmount=" + restockAmount; 
+    window.location.href = editUrl;
+}
+
+function putBookOnSale() {
+    var bookId = document.getElementById("popup-bookId").innerText;
+    var salePrice = document.getElementById("salePrice").value; // Use value instead of textContent
+    var editUrl = "/Book/putBookOnSale?bookId=" + bookId + "&salePrice=" + salePrice; 
+    window.location.href = editUrl;
+}
+
+
+
 function deleteAddress() {
     // AJAX request to delete credit card information
     fetch('DeleteAddress', {

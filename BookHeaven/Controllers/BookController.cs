@@ -103,9 +103,36 @@ namespace BookHeaven.Controllers
         }
 
 
-        public IActionResult testingFunc(int bookId)
+        public IActionResult restockBook(int bookId, int restockAmount)
         {
-            return RedirectToAction("addBookToCart", "Cart", bookId);
+            Console.WriteLine("Book id = " + bookId + ", restock amount = " + restockAmount);
+
+            // add 500 copies to the stock
+            if (true)
+            {
+                return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
+            }
+            else
+            {
+                ViewBag.errorMessage = "Unable to restock the book ..., try again later.";
+                return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
+            }
+        }
+
+        public IActionResult putBookOnSale(int bookId, float salePrice)
+        {
+            Console.WriteLine("Book id = " + bookId + ", sale price = " + salePrice);
+
+            // do some sql shit
+            if (true)
+            {
+                return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
+            }
+            else
+            {
+                ViewBag.errorMessage = "Unable to put the book on sale ..., try again later.";
+                return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
+            }
         }
     }
 }
