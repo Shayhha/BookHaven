@@ -12,7 +12,8 @@ namespace BookHeaven.Controllers
             {
                 return View("PaymentView", book);
             }
-            return View("UserHome/showUserHome");
+            return RedirectToAction("showUserHome", "UserHome");
+
         }
 
         public IActionResult processPayment()

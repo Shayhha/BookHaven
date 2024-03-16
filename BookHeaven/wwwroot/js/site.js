@@ -43,6 +43,7 @@ function closePopup() {
 
 function editBook() {
     var bookId = document.getElementById("popup-bookId").textContent;
+    console.log("the book id is " + bookId);
     var editUrl = "/SearchResults/showBookDetails?bookId=" + bookId;
     window.location.href = editUrl;
 }
@@ -114,10 +115,14 @@ function deleteBook() {
     window.location.href = editUrl;
 }
 
+function deleteBook2() {
+    var bookId = document.getElementById("popup-bookId").textContent;
+    var editUrl = "/Book/deleteBook?bookId=" + bookId;
+    window.location.href = editUrl;
+}
 
 function addBookToCart() {
     var bookId = document.getElementById("popup-bookId").textContent;
-    console.log(bookId)
     // Make an AJAX request to call the addBookToCart method
     fetch(`/Cart/addBookToCart?bookId=${bookId}`)
         .then(response => response.json())

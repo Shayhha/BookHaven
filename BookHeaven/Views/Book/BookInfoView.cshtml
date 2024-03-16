@@ -12,7 +12,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BookHeaven</title>
-    <link rel="stylesheet" href="~/css/bookPages.css?Version=1">
+    <link rel="stylesheet" href="~/css/bookPages.css?Version=2">
 </head>
 <body>
     <div class="container">
@@ -24,7 +24,7 @@
             <div class="book-info">
                 <p><strong>Author: </strong>@Model.author</p>
                 <p><strong>Release Date: </strong>@Model.date</p>
-                <p><strong>Book Id: </strong>@Model.bookId</p>
+                <p><strong>Book Id: </strong><span id="popup-bookId">@Model.bookId</span></p>
                 <p><strong>Category: </strong>@Model.category</p>
                 <p><strong>Format: </strong>@Model.format</p>
                 <p><strong>Age Limitation: </strong>@Model.ageLimitation</p>
@@ -36,8 +36,8 @@
                 {
                     @if (BookHeaven.Models.User.currentUser.isAdmin == true)
                     {
-                        <button id="bookEditButton"  class="buttonBlueColor" onclick="editBook()">Edit</button>
-                        <button id="bookDeleteButton"  class="buttonRedColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
+                        <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
+                        <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook2()">Delete Book</button>
                     }
                     else
                     {
@@ -56,16 +56,18 @@
                 {
                     if (@Model.stock == 0)
                     {
-                        <button id="bookNotifyMeButton"  class="buttonBlueColor" >Notify Me</button>
+                        <button id="bookNotifyMeButton" class="buttonBlueColor">Notify Me</button>
                     }
                     else
                     {
-                        <button id="bookAddToCartButton"   class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button>
-                        <button id="bookBuyNowButton"  class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
+                        <button id="bookAddToCartButton" class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button>
+                        <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
                     }
                 }
             </div>
         </div>
     </div>
+
+    <script src="~/js/site.js"></script>
 </body>
 </html>

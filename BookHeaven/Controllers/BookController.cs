@@ -27,6 +27,7 @@ namespace BookHeaven.Controllers
             Book book = SQLHelper.SQLSearchBookById(bookId);
             if (book != null)
             {
+                ViewBag.addToCartSuccess = TempData["addToCartSuccess"];
                 return View("BookInfoView", book);
             }
             return RedirectToAction("showUserHome", "UserHome");
@@ -69,7 +70,7 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Models.Book.deleteBook(bookId)) //add the book to database 
+                if (Models.Book.deleteBook(bookId)) //delete book from database 
                 {
                     Console.WriteLine("The book with id = " + bookId + " has been deleted form the website.");
                     return RedirectToAction("showUserHome", "UserHome");
@@ -84,6 +85,12 @@ namespace BookHeaven.Controllers
             {
                 return RedirectToAction("showUserHome", "UserHome");
             }
+        }
+
+
+        public IActionResult testingFunc(int bookId)
+        {
+            return RedirectToAction("addBookToCart", "Cart", bookId);
         }
     }
 }

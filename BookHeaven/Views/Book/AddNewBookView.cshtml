@@ -11,49 +11,57 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Book Page</title>
+    <link rel="stylesheet" href="~/css/bookPages.css?Version=4">
 </head>
 <body>
-    <div class="container mt-5">
-        <h2>Add New Book</h2>
-        @if (errorMessage != null)
-        {
-            <span class="validation-error">@errorMessage</span>
-        }
-        @*<input type="hidden" name="bookId" value="" />*@
-        <span class="validation-error">@Html.ValidationMessageFor(x => x.name)</span>
-        <span class="validation-error">@Html.ValidationMessageFor(x => x.author)</span>
-        <span class="validation-error">@Html.ValidationMessageFor(x => x.date)</span>
-        <span class="validation-error">@Html.ValidationMessageFor(x => x.category)</span>
-        <span class="validation-error">@Html.ValidationMessageFor(x => x.format)</span>
-        <span class="validation-error">@Html.ValidationMessageFor(x => x.price)</span>
-        <span class="validation-error">@Html.ValidationMessageFor(x => x.stock)</span>
-        <span class="validation-error">@Html.ValidationMessageFor(x => x.imageUrl)</span>
-        <span class="validation-error">@Html.ValidationMessageFor(x => x.ageLimitation)</span>
+    <div class="container">
+        <div class="editForm">
+            <h2>Add New Book</h2>
+            @if (errorMessage != null)
+            {
+                <span class="validation-error">@errorMessage</span>
+            }
+            @*<input type="hidden" name="bookId" value="" />*@
+            <span class="validation-error">@Html.ValidationMessageFor(x => x.name)</span>
+            <span class="validation-error">@Html.ValidationMessageFor(x => x.author)</span>
+            <span class="validation-error">@Html.ValidationMessageFor(x => x.date)</span>
+            <span class="validation-error">@Html.ValidationMessageFor(x => x.category)</span>
+            <span class="validation-error">@Html.ValidationMessageFor(x => x.format)</span>
+            <span class="validation-error">@Html.ValidationMessageFor(x => x.price)</span>
+            <span class="validation-error">@Html.ValidationMessageFor(x => x.stock)</span>
+            <span class="validation-error">@Html.ValidationMessageFor(x => x.imageUrl)</span>
+            <span class="validation-error">@Html.ValidationMessageFor(x => x.ageLimitation)</span>
 
-        <form method="post" action="/Book/addBook">
-            <div class="form-group">
-                <input type="text" class="form-control" value="@Model.name" id="name" name="name" placeholder="Name" >
+            <form method="post" action="/Book/addBook">
+                <div class="form-group">
+                    <input type="text" class="form-control" value="@Model.name" id="name" name="name" placeholder="Name">
 
-                <input type="text" class="form-control" value="@Model.author" id="author" name="author" placeholder="Author" >
- 
-                <input type="text" class="form-control" value="@Model.date" id="date" name="date" placeholder="Date" >
+                    <input type="text" class="form-control" value="@Model.author" id="author" name="author" placeholder="Author">
 
-                <input type="text" class="form-control" value="@Model.category" id="category" name="category" placeholder="Category" >
+                    <input type="text" class="form-control" value="@Model.date" id="date" name="date" placeholder="Date">
 
-                <input type="text" class="form-control" value="@Model.format" id="format" name="format" placeholder="Format" >
-  
-                <input type="text" class="form-control" value="@Model.price" id="price" name="price" placeholder="Price" >
-   
-                <input type="number" class="form-control" value="@Model.stock" id="stock" name="stock" placeholder="Stock" >
-  
-                <input type="text" class="form-control" value="@Model.imageUrl" id="imageUrl" name="imageUrl" placeholder="Image URL" >
+                    <input type="text" class="form-control" value="@Model.category" id="category" name="category" placeholder="Category">
 
-                <input type="number" class="form-control" value="@Model.ageLimitation" id="ageLimitation" name="ageLimitation" placeholder="Age Limitation" >
-            </div>
-            <button type="submit" class="btn btn-primary">Add Book</button>
-        </form>
+                    <input type="text" class="form-control" value="@Model.format" id="format" name="format" placeholder="Format">
 
+                    <input type="text" class="form-control" value="@Model.price" id="price" name="price" placeholder="Price">
+
+                    <input type="number" class="form-control" value="@Model.stock" id="stock" name="stock" placeholder="Stock">
+
+                    <input type="text" class="form-control" value="@Model.imageUrl" id="imageUrl" name="imageUrl" placeholder="Image URL">
+
+                    <input type="number" class="form-control" value="@Model.ageLimitation" id="ageLimitation" name="ageLimitation" placeholder="Age Limitation">
+                </div>
+
+                <div class="buttons">
+                    <button type="submit" class="buttonBlueColor">Add Book</button>
+                    <a href="/UserHome/showUserHome" id="backButton" class="buttonRedColor">Back</a>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
