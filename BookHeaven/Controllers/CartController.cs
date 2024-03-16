@@ -9,10 +9,10 @@ namespace BookHeaven.Controllers
             return View("CartView");
         }
 
-        public IActionResult addBookToCart(int bookId)
-        {
-            bool success = Models.Cart.addBookToCart(bookId);
-            return Json(new { success = success });
-        }
+        //public IActionResult addBookToCart(int bookId)
+        //{
+        //    bool success = Models.Cart.addBookToCart(bookId);
+        //    return Json(new { success = success });
+        //}
     }
 }
