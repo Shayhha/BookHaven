@@ -41,6 +41,12 @@
 
                         <div style="display:inline-flex">
                             <input type="number" class="bookViewInput" id="salePrice" name="salePrice" value="@Model.price">
+                            <script>document.getElementById("salePrice").addEventListener("input", function () {
+                                    var max = parseFloat(@Model.price);
+                                    if (parseFloat(this.value) > max) {
+                                        this.value = max; // Set value to maximum if it exceeds the maximum allowed
+                                    }
+                                });</script>
                             <button id="bookPutOnSaleButton" class="buttonBlueColor" onclick="putBookOnSale()">Put On Sale</button>
                         </div>
 
