@@ -12,67 +12,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BookHeaven</title>
-    <style>
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 25px;
-        }
-
-        .image-side {
-            flex: 30%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-            .image-side img {
-                max-width: 100%;
-                max-height: 100%;
-                padding-right: 20px;
-            }
-
-        .content-side {
-            flex: 60%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            align-items: center;
-            padding: 0 20px;
-        }
-
-        .book-info p {
-            margin: 5px 0;
-        }
-
-        .buttons button {
-            margin-right: 10px;
-        }
-
-
-        .buttonBlueColor {
-            background-color: #007bff;
-            border: 1px solid #007bff;
-            display: inline-flex;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            margin: 0 10px; /*Add some space between the buttons */
-            border-radius: 5px; /*Add border radius */
-            transition: all 0.3s ease-in-out; /*Add this line to enable smooth animation*/
-        }
-
-            .buttonBlueColor:hover {
-                background-color: #4CAF50;
-                border: 1px solid #4CAF50;
-                color: black;
-                transform: scale(1.1); /*Increase size to 110% when hovered */
-            }
-
-
-    </style>
+    <link rel="stylesheet" href="~/css/bookPages.css?Version=2">
 </head>
 <body>
     <div class="container">
@@ -84,7 +24,7 @@
             <div class="book-info">
                 <p><strong>Author: </strong>@Model.author</p>
                 <p><strong>Release Date: </strong>@Model.date</p>
-                <p><strong>Book Id: </strong>@Model.bookId</p>
+                <p><strong>Book Id: </strong><span id="popup-bookId">@Model.bookId</span></p>
                 <p><strong>Category: </strong>@Model.category</p>
                 <p><strong>Format: </strong>@Model.format</p>
                 <p><strong>Age Limitation: </strong>@Model.ageLimitation</p>
@@ -96,8 +36,28 @@
                 {
                     @if (BookHeaven.Models.User.currentUser.isAdmin == true)
                     {
-                        <button id="bookEditButton"  class="buttonBlueColor" onclick="editBook()">Edit</button>
-                        <button id="bookDeleteButton"  class="buttonBlueColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
+                        <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
+                        <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook2()">Delete Book</button>
+
+                        <div style="display:inline-flex">
+                            <input type="number" class="bookViewInput" id="salePrice" name="salePrice" value="@Model.price">
+                            <button id="bookPutOnSaleButton" class="buttonBlueColor" onclick="putBookOnSale()">Put On Sale</button>
+                        </div>
+
+                        if (Model.stock < 200)
+                        {
+                            <div style="display:inline-flex">
+                                <input type="number" class="bookViewInput" id="restockAmount" name="restockAmount" value="0" min="0" max="800" />
+                                <script>document.getElementById("restockAmount").addEventListener("input", function () {
+                                        var max = parseFloat(this.getAttribute("max"));
+                                        if (parseFloat(this.value) > max) {
+                                            this.value = max; // Set value to maximum if it exceeds the maximum allowed
+                                        }
+                                    });
+                                </script>
+                                <button id="bookRestockButton" class="buttonBlueColor" onclick="restockBook()">Restock</button>
+                            </div>
+                        }
                     }
                     else
                     {
@@ -116,16 +76,18 @@
                 {
                     if (@Model.stock == 0)
                     {
-                        <button id="bookNotifyMeButton"  class="buttonBlueColor" >Notify Me</button>
+                        <button id="bookNotifyMeButton" class="buttonBlueColor">Notify Me</button>
                     }
                     else
                     {
-                        <button id="bookAddToCartButton"   class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button>
-                        <button id="bookBuyNowButton"  class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
+                        <button id="bookAddToCartButton" class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button>
+                        <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
                     }
                 }
             </div>
         </div>
     </div>
+
+    <script src="~/js/site.js"></script>
 </body>
 </html>

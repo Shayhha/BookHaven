@@ -10,7 +10,7 @@
             if (book != null)
             {
                 listOfBooks.Add(book);
-                Console.WriteLine("The book '" + book.name + "' has been added to the cart (Cart.cs)");
+                Console.WriteLine("The book '" + book.name + "' has been added to the cart");
                 return true;
             }
             return false;
