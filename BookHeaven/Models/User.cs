@@ -12,6 +12,7 @@ namespace BookHeaven.Models
 
         public Address? address { get; set; }
         public CreditCard? creditCard { get; set; }
+        public List<CartItem>? cartItems { get; set; }
         public bool isAdmin { get; set; }
 
         public User() { }
@@ -24,16 +25,19 @@ namespace BookHeaven.Models
             this.lname = lname;
             this.address = null;
             this.creditCard = null;
+            this.cartItems = new List<CartItem>();
             this.isAdmin = isAdmin;
         }
 
 
-        public User(int userId, string email, string fname, string lname, string country, string city, string street, int apartNum, long number, string date, int ccv)
+        public User(int userId, string email, string fname, string lname, string country, string city, string street, int apartNum, long number, string date, int ccv, bool isAdmin = false)
         {
             this.userId = userId;
             this.email = email;
             this.fname = fname;
             this.lname = lname;
+            this.cartItems = new List<CartItem>();
+            this.isAdmin = isAdmin;
             if (country == "" && city == "" && street == "" && apartNum == 0)
                 this.address = null;
             else
@@ -45,6 +49,13 @@ namespace BookHeaven.Models
                 this.creditCard = null;
         }
 
+        public void setCartItems(List<CartItem> cartItems)
+        {
+            if(cartItems != null) 
+            {
+                this.cartItems = cartItems;
+            }
+        }
 
         public static bool checkUsers(User a, User b)
         {
@@ -141,6 +152,5 @@ namespace BookHeaven.Models
             }
             return false;
         }
-
     }
 }

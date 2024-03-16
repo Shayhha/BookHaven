@@ -1,4 +1,5 @@
 ﻿using BookHeaven.Models;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
@@ -159,6 +160,60 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
+        /// Function for checking if user has cart items in database
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private static bool SQLCheckCart(int userId, SqlConnection connection)
+        {
+            string query = "SELECT COUNT(*) FROM Cart WHERE userId = @userId;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@userId", userId);
+                int count = (int)command.ExecuteScalar();
+                return count > 0; //return true if the count is greater than 0, indicating the user has items in cart
+            }
+        }
+
+        /// <summary>
+        /// Function for initializing cartItems for user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private static List<CartItem> SQLInitCartItems(int userId, SqlConnection connection)
+        {
+            string query = "SELECT * FROM Cart WHERE userId = @userId;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@userId", userId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    List<CartItem> cartItems = new List<CartItem>(); //our actual cart list
+                    List<int> bookIdList = new List<int>(); //temp list to hold bookId's to initialize later
+                    while (reader.Read())
+                    {
+                        CartItem cartItem = new CartItem(reader.GetInt32(3)); //create cartItem with book set to null and with amount
+                        cartItems.Add(cartItem); //add cartItem to list
+                        bookIdList.Add(reader.GetInt32(1)); //add all book id's to our temp list for initializing book objects
+                    }
+                    reader.Close(); //close the reader 
+                    for (int i = 0; i < cartItems.Count; i++) //iterate over cartItems list and initialize all book objects
+                    {
+                        int bookId = bookIdList[i]; //get bookId from list
+                        Book book = SQLSearchBookById(bookId, connection); //get book object
+                        cartItems[i].book = book; // set book object in our carteItem
+                    }
+                    return cartItems; //return initialized cartItems list
+                }
+            }
+        }
+
+        /// <summary>
         /// Function for creating user object for our use later in the website
         /// </summary>
         /// <param name="userId"></param>
@@ -185,6 +240,10 @@ namespace BookHeaven.Models
                         if (SQLCheckCreditCard(userId, connection))
                         {
                             user.creditCard = SQLInitCreditCard(userId, connection); //if the user has credit card, initialize the creditCard object
+                        }
+                        if (SQLCheckCart(userId, connection))
+                        {
+                            user.cartItems = SQLInitCartItems(userId, connection); //initialize the cart of user
                         }
                         return user; //we return the initialized user object
                     }
@@ -278,12 +337,43 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
+        /// Function for updating user info in UserInfo db
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static bool SQLUpdateUserInfo(User user)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"
+                    UPDATE UserInfo SET email = @email, fname = @fname, lname = @lname WHERE userId = @userId;
+                    UPDATE Users SET email = @email WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", user.userId);
+                    command.Parameters.AddWithValue("@email", user.email);
+                    command.Parameters.AddWithValue("@fname", user.fname);
+                    command.Parameters.AddWithValue("@lname", user.lname);
+
+                    //execute the command and check if we updated the userInfo
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; //userInfo successfully updated
+                    else
+                        return false; //failed to update userInfo
+                }
+            }
+        }
+
+        /// <summary>
         /// Function for searching books by name or id in the database, returns an initialized SearchResults object with the list of books
         /// </summary>
         /// <param name="searchResults"></param>
         /// <param name="isName"></param>
         /// <returns></returns>
-        public static SearchResults SQLSearchBook(SearchResults searchResults, bool isName=true) 
+        public static SearchResults SQLSearchBook(SearchResults searchResults, bool isName = true)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -324,7 +414,7 @@ namespace BookHeaven.Models
             {
                 connection.Open();
                 string query = "SELECT * FROM Books WHERE bookId = @searchQuery;";
-      
+
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -337,6 +427,33 @@ namespace BookHeaven.Models
                             return new Book(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4),
                                 reader.GetString(5), reader.GetFloat(6), reader.GetInt32(7), reader.GetString(8), reader.GetInt32(9), reader.GetFloat(10));
                         }
+                    }
+                }
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Function for searching book my id with sql connection string
+        /// </summary>
+        /// <param name="bookId"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        public static Book? SQLSearchBookById(int bookId, SqlConnection connection)
+        {
+            string query = "SELECT * FROM Books WHERE bookId = @searchQuery;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@searchQuery", bookId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new Book(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4),
+                            reader.GetString(5), reader.GetFloat(6), reader.GetInt32(7), reader.GetString(8), reader.GetInt32(9), reader.GetFloat(10));
                     }
                 }
             }
@@ -375,12 +492,12 @@ namespace BookHeaven.Models
         }
 
 
-         /// <summary>
-         /// Function to check if book already exists
-         /// </summary>
-         /// <param name="userId"></param>
-         /// <param name="connection"></param>
-         /// <returns></returns>
+        /// <summary>
+        /// Function to check if book already exists
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
         public static bool SQLCheckBook(string bookName, string bookAuthor, string bookDate)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -625,32 +742,86 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
-        /// Function for updating user info in UserInfo db
+        /// Function for adding item to cart in database
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="userId"></param>
+        /// <param name="cartItem"></param>
         /// <returns></returns>
-        public static bool SQLUpdateUserInfo(User user)
+        public static bool SQLAddCartItem(int userId, CartItem cartItem)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"
-                    UPDATE UserInfo SET email = @email, fname = @fname, lname = @lname WHERE userId = @userId;
-                    UPDATE Users SET email = @email WHERE userId = @userId;";
+                string query = @"INSERT INTO Cart(userId, bookId, amount) VALUES(@userId, @bookId, @amount);";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@userId", user.userId);
-                    command.Parameters.AddWithValue("@email", user.email);
-                    command.Parameters.AddWithValue("@fname", user.fname);
-                    command.Parameters.AddWithValue("@lname", user.lname);
+                    command.Parameters.AddWithValue("@userId", userId);
+                    command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
+                    command.Parameters.AddWithValue("@amount", cartItem.amount);
 
-                    //execute the command and check if we updated the userInfo
+                    //execute the command and check if we added the credit card
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
-                        return true; //userInfo successfully updated
+                        return true; //credit card successfully added
                     else
-                        return false; //failed to update userInfo
+                        return false; //failed to add the credit card
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for updating amount in cart for an item for user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static bool SQLUpdateCartItem(int userId, CartItem cartItem)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"UPDATE Cart SET bookId = @bookId, amount = @amount WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+                    command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
+                    command.Parameters.AddWithValue("@amount", cartItem.amount);
+
+                    //execute the command and check if we updated the credit card
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; //credit card successfully updated
+                    else
+                        return false; //failed to update the credit card
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for deleting cart item for a user from db
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="bookId"></param>
+        /// <returns></returns>
+        public static bool SQLDeleteCartItem(int userId, int bookId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"DELETE FROM Cart WHERE userId = @userId AND bookId = @bookId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+                    command.Parameters.AddWithValue("@bookId", bookId);
+
+                    //execute the command and check if we deleted the credit card
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                        return true; //credit card successfully deleted
+                    else
+                        return false; //failed to delete the credit card
                 }
             }
         }
@@ -798,7 +969,7 @@ namespace BookHeaven.Models
             {
                 connection.Open();
                 string query;
-                if(!isSale)
+                if (!isSale)
                     query = @"UPDATE Books SET price = @price WHERE bookId = @bookId";
                 else
                     query = @"UPDATE Books SET salePrice = @price WHERE bookId = @bookId";
@@ -851,6 +1022,8 @@ namespace BookHeaven.Models
                 }
             }
         }
+
+
 
     }
 }
