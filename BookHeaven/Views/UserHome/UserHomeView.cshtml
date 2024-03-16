@@ -34,6 +34,8 @@
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Drama</div>
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Comedy</div>
             <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Romance</div>
+            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Education</div>
+
         </div>
     </div>
 
@@ -67,7 +69,7 @@
                                 <p>Stock: @book.stock</p>
                                 @if (book.price != book.salePrice && book.salePrice != 0)
                                 {
-                                    <p>Price: <strong>@book.salePrice</strong> <strike>$@book.price</strike></p>
+                                    <p>Price: <strong>$@book.salePrice</strong> <strike>$@book.price</strike></p>
                                 }
                                 else
                                 {
