@@ -120,3 +120,14 @@
 }
 
 
+.validation-error {
+    color: red;
+}
+
+.errorMessagesDiv {
+    position: absolute;
+    left: 30px;
+    top: 40%;
+    transform: translateY(-50%);
+    max-width: 350px;
+}

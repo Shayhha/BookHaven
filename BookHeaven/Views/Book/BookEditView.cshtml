@@ -9,50 +9,82 @@
     <link rel="stylesheet" href="~/css/bookPages.css?Version=4">
 </head>
 <body>
-    <div class="container mt-5">
-        <h2>Edit Book</h2>
-        <form method="post" action="/Book/updateBook">
-            <input type="hidden" name="bookId" value="@Model.bookId" />
-            <input type="hidden" name="salePrice" value="@Model.salePrice" />
-            <input type="hidden" name="stock" value="@Model.stock" />
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" class="form-control" id="name" name="name" value="@Model.name" >
-            </div>
-            <div class="form-group">
-                <label for="author">Author:</label>
-                <input type="text" class="form-control" id="author" name="author" value="@Model.author" >
-            </div>
-            <div class="form-group">
-                <label for="date">Date:</label>
-                <input type="text" class="form-control" id="date" name="date" value="@Model.date" >
-            </div>
-            <div class="form-group">
-                <label for="category">Category:</label>
-                <input type="text" class="form-control" id="category" name="category" value="@Model.category" >
-            </div>
-            <div class="form-group">
-                <label for="format">Format:</label>
-                <input type="text" class="form-control" id="format" name="format" value="@Model.format" >
-            </div>
-            <div class="form-group">
-                <label for="price">Price:</label>
-                <input type="number" class="form-control" id="price" name="price" value="@Model.price" >
-            </div>
-            <div class="form-group">
-                <label for="stock">Stock:</label>
-                <input type="number" class="form-control" id="stock" value="@Model.stock" disabled>
-            </div>
-            <div class="form-group">
-                <label for="imageUrl">Image URL:</label>
-                <input type="text" class="form-control" id="imageUrl" name="imageUrl" value="@Model.imageUrl" >
-            </div>
-            <div class="form-group">
-                <label for="ageLimitation">Age Limitation:</label>
-                <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" value="@Model.ageLimitation" >
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-        </form>
+    <div class="container">
+
+        <div class="errorMessagesDiv">
+
+            @if (Html.ValidationMessageFor(x => x.name) != null)
+            {<span class="validation-error">@Html.ValidationMessageFor(x => x.name)</span><br />}
+            @if (Html.ValidationMessageFor(x => x.author) != null)
+            {<span class="validation-error">@Html.ValidationMessageFor(x => x.author)</span><br />}
+            @if (Html.ValidationMessageFor(x => x.date) != null)
+            {<span class="validation-error">@Html.ValidationMessageFor(x => x.date)</span><br />}
+            @if (Html.ValidationMessageFor(x => x.category) != null)
+            {<span class="validation-error">@Html.ValidationMessageFor(x => x.category)</span><br />}
+            @if (Html.ValidationMessageFor(x => x.format) != null)
+            {<span class="validation-error">@Html.ValidationMessageFor(x => x.format)</span><br />}
+            @if (Html.ValidationMessageFor(x => x.price) != null)
+            {<span class="validation-error">@Html.ValidationMessageFor(x => x.price)</span><br />}
+            @if (Html.ValidationMessageFor(x => x.imageUrl) != null)
+            {<span class="validation-error">@Html.ValidationMessageFor(x => x.imageUrl)</span><br />}
+            @if (Html.ValidationMessageFor(x => x.ageLimitation) != null)
+            {<span class="validation-error">@Html.ValidationMessageFor(x => x.ageLimitation)</span><br />}
+
+        </div>
+
+        <div class="editForm">
+            <h2>Edit Book</h2>
+            <form method="post" action="/Book/updateBook">
+                <input type="hidden" name="bookId" value="@Model.bookId" />
+                <input type="hidden" name="salePrice" value="@Model.salePrice" />
+                <input type="hidden" name="stock" value="@Model.stock" />
+
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" value="@Model.name">
+                </div>
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <input type="text" class="form-control" id="author" name="author" value="@Model.author">
+                </div>
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="text" class="form-control" id="date" name="date" value="@Model.date">
+                </div>
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <input type="text" class="form-control" id="category" name="category" value="@Model.category">
+                </div>
+                <div class="form-group">
+                    <label for="format">Format:</label>
+                    <input type="text" class="form-control" id="format" name="format" value="@Model.format">
+                </div>
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="number" class="form-control" id="price" name="price" value="@Model.price">
+                </div>
+                <div class="form-group">
+                    <label for="stock">Stock:</label>
+                    <input type="number" class="form-control" id="stock" value="@Model.stock" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="imageUrl">Image URL:</label>
+                    <input type="text" class="form-control" id="imageUrl" name="imageUrl" value="@Model.imageUrl">
+                </div>
+                <div class="form-group">
+                    <label for="ageLimitation">Age Limitation:</label>
+                    <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" value="@Model.ageLimitation">
+                </div>
+
+
+
+                <div class="buttons">
+                    <button type="submit" class="buttonBlueColor">Update</button>
+                    <a href="/UserHome/showUserHome" id="backButton" class="buttonRedColor">Back</a>
+                </div>
+            </form>
+
+        </div>
     </div>
 </body>
 </html>
