@@ -17,6 +17,7 @@
     <None Remove="Views\Book\" />
     <None Remove="Views\AdminHome\" />
     <None Remove="Views\Profile\" />
+    <None Remove="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\UserHome\" />
@@ -27,6 +28,7 @@
     <Folder Include="Views\Book\" />
     <Folder Include="Views\AdminHome\" />
     <Folder Include="Views\Profile\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

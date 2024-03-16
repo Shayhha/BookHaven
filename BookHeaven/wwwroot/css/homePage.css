@@ -110,6 +110,7 @@
     overflow: hidden;
     display: flex;
     justify-content: flex-start;
+    align-items:center;
     padding: 10px;
 }
 
@@ -250,3 +251,33 @@
     cursor: pointer;
     font-size: 24px;
 }
+
+/* Style for the label */
+.filter-label {
+    font-weight: bold;
+    margin: 0px 10px;
+}
+
+/* Style for the combobox */
+.filter-select {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+    /* Style for the dropdown arrow */
+    .filter-select::after {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    /* Style for option hover */
+    .filter-select option:hover {
+        background-color: #ddd;
+    }

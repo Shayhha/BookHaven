@@ -39,17 +39,44 @@
         </div>
     </div>
 
+    <div class="adminButtons">
 
-    @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
-    {
-        @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+
+        @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
         {
-            <div class="adminButtons">
+            @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+            {
                 <a href="/Book/showAddNewBook" id="addNewBookButton" class="">Add New Book</a>
-            </div>
+            }
         }
-    }
 
+        <label for="filter" class="filter-label">Filter by:</label>
+        <select id="filter" class="filter-select">
+            <option value="A - Z">A - Z</option>
+            <option value="Z - A">Z - A</option>
+            <option value="Price Ascending">Price Ascending</option>
+            <option value="Price Descending">Price Descending</option>
+            <option value="Most Popular">Most Popular</option>
+        </select>
+
+        @{
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var filterSelect = document.getElementById("filter");
+                    filterSelect.addEventListener("change", function () {
+                        var selectedValue = filterSelect.value;
+                        //var searchQuery = "";
+                        console.log("Selected value: ", selectedValue);
+                        //console.log("Search query: ", searchQuery);
+
+                        var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;// + "&searchQuery=" + searchQuery;
+                        window.location.href = editUrl;
+                    });
+                });
+            </script>
+        }
+
+    </div>
 
     <div class="container">
         <div class="row">
@@ -112,8 +139,8 @@
             {
                 @if (BookHeaven.Models.User.currentUser.isAdmin == true)
                 {
-                    <button id="bookEditButton"  class="buttonBlueColor" onclick="editBook()">Edit</button>
-                    <button id="bookDeleteButton"  class="buttonRedColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
+                    <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
+                    <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
 
                 }
             }

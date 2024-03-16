@@ -43,7 +43,6 @@ function closePopup() {
 
 function editBook() {
     var bookId = document.getElementById("popup-bookId").textContent;
-    console.log("the book id is " + bookId);
     var editUrl = "/SearchResults/showBookDetails?bookId=" + bookId;
     window.location.href = editUrl;
 }
