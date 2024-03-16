@@ -105,8 +105,6 @@ namespace BookHeaven.Controllers
 
         public IActionResult restockBook(int bookId, int restockAmount)
         {
-            Console.WriteLine("Book id = " + bookId + ", restock amount = " + restockAmount);
-
             if (Book.updateBookStock(bookId, restockAmount, true))
             {
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
@@ -120,9 +118,20 @@ namespace BookHeaven.Controllers
 
         public IActionResult putBookOnSale(int bookId, float salePrice)
         {
-            Console.WriteLine("Book id = " + bookId + ", sale price = " + salePrice);
-
             if (Book.updateBookPrice(bookId, salePrice, true))
+            {
+                return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
+            }
+            else
+            {
+                ViewBag.errorMessage = "Unable to put the book on sale ..., try again later.";
+                return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
+            }
+        }
+
+        public IActionResult removeBookFromSale(int bookId)
+        {
+            if (Book.updateBookPrice(bookId, 0, true))
             {
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }

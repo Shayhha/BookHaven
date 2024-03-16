@@ -74,6 +74,11 @@ function putBookOnSale() {
     window.location.href = editUrl;
 }
 
+function removeBookFromSale() {
+    var bookId = document.getElementById("popup-bookId").textContent;
+    var editUrl = "/Book/removeBookFromSale?bookId=" + bookId;
+    window.location.href = editUrl;
+}
 
 
 function deleteAddress() {
