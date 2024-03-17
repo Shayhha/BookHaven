@@ -94,7 +94,7 @@ namespace BookHeaven.Controllers
         public IActionResult userLogout()
         {
             Console.WriteLine(Models.User.currentUser.fname + " has logged out"); //print user name from the user object
-            Models.User.currentUser = null;
+            Models.User.currentUser = new User();
             _contx.HttpContext.Session.SetString("isLoggedIn", "false");
             return RedirectToAction("showUserHome");
         }

@@ -50,7 +50,7 @@ namespace BookHeaven.Controllers
         }
 
         public IActionResult showBookDetails(int bookId)
-        {
+        { 
             return RedirectToAction("showBookEdit", "Book", new { bookId = bookId });
         }
 
@@ -62,7 +62,7 @@ namespace BookHeaven.Controllers
             if (searchQuery == "")
                 searchResults = new SearchResults("All Books");
             else
-                searchResults = new SearchResults(searchQuery);
+                searchResults = new SearchResults(searchQuery, isCategory);
 
             // Get the books that we have saved in the session variable
             List<Book> bookList = _contx.HttpContext.Session.GetObjectFromJson<List<Book>>("listOfBooks");
