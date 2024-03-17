@@ -60,7 +60,7 @@
                     console.log("Selected value: ", selectedValue);
                     console.log("Search query: ", searchQuery);
 
-                    var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue + "&searchQuery=" + searchQuery;
+                        var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue + "&searchQuery=" + searchQuery + "&isCategory=" + @Model.isCategory;
                     window.location.href = editUrl;
                 });
             });

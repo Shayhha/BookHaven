@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace BookHeaven.Models
@@ -404,6 +405,45 @@ namespace BookHeaven.Models
 
 
         /// <summary>
+        /// Function for searching popular books by category in the database, returns an initialized SearchResults object with the list of books
+        /// </summary>
+        /// <param name="searchResults"></param>
+        /// <returns></returns>
+        public static List<Book> SQLSearchPopularBook(string searchQuery)
+        {
+            List<Book> popularBooks; //declare list of popular books to return
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"SELECT b.name, b.author, b.date, b.bookId, b.category, b.format, b.price, b.stock, b.imageUrl, b.ageLimitation, b.salePrice, 
+                                        ISNULL(SUM(od.quantity), 0) AS totalOrdered
+                                FROM Books b
+                                LEFT JOIN OrderDetails od ON b.bookId = od.bookId
+                                WHERE b.name LIKE '%' + @searchQuery + '%'
+                                GROUP BY b.name, b.author, b.date, b.bookId, b.category, b.format, b.price, b.stock, b.imageUrl, b.ageLimitation, b.salePrice
+                                ORDER BY totalOrdered DESC;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@searchQuery", searchQuery);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        popularBooks = new List<Book>(); //initialize the list of popular books
+                        while (reader.Read()) //add each book we found
+                        {
+                            Book book = new Book(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4),
+                                reader.GetString(5), reader.GetFloat(6), reader.GetInt32(7), reader.GetString(8), reader.GetInt32(9), reader.GetFloat(10));
+                            popularBooks.Add(book);
+                        }
+                    }
+                }
+            }
+            return popularBooks;
+        }
+
+
+        /// <summary>
         /// Function for searching for a SINGLE BOOK by it's bookId in the database, returns an initialized Book object with all of the information about the book from the database
         /// </summary>
         /// <param name="bookId"></param>
@@ -489,6 +529,45 @@ namespace BookHeaven.Models
                 }
             }
             return searchResults;
+        }
+
+
+        /// <summary>
+        /// Function for searching popular books by category
+        /// </summary>
+        /// <param name="searchQuery"></param>
+        /// <returns></returns>
+        public static List<Book> SQLSearchPopularCategory(string searchQuery)
+        {
+            List<Book> popularBooks; //declare list of popular books to return
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"SELECT b.name, b.author, b.date, b.bookId, b.category, b.format, b.price, b.stock, b.imageUrl, b.ageLimitation, b.salePrice, 
+                                        ISNULL(SUM(od.quantity), 0) AS totalOrdered
+                                FROM Books b
+                                LEFT JOIN OrderDetails od ON b.bookId = od.bookId
+                                WHERE b.category LIKE '%' + @searchQuery + '%'
+                                GROUP BY b.name, b.author, b.date, b.bookId, b.category, b.format, b.price, b.stock, b.imageUrl, b.ageLimitation, b.salePrice
+                                ORDER BY totalOrdered DESC;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@searchQuery", searchQuery);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        popularBooks = new List<Book>(); //initialize the list of popular books
+                        while (reader.Read()) //add each book we found
+                        {
+                            Book book = new Book(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4),
+                                reader.GetString(5), reader.GetFloat(6), reader.GetInt32(7), reader.GetString(8), reader.GetInt32(9), reader.GetFloat(10));
+                            popularBooks.Add(book);
+                        }
+                    }
+                }
+            }
+            return popularBooks;
         }
 
 

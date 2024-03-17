@@ -6,19 +6,18 @@ namespace BookHeaven.Models
     {
         // maybe we can check here for sql injections?
         public string searchQuery { get; set; }
-
+        public int isCategory;
         public Book book;
         public List<Book> books;
-        //public Cart cart;
 
         public SearchResults() { }
 
-        public SearchResults(string _searchQuery)
+        public SearchResults(string _searchQuery, int _isCategory = 0)
         {
             searchQuery = _searchQuery;
+            isCategory = _isCategory;
             book = new Book();
             books = new List<Book>();
-            //cart = new Cart();
         }
 
         // here there will be more functions of adding items to cart, searching for items maybe? 

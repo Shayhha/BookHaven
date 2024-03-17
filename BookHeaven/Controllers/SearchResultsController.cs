@@ -35,7 +35,7 @@ namespace BookHeaven.Controllers
 
         public IActionResult showCategoryResults(string searchQuery)
         {
-            SearchResults searchResults = new SearchResults(searchQuery);
+            SearchResults searchResults = new SearchResults(searchQuery, 1);
             searchResults = SQLHelper.SQLSearchCategory(searchResults);
 
             _contx.HttpContext.Session.SetObjectAsJson("listOfBooks", searchResults.books); // Store the book list in session
@@ -55,9 +55,7 @@ namespace BookHeaven.Controllers
         }
 
 
-
-
-        public IActionResult filterBooks(string filterBy, string searchQuery = "")
+        public IActionResult filterBooks(string filterBy, string searchQuery = "", int isCategory = 0)
         {
             SearchResults searchResults;
 
@@ -67,13 +65,13 @@ namespace BookHeaven.Controllers
                 searchResults = new SearchResults(searchQuery);
 
             // Get the books that we have saved in the session variable
-            List<Book> listOfBooks = _contx.HttpContext.Session.GetObjectFromJson<List<Book>>("listOfBooks");
+            List<Book> bookList = _contx.HttpContext.Session.GetObjectFromJson<List<Book>>("listOfBooks");
 
             // Call a function that will filter the sessionBooks
-            listOfBooks = filterTheBooks(listOfBooks);
+            bookList = filterTheBooks(bookList, filterBy, searchResults.searchQuery, isCategory);
 
             // Then we add the books in the correct order to the searchResults object and send it to the users screen
-            foreach (Book book in listOfBooks)
+            foreach (Book book in bookList)
             {
                 searchResults.books.Add(book);
             }
@@ -82,9 +80,29 @@ namespace BookHeaven.Controllers
             return View("SearchResultsView", searchResults);
         }
 
-        public List<Book> filterTheBooks(List<Book> listOfBooks) // temporary function, will be replaced by other filter functions
+        public List<Book> filterTheBooks(List<Book> bookList, string filterBy, string searchQuery = "", int isCategory = 0) // temporary function, will be replaced by other filter functions
         {
-            return listOfBooks;
+            if (filterBy == "A - Z")
+                return bookList.OrderBy(book => book.name).ToList();
+            else if (filterBy == "Z - A")
+                return bookList.OrderByDescending(book => book.name).ToList();
+            else if (filterBy == "Price Ascending")
+                return bookList.OrderBy(book => book.salePrice > 0 ? book.salePrice : book.price).ToList();
+            else if (filterBy == "Price Descending")
+                return bookList.OrderByDescending(book => book.salePrice > 0 ? book.salePrice : book.price).ToList();
+            else if (filterBy == "Most Popular")
+            {
+                if (isCategory == 0)
+                {
+                    if (searchQuery == "All Books")
+                        searchQuery = "";
+                    return SQLHelper.SQLSearchPopularBook(searchQuery);
+                }
+                else
+                    return SQLHelper.SQLSearchPopularCategory(searchQuery);
+            }
+            else
+                return bookList;
         }
     }
 }
