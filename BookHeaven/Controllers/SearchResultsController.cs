@@ -62,9 +62,9 @@ namespace BookHeaven.Controllers
             SearchResults searchResults;
 
             if (searchQuery == "")
-                searchResults = new SearchResults(", Filtered by: " + filterBy);
+                searchResults = new SearchResults("All Books");
             else
-                searchResults = new SearchResults(searchQuery.Split(",")[0] + ", Filtered by: " + filterBy);
+                searchResults = new SearchResults(searchQuery);
 
             // Get the books that we have saved in the session variable
             List<Book> listOfBooks = _contx.HttpContext.Session.GetObjectFromJson<List<Book>>("listOfBooks");
