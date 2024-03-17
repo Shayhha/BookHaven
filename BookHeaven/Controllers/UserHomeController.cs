@@ -1,9 +1,5 @@
 ﻿using BookHeaven.Models;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using static System.Reflection.Metadata.BlobBuilder;
-
-using Microsoft.AspNetCore.Http;
 using BookHeaven.Extensions;
 
 
@@ -23,7 +19,6 @@ namespace BookHeaven.Controllers
 
         public IActionResult showUserHome()
         {
-            //Console.WriteLine(SQLHelper.ToSHA256("Shay1234"));
             return View("UserHomeView", initHomeBooks());
         }
 
@@ -108,9 +103,7 @@ namespace BookHeaven.Controllers
         {
             SearchResults searchResults = new SearchResults("");
             searchResults = SQLHelper.SQLSearchBook(searchResults);
-
             _contx.HttpContext.Session.SetObjectAsJson("listOfBooks", searchResults.books); // Store the initial list in session
-
             return searchResults;
         }
 

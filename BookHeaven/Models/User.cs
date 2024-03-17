@@ -15,7 +15,9 @@ namespace BookHeaven.Models
         public List<CartItem>? cartItems { get; set; }
         public bool isAdmin { get; set; }
 
-        public User() { }
+        public User() {
+            this.cartItems = new List<CartItem>();
+        }
 
         public User(int userId, string email, string fname, string lname, bool isAdmin = false)
         {
