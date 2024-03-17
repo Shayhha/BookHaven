@@ -144,7 +144,7 @@ function deleteBook2() {
 function addBookToCart() {
     var bookId = document.getElementById("popup-bookId").textContent;
     // Make an AJAX request to call the addBookToCart method
-    fetch(`/Cart/addBookToCart?bookId=${bookId}`)
+    fetch(`/CartItem/addBookToCart?bookId=${bookId}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {

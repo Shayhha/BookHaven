@@ -198,7 +198,7 @@ namespace BookHeaven.Models
                     List<int> bookIdList = new List<int>(); //temp list to hold bookId's to initialize later
                     while (reader.Read())
                     {
-                        CartItem cartItem = new CartItem(reader.GetInt32(3)); //create cartItem with book set to null and with amount
+                        CartItem cartItem = new CartItem(reader.GetInt32(2)); //create cartItem with book set to null and with amount
                         cartItems.Add(cartItem); //add cartItem to list
                         bookIdList.Add(reader.GetInt32(1)); //add all book id's to our temp list for initializing book objects
                     }
@@ -859,7 +859,7 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"UPDATE Cart SET bookId = @bookId, amount = @amount WHERE userId = @userId;";
+                string query = @"UPDATE Cart SET amount = @amount WHERE userId = @userId AND bookId = @bookId;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {

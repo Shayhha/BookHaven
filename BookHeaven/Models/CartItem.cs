@@ -33,7 +33,7 @@ namespace BookHeaven.Models
             return false; //return false in other scenarios
         }
 
-        public static bool addCartItem(CartItem cartItem)
+        public static bool addCartItem(CartItem cartItem) //for user without db
         {
             if (Models.User.currentUser.cartItems != null)
             {
@@ -44,7 +44,7 @@ namespace BookHeaven.Models
                 return false;
         }
 
-        public static bool addCartItem(int userId, CartItem cartItem)
+        public static bool addCartItem(int userId, CartItem cartItem) //for user with db
         {
             if (SQLHelper.SQLAddCartItem(userId, cartItem))
             {

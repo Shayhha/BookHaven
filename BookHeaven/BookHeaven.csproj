@@ -13,22 +13,22 @@
     <None Remove="Views\SearchResults\" />
     <None Remove="Views\Payment\" />
     <None Remove="Views\Orders\" />
-    <None Remove="Views\Cart\" />
     <None Remove="Views\Book\" />
     <None Remove="Views\AdminHome\" />
     <None Remove="Views\Profile\" />
     <None Remove="Extensions\" />
+    <None Remove="Views\CartItem\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\UserHome\" />
     <Folder Include="Views\SearchResults\" />
     <Folder Include="Views\Payment\" />
     <Folder Include="Views\Orders\" />
-    <Folder Include="Views\Cart\" />
     <Folder Include="Views\Book\" />
     <Folder Include="Views\AdminHome\" />
     <Folder Include="Views\Profile\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Views\CartItem\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

@@ -30,7 +30,7 @@
                 {
                     @if (BookHeaven.Models.User.currentUser.isAdmin == false)
                     {
-                        <a href="#" class="btn" id="cartButton">🛒</a> @* href="/Cart/showCartView" *@
+                        <a href="/CartItem/showCartView" class="btn" id="cartButton">🛒</a> 
                         <a href="/Profile/showProfileView" id="helloUserHeader">Hello @BookHeaven.Models.User.currentUser.fname</a>
                     }
                     else
@@ -40,7 +40,7 @@
                 }
                 else
                 {
-                    <a href="#" class="btn" id="cartButton">🛒</a> @* href="/Cart/showCartView" *@
+                    <a href="/CartItem/showCartView" class="btn" id="cartButton">🛒</a> 
 
                     <a href="/UserHome/showLoginView" id="loginButton">Login</a>
                     <a href="/UserHome/showSignupView" id="signupButton">Sign Up</a>

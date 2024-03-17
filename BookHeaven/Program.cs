@@ -1,3 +1,4 @@
+using System.Reflection;
 using BookHeaven.Models;
 using Microsoft.Extensions.Options;
 
@@ -16,6 +17,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);//You can set Time in seconds or minutes
+    options.Cookie.IsEssential = true; // Set the session cookie as essential
 });
 #endregion
 
@@ -26,6 +28,10 @@ builder.Services.AddHttpContextAccessor();
 SQLHelper.Initialize(builder.Configuration);
 
 var app = builder.Build();
+
+// Run your initialization code here
+User defaultUser = new User(); // User(0, "default@default.com", "default", "default", false);
+User.currentUser = defaultUser;
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

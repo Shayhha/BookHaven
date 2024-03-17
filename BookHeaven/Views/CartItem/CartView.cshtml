@@ -1,0 +1,213 @@
+﻿@model BookHeaven.Models.User;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        .container3 {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+            .cart-item img {
+                width: 150px;
+                margin-right: 20px;
+            }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-price {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .quantity-input {
+            width: 50px;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container3">
+        <h1>Shopping Cart</h1>
+
+        @if (Model.cartItems != null)
+        {
+            @foreach (CartItem item in Model.cartItems)
+            {
+                if (item.book != null) { 
+                    <div class="cart-item">
+                        <img src="@item.book.imageUrl" alt="Book Image">
+                        <div class="cart-item-details">
+                            <h3><strong>@item.book.name</strong></h3>
+                            <p><strong>Author: </strong>@item.book.author</p>
+                            <p class="bookId"><strong>Book Id: </strong><span id="bookId">@item.book.bookId</span></p>
+                            <p><strong>Quantity: </strong><input class="quantity-input" type="number" value="@item.amount" min="0" max="100" onkeydown="return event.keyCode >= 37 && event.keyCode <= 40" onchange="checkQuantity(this)"></p>
+                        </div>
+
+                        @if (item.book.price != item.book.salePrice && item.book.salePrice != 0)
+                        {
+                            <div>
+                                <div class="cart-item-price"><strong><span class="cart-item-price-span">$@item.book.salePrice</span></strong></div>
+                                <p>Original Price Per Book: <strike>$@item.book.price</strike></p>
+                            </div>
+                            <p class="pricePerBook" style="display: none;">@item.book.salePrice</p>
+                        }
+                        else
+                        {
+                            <div class="cart-item-price cart-item-price-span">$@item.book.price</div>
+                            <p class="pricePerBook" style="display: none;">@item.book.price</p>
+                        }
+
+                        <button class="delete-btn" onclick="">Delete</button>
+                    </div>
+                }
+            }
+        }
+
+        <!-- Total price -->
+        <div style="text-align: right; margin-top: 20px;">
+            <h3>Total: <span class="total-price">$149.98</span></h3>
+            <button>Checkout</button>
+        </div>
+    </div>
+
+    <script>// Function to update total price
+        function checkQuantity(input) {
+            const quantity = parseInt(input.value);
+            if (quantity === 0) {
+                if (confirmDelete()) {
+                    deleteItem(input.closest('.cart-item'));
+                } else {
+                    // If user cancels deletion, reset quantity to 1 and update the price
+                    input.value = 1;
+                    updateQuantity({ target: input });
+                }
+            }
+        }
+
+        function updateQuantitiesAndPrices() {
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+            quantityInputs.forEach(input => {
+                const cartItem = input.closest('.cart-item');
+
+                // Find the quantity and price per book for this item
+                const quantity = parseInt(input.value);
+                const pricePerBook = parseFloat(cartItem.querySelector('.pricePerBook').textContent.replace('$', ''));
+
+                // Calculate the total price for this item
+                const itemTotalPrice = quantity * pricePerBook;
+
+                // Update the price display for this item
+                cartItem.querySelector('.cart-item-price-span').textContent = `$${itemTotalPrice.toFixed(2)}`;
+            });
+        }
+
+        function updateTotalPrice() {
+            updateQuantitiesAndPrices();
+            const totalPriceElements = document.querySelectorAll('.cart-item-price-span');
+            let totalPrice = 0;
+            totalPriceElements.forEach(element => {
+                totalPrice += parseFloat(element.textContent.replace('$', ''));
+            });
+            document.querySelector('.total-price').textContent = `$${totalPrice.toFixed(2)}`;
+        }
+
+        // Function to update quantity
+        function updateQuantity(event) {
+            const input = event.target;
+            const cartItem = input.closest('.cart-item');
+            const bookId = cartItem.querySelector('.bookId span').textContent;
+            var quantity = parseInt(input.value);
+            // Make an AJAX request to call the addBookToCart method
+            fetch(`/CartItem/updateBookInCart?bookId=${bookId}&quantity=${quantity}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const priceElement = event.target.closest('.cart-item').querySelector('.cart-item-price-span');
+                        const pricePerBookElements = document.querySelectorAll('.pricePerBook');
+                        let pricePerItem = 0;
+
+                        pricePerBookElements.forEach(element => {
+                            pricePerItem = parseFloat(element.textContent);
+                        });
+
+                        const totalPrice = quantity * pricePerItem;
+                        priceElement.textContent = `$${totalPrice.toFixed(2)}`;
+                        updateTotalPrice();
+                    } else {
+                        alert('Failed to delete book from cart. Please try again later.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the book to cart. Please try again later.');
+                });
+        }
+
+        function deleteItem(cartItem) {
+            var bookId = document.getElementById("bookId").textContent;
+            // Make an AJAX request to call the addBookToCart method
+            fetch(`/CartItem/deleteBookFromCart?bookId=${bookId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        cartItem.remove();
+                        updateTotalPrice();
+                    } else {
+                        alert('Failed to delete book from cart. Please try again later.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the book to cart. Please try again later.');
+                });
+        }
+
+        // Event listener for quantity change
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        quantityInputs.forEach(input => {
+            input.addEventListener('input', updateQuantity);
+        });
+
+        // Event listener for delete button
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                if (confirmDelete())
+                    deleteItem(this.closest('.cart-item'));
+            });
+        });
+
+        window.onload = function () {
+            updateTotalPrice();
+        };</script>
+</body>
+</html>
