@@ -167,5 +167,14 @@ namespace BookHeaven.Models
             }
             return false;
         }
+
+        public void mergeCartLists(User currentDefaltUser)
+        {
+            if (this.cartItems != null && currentDefaltUser != null && currentDefaltUser.cartItems != null && currentDefaltUser.cartItems.Any())
+            {
+                if (!this.isAdmin)
+                    this.cartItems = SQLHelper.SQLBulkInsertCartItems(this.userId, currentDefaltUser.cartItems);
+            }
+        }
     }
 }
