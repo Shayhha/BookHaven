@@ -1102,8 +1102,85 @@ namespace BookHeaven.Models
             }
         }
 
+        /// <summary>
+        /// Function for inserting a list of cart items into the database Cart table without openning a new connection for each insert.
+        /// Useing a helper function to convert the given list of items to a DataTable object and then insert that object into the table.
+        /// This function ignores items that already exist in the database (for the given userId), meaning it does not create duplicate values in the
+        /// database Cart table, just addes the items that are in the list and not in the database.
+        /// </summary>
+        /// <param name="userId">The userId of the user that we want to add the cart items to.</param>
+        /// <param name="cartItems">The list of cart items that we want to add to the database.</param>
+        /// <returns>Returns the updated list of cart items that is in the database after the insert was finished.</returns>
+        public static List<CartItem> SQLBulkInsertCartItems(int userId, List<CartItem> cartItems)
+        {
+            // Convert list of CartItem objects to a DataTable
+            DataTable dataTable = SQLConvertListToDataTable(userId, cartItems);
 
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Execute the MERGE operation
+                        using (SqlCommand command = new SqlCommand("MERGE INTO Cart AS Target " +
+                                                                     "USING (VALUES (@userId, @bookId, @amount)) AS Source (userId, bookId, amount) " +
+                                                                     "ON (Target.userId = Source.userId AND Target.bookId = Source.bookId) " +
+                                                                     "WHEN NOT MATCHED BY TARGET THEN " +
+                                                                     "    INSERT (userId, bookId, amount) " +
+                                                                     "    VALUES (Source.userId, Source.bookId, Source.amount);", connection, transaction))
+                        {
+                            command.Parameters.Add("@userId", SqlDbType.Int);
+                            command.Parameters.Add("@bookId", SqlDbType.Int);
+                            command.Parameters.Add("@amount", SqlDbType.Int);
 
+                            foreach (DataRow row in dataTable.Rows)
+                            {
+                                command.Parameters["@userId"].Value = row["userId"];
+                                command.Parameters["@bookId"].Value = row["bookId"];
+                                command.Parameters["@amount"].Value = row["amount"];
+                                command.ExecuteNonQuery();
+                            }
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Rollback the transaction if an error occurs
+                        Console.WriteLine("Error: " + ex.Message);
+                        transaction.Rollback();
+                    }
+                }
+
+                return SQLInitCartItems(userId, connection); // return the updated list of cart items. (this saves the creating of a new connection to the database)
+            }
+        }
+
+        /// <summary>
+        /// Helper function for the SQLBulkInsertCartItems function. This function gets a list of cart items and converts it into a DataTable object
+        /// that is then passed to the SQLBulkInsertCartItems function.
+        /// </summary>
+        /// <param name="userId">The userId of the user that we want to add the cart items to.</param>
+        /// <param name="cartItems">The list of cart items that we want to add to the database.</param>
+        /// <returns>DataTable object that represents the given list of cart items, ready to be inserted into the database Cart table.</returns>
+        private static DataTable SQLConvertListToDataTable(int userId, List<CartItem> cartItems)
+        {
+            DataTable dataTable = new DataTable();
+            // Define columns in the DataTable
+            dataTable.Columns.Add("userId", typeof(int));
+            dataTable.Columns.Add("bookId", typeof(int));
+            dataTable.Columns.Add("amount", typeof(int));
+
+            // Add rows to the DataTable
+            foreach (CartItem item in cartItems)
+            {
+                dataTable.Rows.Add(userId, item.book.bookId, item.amount);
+            }
+
+            return dataTable;
+        }
     }
 }
 

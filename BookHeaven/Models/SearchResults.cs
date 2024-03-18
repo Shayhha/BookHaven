@@ -19,7 +19,5 @@ namespace BookHeaven.Models
             book = new Book();
             books = new List<Book>();
         }
-
-        // here there will be more functions of adding items to cart, searching for items maybe? 
     }
 }
