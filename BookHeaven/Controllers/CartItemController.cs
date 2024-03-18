@@ -24,6 +24,15 @@ namespace BookHeaven.Controllers
         public IActionResult addBookToCart(int bookId)
         {
             bool success = false;
+            string errorMessage = "";
+
+            if (Models.User.currentUser.existsInCart(bookId))
+            {
+                errorMessage = "This book is already in your cart.";
+                return Json(new { success = success, errorMessage = errorMessage });
+
+            }
+
             Book book = SQLHelper.SQLSearchBookById(bookId);
 
             if (book != null)
@@ -43,7 +52,7 @@ namespace BookHeaven.Controllers
                     Console.WriteLine("The book '" + book.name + "' has been added to the cart");
             }
 
-            return Json(new { success = success });
+            return Json(new { success = success, errorMessage = errorMessage });
         }
 
         public IActionResult updateBookInCart(int bookId, int quantity)

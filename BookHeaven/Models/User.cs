@@ -53,7 +53,7 @@ namespace BookHeaven.Models
 
         public void setCartItems(List<CartItem> cartItems)
         {
-            if(cartItems != null) 
+            if (cartItems != null)
             {
                 this.cartItems = cartItems;
             }
@@ -61,7 +61,7 @@ namespace BookHeaven.Models
 
         public static bool checkUsers(User a, User b)
         {
-            if(a.email == b.email && a.fname == b.fname && a.lname == b.lname && a.isAdmin == b.isAdmin)
+            if (a.email == b.email && a.fname == b.fname && a.lname == b.lname && a.isAdmin == b.isAdmin)
                 return true;
             else
                 return false;
@@ -151,6 +151,19 @@ namespace BookHeaven.Models
                     return true;
                 }
                 return false;
+            }
+            return false;
+        }
+
+        public bool existsInCart(int bookId) // checks if the given bookId exists in the 
+        {
+            if (this.cartItems != null)
+            {
+                foreach (CartItem item in this.cartItems)
+                {
+                    if (item.book != null && item.book.bookId == bookId)
+                        return true;
+                }
             }
             return false;
         }
