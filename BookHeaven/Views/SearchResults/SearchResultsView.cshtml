@@ -55,8 +55,8 @@
                 <label for="filterFormat" class="filter-label">Filter Format:</label>
                 <select id="filterFormat" class="filter-select">
                     <option value="" disabled selected>Select an option</option>
-                    <option value="Paperback">Paperback</option>
-                    <option value="Hardcover">Hardcover</option>
+                    <option value="Paperback" selected="@(ViewBag.SelectedFilter == "Paperback")">Paperback</option>
+                    <option value="Hardcover" selected="@(ViewBag.SelectedFilter == "Hardcover")">Hardcover</option>
                 </select>
             </div>
 
@@ -64,10 +64,10 @@
                 <label for="filterPrice" class="filter-label">Filter Price:</label>
                 <select id="filterPrice" class="filter-select">
                     <option value="" disabled selected>Select an option</option>
-                    <option value="Less Than $10">Less Than $10</option>
-                    <option value="$10 - $20">$10 - $20</option>
-                    <option value="$20 - $30">$20 - $30</option>
-                    <option value="More Than $30">More Than $30</option>
+                    <option value="Less Than $10" selected="@(ViewBag.SelectedFilter == "Less Than $10")">Less Than $10</option>
+                    <option value="$10 - $20" selected="@(ViewBag.SelectedFilter == "$10 - $20")">$10 - $20</option>
+                    <option value="$20 - $30" selected="@(ViewBag.SelectedFilter == "$20 - $30")">$20 - $30</option>
+                    <option value="More Than $30" selected="@(ViewBag.SelectedFilter == "More Than $30")">More Than $30</option>
                 </select>
             </div>
 
@@ -75,9 +75,9 @@
                 <label for="filterPrice" class="filter-label">Filter Date:</label>
                 <select id="filterPrice" class="filter-select">
                     <option value="" disabled selected>Select an option</option>
-                    <option value="Before 1950">Before 1950</option>
-                    <option value="1950 - 2000">1950 - 2000</option>
-                    <option value="After 2000">After 2000</option>
+                    <option value="Before 1950" selected="@(ViewBag.SelectedFilter == "Before 1950")">Before 1950</option>
+                    <option value="1950 - 2000" selected="@(ViewBag.SelectedFilter == "1950 - 2000")">1950 - 2000</option>
+                    <option value="After 2000" selected="@(ViewBag.SelectedFilter == "After 2000")">After 2000</option>
                 </select>
             </div>
 
@@ -85,9 +85,9 @@
                 <label for="filterAge" class="filter-label">Filter Age:</label>
                 <select id="filterAge" class="filter-select">
                     <option value="" disabled selected>Select an option</option>
-                    <option value="Below 10">Below 10</option>
-                    <option value="10 - 18">10 - 18</option>
-                    <option value="Above 18">Above 18</option>
+                    <option value="Below 10" selected="@(ViewBag.SelectedFilter == "Below 10")">Below 10</option>
+                    <option value="10 - 18" selected="@(ViewBag.SelectedFilter == "10 - 18")">10 - 18</option>
+                    <option value="Above 18" selected="@(ViewBag.SelectedFilter == "Above 18")">Above 18</option>
                 </select>
             </div>
 

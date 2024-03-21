@@ -100,14 +100,14 @@ namespace BookHeaven.Controllers
                     return bookList.Where(book => int.Parse(book.date.Split('/')[2]) >= 1950 && int.Parse(book.date.Split('/')[2]) <= 2000).ToList();
                 case "After 2000":
                     return bookList.Where(book => int.Parse(book.date.Split('/')[2]) > 2000).ToList();
-                case "Less Than $10":
-                    return bookList.Where(book => book.price < 10).ToList();
+                case "Less Than $10": 
+                    return bookList.Where(book => book.salePrice > 0 ? (book.salePrice < 10) : (book.price < 10)).ToList();
                 case "$10 - $20":
-                    return bookList.Where(book => book.price >= 10 && book.price <= 20).ToList();
-                case "$20 - $30":
-                    return bookList.Where(book => book.price >= 20 && book.price <= 30).ToList();
-                case "More Than $30":
-                    return bookList.Where(book => book.price > 30).ToList();
+                    return bookList.Where(book => book.salePrice > 0 ? (book.salePrice >= 10 && book.salePrice <= 20) : (book.price >= 10 && book.price <= 20)).ToList();
+                case "$20 - $30": 
+                    return bookList.Where(book => book.salePrice > 0 ? (book.salePrice >= 20 && book.salePrice <= 30) : (book.price >= 20 && book.price <= 30)).ToList(); 
+                case "More Than $30": 
+                    return bookList.Where(book => book.salePrice > 0 ? (book.salePrice > 30) : (book.price > 30)).ToList();
                 case "Below 10":
                     return bookList.Where(book => book.ageLimitation < 10).ToList();
                 case "10 - 18":
