@@ -95,29 +95,29 @@ namespace BookHeaven.Controllers
                 case "Most Popular":
                     return sortByMostPopular(searchQuery, isCategory);
                 case "Before 1950":
-                    return bookList.OrderBy(book => int.Parse(book.date.Split('/')[2]) < 1950).ToList();
+                    return bookList.Where(book => int.Parse(book.date.Split('/')[2]) < 1950).ToList();
                 case "1950 - 2000":
-                    return bookList.OrderBy(book => int.Parse(book.date.Split('/')[2]) >= 1950 && int.Parse(book.date.Split('/')[2]) <= 2000).ToList();
+                    return bookList.Where(book => int.Parse(book.date.Split('/')[2]) >= 1950 && int.Parse(book.date.Split('/')[2]) <= 2000).ToList();
                 case "After 2000":
-                    return bookList.OrderBy(book => int.Parse(book.date.Split('/')[2]) > 2000).ToList();
+                    return bookList.Where(book => int.Parse(book.date.Split('/')[2]) > 2000).ToList();
                 case "Less than $10":
-                    return bookList.OrderBy(book => book.price < 10).ToList();
+                    return bookList.Where(book => book.price < 10).ToList();
                 case "$10 - $20":
-                    return bookList.OrderBy(book => book.price >= 10 && book.price <= 20).ToList();
+                    return bookList.Where(book => book.price >= 10 && book.price <= 20).ToList();
                 case "$20 - $30":
-                    return bookList.OrderBy(book => book.price >= 20 && book.price <= 30).ToList();
+                    return bookList.Where(book => book.price >= 20 && book.price <= 30).ToList();
                 case "Above $30":
-                    return bookList.OrderBy(book => book.price > 30).ToList();
+                    return bookList.Where(book => book.price > 30).ToList();
                 case "Below 10":
-                    return bookList.OrderBy(book => book.ageLimitation < 10).ToList();
+                    return bookList.Where(book => book.ageLimitation < 10).ToList();
                 case "10 - 18":
-                    return bookList.OrderBy(book => book.ageLimitation >= 10 && book.ageLimitation < 18).ToList();
+                    return bookList.Where(book => book.ageLimitation >= 10 && book.ageLimitation < 18).ToList();
                 case "Above 18":
-                    return bookList.OrderBy(book => book.ageLimitation >= 18).ToList();
+                    return bookList.Where(book => book.ageLimitation >= 18).ToList();
                 case "Paperback":
-                    return bookList.OrderBy(book => book.format == "Paperback").ToList();
+                    return bookList.Where(book => book.format == "Paperback").ToList();
                 case "Hardcover":
-                    return bookList.OrderBy(book => book.format == "Hardcover").ToList();
+                    return bookList.Where(book => book.format == "Hardcover").ToList();
                 default:
                     return bookList;
             }
