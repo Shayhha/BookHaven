@@ -179,3 +179,28 @@ function deleteCreditCard() {
 
 
 
+document.addEventListener("DOMContentLoaded", function () {
+    var filterSelects = document.getElementsByClassName("filter-select");
+    for (var i = 0; i < filterSelects.length; i++) {
+        filterSelects[i].addEventListener("change", function () {
+            var selectedValue = this.value;
+            console.log("Selected value: ", selectedValue);
+            var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;
+            window.location.href = editUrl;
+        });
+
+        // Show placeholder text if no option is selected
+        filterSelects[i].addEventListener("click", function () {
+            if (this.selectedIndex === 0) {
+                this.selectedIndex = -1;
+            }
+        });
+
+        // Handle blur event to reset select box if no option is selected
+        filterSelects[i].addEventListener("blur", function () {
+            if (this.selectedIndex === -1) {
+                this.selectedIndex = 0;
+            }
+        });
+    }
+});
