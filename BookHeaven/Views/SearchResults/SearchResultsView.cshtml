@@ -31,46 +31,114 @@
             }
         }
 
-        <label for="filter" class="filter-label">Filter by:</label>
-        <select id="filter" class="filter-select">
-            <option value="A - Z" selected="@(ViewBag.SelectedFilter == "A - Z")">A - Z</option>
-            <option value="Z - A" selected="@(ViewBag.SelectedFilter == "Z - A")">Z - A</option>
-            <option value="Price Ascending" selected="@(ViewBag.SelectedFilter == "Price Ascending")">Price Ascending</option>
-            <option value="Price Descending" selected="@(ViewBag.SelectedFilter == "Price Descending")">Price Descending</option>
-            <option value="Most Popular" selected="@(ViewBag.SelectedFilter == "Most Popular")">Most Popular</option>
-        </select>
 
-        @{
-            <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                var filterSelect = document.getElementById("filter");
-                var searchQuery = document.getElementById("searchQueryString").innerText;
-                var selectedValue = "@ViewBag.SelectedFilter"; // Get the selected filter option from ViewBag
-
-                // Set the selected value for the dropdown menu
-                for (var i = 0; i < filterSelect.options.length; i++) {
-                    if (filterSelect.options[i].value === selectedValue) {
-                        filterSelect.selectedIndex = i;
-                        break;
-                    }
-                }
-
-                filterSelect.addEventListener("change", function () {
-                    selectedValue = filterSelect.value;
-                    console.log("Selected value: ", selectedValue);
-                    console.log("Search query: ", searchQuery);
-
-                        var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue + "&searchQuery=" + searchQuery + "&isCategory=" + @Model.isCategory;
-                    window.location.href = editUrl;
-                });
-            });
-            </script>
-        }
 
     </div>
 
 
-    <div class="container">
+    <div class="container5">
+
+        <div class="sidenav">
+            <div>
+                <label for="filter" class="filter-label">Filter by:</label>
+                <select id="filter" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="A - Z" selected="@(ViewBag.SelectedFilter == "A - Z")">A - Z</option>
+                    <option value="Z - A" selected="@(ViewBag.SelectedFilter == "Z - A")">Z - A</option>
+                    <option value="Price Ascending" selected="@(ViewBag.SelectedFilter == "Price Ascending")">Price Ascending</option>
+                    <option value="Price Descending" selected="@(ViewBag.SelectedFilter == "Price Descending")">Price Descending</option>
+                    <option value="Most Popular" selected="@(ViewBag.SelectedFilter == "Most Popular")">Most Popular</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterFormat" class="filter-label">Filter Format:</label>
+                <select id="filterFormat" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Paperback" selected="@(ViewBag.SelectedFilter == "Paperback")">Paperback</option>
+                    <option value="Hardcover" selected="@(ViewBag.SelectedFilter == "Hardcover")">Hardcover</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterPrice" class="filter-label">Filter Price:</label>
+                <select id="filterPrice" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Less Than $10" selected="@(ViewBag.SelectedFilter == "Less Than $10")">Less Than $10</option>
+                    <option value="$10 - $20" selected="@(ViewBag.SelectedFilter == "$10 - $20")">$10 - $20</option>
+                    <option value="$20 - $30" selected="@(ViewBag.SelectedFilter == "$20 - $30")">$20 - $30</option>
+                    <option value="More Than $30" selected="@(ViewBag.SelectedFilter == "More Than $30")">More Than $30</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterPrice" class="filter-label">Filter Date:</label>
+                <select id="filterPrice" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Before 1950" selected="@(ViewBag.SelectedFilter == "Before 1950")">Before 1950</option>
+                    <option value="1950 - 2000" selected="@(ViewBag.SelectedFilter == "1950 - 2000")">1950 - 2000</option>
+                    <option value="After 2000" selected="@(ViewBag.SelectedFilter == "After 2000")">After 2000</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterAge" class="filter-label">Filter Age:</label>
+                <select id="filterAge" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Below 10" selected="@(ViewBag.SelectedFilter == "Below 10")">Below 10</option>
+                    <option value="10 - 18" selected="@(ViewBag.SelectedFilter == "10 - 18")">10 - 18</option>
+                    <option value="Above 18" selected="@(ViewBag.SelectedFilter == "Above 18")">Above 18</option>
+                </select>
+            </div>
+
+            @{
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        var filterSelect = document.getElementsByClassName("filter-select");
+                        var searchQuery = document.getElementById("searchQueryString").innerText;
+                        var selectedValue = "@ViewBag.SelectedFilter"; // Get the selected filter option from ViewBag
+
+                        // Set the selected value for the dropdown menu
+                        for (var i = 0; i < filterSelect.options.length; i++) {
+                            if (filterSelect.options[i].value === selectedValue) {
+                                filterSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+
+                        for (var i = 0; i < filterSelects.length; i++) {
+                            filterSelects[i].addEventListener("change", function () {
+                                var selectedValue = this.value;
+                                console.log("Selected value: ", selectedValue);
+                                console.log("Search query: ", searchQuery);
+                                var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue + "&searchQuery=" + searchQuery + "&isCategory=" + @Model.isCategory;
+                                window.location.href = editUrl;
+                            });
+
+                            // Show placeholder text if no option is selected
+                            filterSelects[i].addEventListener("click", function () {
+                                if (this.selectedIndex === 0) {
+                                    this.selectedIndex = -1;
+                                }
+                            });
+
+                            // Handle blur event to reset select box if no option is selected
+                            filterSelects[i].addEventListener("blur", function () {
+                                if (this.selectedIndex === -1) {
+                                    this.selectedIndex = 0;
+                                }
+                            });
+                        }
+
+      
+
+                    });
+
+                </script>
+            }
+
+        </div>
+
         <div class="row">
             @foreach (var index in Enumerable.Range(0, Model.books.Count / 4 + (Model.books.Count % 4 == 0 ? 0 : 1)))
             {
