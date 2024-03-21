@@ -82,27 +82,57 @@ namespace BookHeaven.Controllers
 
         public List<Book> filterTheBooks(List<Book> bookList, string filterBy, string searchQuery = "", int isCategory = 0) // temporary function, will be replaced by other filter functions
         {
-            if (filterBy == "A - Z")
-                return bookList.OrderBy(book => book.name).ToList();
-            else if (filterBy == "Z - A")
-                return bookList.OrderByDescending(book => book.name).ToList();
-            else if (filterBy == "Price Ascending")
-                return bookList.OrderBy(book => book.salePrice > 0 ? book.salePrice : book.price).ToList();
-            else if (filterBy == "Price Descending")
-                return bookList.OrderByDescending(book => book.salePrice > 0 ? book.salePrice : book.price).ToList();
-            else if (filterBy == "Most Popular")
+            switch (filterBy)
             {
-                if (isCategory == 0)
-                {
-                    if (searchQuery == "All Books")
-                        searchQuery = "";
-                    return SQLHelper.SQLSearchPopularBook(searchQuery);
-                }
-                else
-                    return SQLHelper.SQLSearchPopularCategory(searchQuery);
+                case "A - Z":
+                    return bookList.OrderBy(book => book.name).ToList();
+                case "Z - A":
+                    return bookList.OrderByDescending(book => book.name).ToList();
+                case "Price Ascending":
+                    return bookList.OrderBy(book => book.salePrice > 0 ? book.salePrice : book.price).ToList();
+                case "Price Descending":
+                    return bookList.OrderByDescending(book => book.salePrice > 0 ? book.salePrice : book.price).ToList();
+                case "Most Popular":
+                    return sortByMostPopular(searchQuery, isCategory);
+                case "Before 1950":
+                    return bookList.OrderBy(book => int.Parse(book.date.Split('/')[2]) < 1950).ToList();
+                case "1950 - 2000":
+                    return bookList.OrderBy(book => int.Parse(book.date.Split('/')[2]) >= 1950 && int.Parse(book.date.Split('/')[2]) <= 2000).ToList();
+                case "After 2000":
+                    return bookList.OrderBy(book => int.Parse(book.date.Split('/')[2]) > 2000).ToList();
+                case "Less than $10":
+                    return bookList.OrderBy(book => book.price < 10).ToList();
+                case "$10 - $20":
+                    return bookList.OrderBy(book => book.price >= 10 && book.price <= 20).ToList();
+                case "$20 - $30":
+                    return bookList.OrderBy(book => book.price >= 20 && book.price <= 30).ToList();
+                case "Above $30":
+                    return bookList.OrderBy(book => book.price > 30).ToList();
+                case "Below 10":
+                    return bookList.OrderBy(book => book.ageLimitation < 10).ToList();
+                case "10 - 18":
+                    return bookList.OrderBy(book => book.ageLimitation >= 10 && book.ageLimitation < 18).ToList();
+                case "Above 18":
+                    return bookList.OrderBy(book => book.ageLimitation >= 18).ToList();
+                case "Paperback":
+                    return bookList.OrderBy(book => book.format == "Paperback").ToList();
+                case "Hardcover":
+                    return bookList.OrderBy(book => book.format == "Hardcover").ToList();
+                default:
+                    return bookList;
+            }
+        }
+
+        public List<Book> sortByMostPopular(string searchQuery, int isCategory)
+        {
+            if (isCategory == 0)
+            {
+                if (searchQuery == "All Books")
+                    searchQuery = "";
+                return SQLHelper.SQLSearchPopularBook(searchQuery);
             }
             else
-                return bookList;
+                return SQLHelper.SQLSearchPopularCategory(searchQuery);
         }
     }
 }
