@@ -83,3 +83,89 @@
 }*/
 
 
+
+.navbar2 {
+    overflow: hidden;
+    background-color: #232323;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0;
+    padding-right: 10px;
+    margin: 0;
+}
+
+.categoriesButton::before {
+    content: "\2261";
+}
+
+.categoriesButton {
+    display: block;
+    color: #222;
+    text-align: center;
+    padding: 10px 15px;
+    text-decoration: none;
+    margin: 0;
+    background-color: #f2f2f2;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.rectangle1 {
+    color: #f2f2f2;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Horizontally center the text */
+    align-items: center; /* Vertically center the text */
+    white-space: nowrap; /* Prevent text from wrapping */
+    z-index: 2;
+}
+
+
+.navbar2 > div > .rectangle1:hover {
+    transform: scale(1.25); /* Increase size to 110% when hovered */
+    transition: transform 0.3s ease-out; /* Add transition for smooth movement */
+    cursor: pointer;
+    color: white;
+}
+
+/* Custom row class */
+.custom-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -10px; /* Negative margin to counteract padding of columns */
+    margin-right: -10px; /* Negative margin to counteract padding of columns */
+    position: relative; /* Change position to relative */
+    left: -100%; /* Initially position the row outside of the screen */
+    width: 100%;
+    transition: left 0.85s ease-out; /* Add transition for smooth movement */
+    opacity: 0; /* Initially hide the row */
+}
+
+
+/* Custom column class */
+.custom-col {
+    flex: 1;
+    padding: 0 10px; /* Add padding to columns */
+    box-sizing: border-box; /* Include padding in column width */
+    transition: all 0.85s ease-out; /* Add transition for smooth movement */
+    opacity: 0;
+}
+
+
+.navbar2.active .custom-row {
+    left: 0; /* Move the row into view when navbar2 has the active class */
+    opacity: 1; /* Make the row gradually visible */
+}
+
+.navbar2.active .custom-col {
+    opacity: 1; /* Make the row gradually visible */
+}
+
+
+
