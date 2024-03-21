@@ -14,14 +14,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results Page</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="~/css/homePage.css?Version=4">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=5">
 </head>
 <body>
 
     <p class="fw-bold display-5 px-3 py-2">You searched for: <span id="searchQueryString">@Model.searchQuery</span></p>
 
 
-    <div class="adminButtons">
+    @*<div class="adminButtons">
 
         @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
         {
@@ -33,7 +33,7 @@
 
 
 
-    </div>
+    </div>*@
 
 
     <div class="container5">
