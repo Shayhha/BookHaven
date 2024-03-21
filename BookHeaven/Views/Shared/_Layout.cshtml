@@ -14,7 +14,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BookHeaven</title>
-    <link rel="stylesheet" href="~/css/layout.css?Version=1">
+    <link rel="stylesheet" href="~/css/layout.css?Version=5.8">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
@@ -30,7 +30,7 @@
                 {
                     @if (BookHeaven.Models.User.currentUser.isAdmin == false)
                     {
-                        <a href="/CartItem/showCartView" class="btn" id="cartButton">🛒</a> 
+                        <a href="/CartItem/showCartView" class="btn" id="cartButton">🛒</a>
                         <a href="/Profile/showProfileView" id="helloUserHeader">Hello @BookHeaven.Models.User.currentUser.fname</a>
                     }
                     else
@@ -40,14 +40,55 @@
                 }
                 else
                 {
-                    <a href="/CartItem/showCartView" class="btn" id="cartButton">🛒</a> 
+                    <a href="/CartItem/showCartView" class="btn" id="cartButton">🛒</a>
 
                     <a href="/UserHome/showLoginView" id="loginButton">Login</a>
                     <a href="/UserHome/showSignupView" id="signupButton">Sign Up</a>
                 }
             </div>
         </div>
-    </header>
+        <div class="navbar2">
+            <h5 class="categoriesButton"></h5>
+
+            <div class="categoriesRow custom-row">
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Fiction</div>
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Science Fiction</div>
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Mystery</div>
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Fantasy</div>
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Biography</div>
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Thriller</div>
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Drama</div>
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Comedy</div>
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Romance</div>
+                <div class="custom-col rectangle1" onclick="handleCategoryButtonClick(this)">Education</div>
+            </div>
+
+            <script>
+                function toggleCategoriesRow() {
+                    var navbar = document.querySelector('.navbar2');
+                    navbar.classList.toggle('active');
+                }
+
+                var isRowVisible = false;
+                document.querySelector('.categoriesButton').addEventListener('click', function () {
+                    toggleCategoriesRow();
+                    // Check if row is currently visible
+                    if (isRowVisible) {
+                        // Hide the row after a delay to allow the transition to complete
+                        setTimeout(function () {
+                            document.querySelector('.categoriesRow').style.opacity = '0';
+                        }, 850); // 850ms is the duration of the transition
+                    } else {
+                        // Show the row
+                        document.querySelector('.categoriesRow').style.opacity = '1';
+                    }
+                    // Update the visibility flag
+                    isRowVisible = !isRowVisible;
+                });
+            </script>
+        </div>
+
+</header>
     <main role="main">
         @RenderBody()
     </main>

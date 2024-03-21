@@ -18,97 +18,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Home Page</title>
-    <link rel="stylesheet" href="~/css/homePage.css?Version=4">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=4.2">
 </head>
 <body>
-    <div class="genre_container">
-        <p class="title">Categories</p>
+    @*<div class="genre_container">
+            <p class="title">Categories</p>
 
-        <div class="row">
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fiction</div>
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Science Fiction</div>
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Mystery</div>
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fantasy</div>
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Biography</div>
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Thriller</div>
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Drama</div>
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Comedy</div>
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Romance</div>
-            <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Education</div>
+            <div class="row">
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fiction</div>
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Science Fiction</div>
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Mystery</div>
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fantasy</div>
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Biography</div>
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Thriller</div>
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Drama</div>
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Comedy</div>
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Romance</div>
+                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Education</div>
+            </div>
+        </div>*@
+
+
+
+    @*<div class="adminButtons">
+
+
+            @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+            {
+                @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+                {
+                    <a href="/Book/showAddNewBook" id="addNewBookButton" class="">Add New Book</a>
+                }
+            }
+
+            <label for="filter" class="filter-label">Filter by:</label>
+            <select id="filter" class="filter-select">
+                <option value="A - Z">A - Z</option>
+                <option value="Z - A">Z - A</option>
+                <option value="Price Ascending">Price Ascending</option>
+                <option value="Price Descending">Price Descending</option>
+                <option value="Most Popular">Most Popular</option>
+            </select>
+
+            @{
+                <script>document.addEventListener("DOMContentLoaded", function () {
+                        var filterSelect = document.getElementById("filter");
+                        filterSelect.addEventListener("change", function () {
+                            var selectedValue = filterSelect.value;
+                            //var searchQuery = "";
+                            console.log("Selected value: ", selectedValue);
+                            //console.log("Search query: ", searchQuery);
+
+                            var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;// + "&searchQuery=" + searchQuery;
+                            window.location.href = editUrl;
+                        });
+                    });</script>
+            }
+
+        </div>*@
+
+    <div class="container5">
+
+        <div class="sidenav">
+            <div>
+                <label for="filter" class="filter-label">Filter by:</label>
+                <select id="filter" class="filter-select">
+                    <option value="A - Z">A - Z</option>
+                    <option value="Z - A">Z - A</option>
+                    <option value="Price Ascending">Price Ascending</option>
+                    <option value="Price Descending">Price Descending</option>
+                    <option value="Most Popular">Most Popular</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterFormat" class="filter-label">Filter Format:</label>
+                <select id="filterFormat" class="filter-select">
+                    <option value="Paperback">Paperback</option>
+                    <option value="Hardcover">Hardcover</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterPrice" class="filter-label">Filter Price:</label>
+                <select id="filterPrice" class="filter-select">
+                    <option value="Less Than $10">Less Than $10</option>
+                    <option value="$10 - $20">$10 - $20</option>
+                    <option value="$20 - $30">$20 - $30</option>
+                    <option value="More Than $30">More Than $30</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterPrice" class="filter-label">Filter Price:</label>
+                <select id="filterPrice" class="filter-select">
+                    <option value="Before 1950">Before 1950</option>
+                    <option value="1950 - 2000">1950 - 2000</option>
+                    <option value="After 2000">After 2000</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterAge" class="filter-label">Filter Age:</label>
+                <select id="filterAge" class="filter-select">
+                    <option value="Less Than 10">Less Than 10</option>
+                    <option value="10 - 18">10 - 18</option>
+                    <option value="Above 18">Above 18</option>
+                </select>
+            </div>
+
+
+            @{
+                <script>document.addEventListener("DOMContentLoaded", function () {
+                        var filterSelect = document.getElementById("filter-select");
+                        filterSelect.addEventListener("change", function () {
+                            var selectedValue = filterSelect.value;
+                            console.log("Selected value: ", selectedValue);
+                            var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;
+                            window.location.href = editUrl;
+                        });
+                    });</script>
+            }
 
         </div>
-    </div>
-
-    <div class="adminButtons">
 
 
-        @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
-        {
-            @if (BookHeaven.Models.User.currentUser.isAdmin == true)
-            {
-                <a href="/Book/showAddNewBook" id="addNewBookButton" class="">Add New Book</a>
-            }
-        }
+        <div class="container">
+            <div class="row">
 
-        <label for="filter" class="filter-label">Filter by:</label>
-        <select id="filter" class="filter-select">
-            <option value="A - Z">A - Z</option>
-            <option value="Z - A">Z - A</option>
-            <option value="Price Ascending">Price Ascending</option>
-            <option value="Price Descending">Price Descending</option>
-            <option value="Most Popular">Most Popular</option>
-        </select>
+                @foreach (var index in Enumerable.Range(0, Model.books.Count / 4 + (Model.books.Count % 4 == 0 ? 0 : 1)))
+                {
+                    <div class="row">
 
-        @{
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    var filterSelect = document.getElementById("filter");
-                    filterSelect.addEventListener("change", function () {
-                        var selectedValue = filterSelect.value;
-                        //var searchQuery = "";
-                        console.log("Selected value: ", selectedValue);
-                        //console.log("Search query: ", searchQuery);
-
-                        var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;// + "&searchQuery=" + searchQuery;
-                        window.location.href = editUrl;
-                    });
-                });
-            </script>
-        }
-
-    </div>
-
-    <div class="container">
-        <div class="row">
-
-            @foreach (var index in Enumerable.Range(0, Model.books.Count / 4 + (Model.books.Count % 4 == 0 ? 0 : 1)))
-            {
-                <div class="row">
-
-                    @foreach (Book book in Model.books.Skip(index * 4).Take(4))
-                    {
-                        string sanitizedName = book.name.Replace("'", "\\'"); // Replace single quote with escaped single quote
-                        <div class="col-md-3" onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', '@book.ageLimitation', @book.price, @book.stock, @book.salePrice)">
-                            <div class="item">
-                                <img src="@book.imageUrl" alt="Image" class="img-fluid">
-                                <span class="item-title">@book.name</span>
-                                <p>Genre: @book.category</p>
-                                <p>Stock: @book.stock</p>
-                                @if (book.price != book.salePrice && book.salePrice != 0)
-                                {
-                                    <p>Price: <strong>$@book.salePrice</strong> <strike>$@book.price</strike></p>
-                                }
-                                else
-                                {
-                                    <p>Price: $@book.price</p>
-                                }
+                        @foreach (Book book in Model.books.Skip(index * 4).Take(4))
+                        {
+                            string sanitizedName = book.name.Replace("'", "\\'"); // Replace single quote with escaped single quote
+                            <div class="col-md-3" onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', '@book.ageLimitation', @book.price, @book.stock, @book.salePrice)">
+                                <div class="item">
+                                    <img src="@book.imageUrl" alt="Image" class="img-fluid">
+                                    <span class="item-title">@book.name</span>
+                                    <p>Genre: @book.category</p>
+                                    <p>Stock: @book.stock</p>
+                                    @if (book.price != book.salePrice && book.salePrice != 0)
+                                    {
+                                        <p>Price: <strong>$@book.salePrice</strong> <strike>$@book.price</strike></p>
+                                    }
+                                    else
+                                    {
+                                        <p>Price: $@book.price</p>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
 
-                </div>
-            }
+                    </div>
+                }
 
+            </div>
         </div>
     </div>
 
