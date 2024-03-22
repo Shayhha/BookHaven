@@ -18,11 +18,26 @@ function showPopup(url, name, author, date, bookId, category, format, ageLimitat
 
     document.getElementById('overlay').style.display = 'block';
     document.getElementById('popup').style.display = 'block';
+
+    checkStockAvailability()
 }
 
 function closePopup() {
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('popup').style.display = 'none';
+}
+
+function checkStockAvailability() {
+    var stock = document.getElementById('popup-stock').innerText;
+    var notifyButton = document.getElementById('bookNotifyMeButton');
+    var bookInfoButton = document.getElementById('bookInfoPageButton');
+    if (stock.trim() === '0') {
+        notifyButton.style.display = 'block';
+        bookInfoButton.style.display = 'none';
+    } else {
+        notifyButton.style.display = 'none';
+        bookInfoButton.style.display = 'block';
+    }
 }
 
 
@@ -148,6 +163,10 @@ function userLogout() {
 
 function showEmailTakenMessage() {
     alert("This email is already taken. Please choose another one.");
+}
+
+function showNotifyMessage() {
+    alert("You will be notified once this book is restocked on our shelves. Sorry for the inconvenience.");
 }
 
 function deleteAddress() {
