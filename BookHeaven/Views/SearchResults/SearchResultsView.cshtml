@@ -14,26 +14,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results Page</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.1">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.2">
 </head>
 <body>
-
-
-
-    @*<div class="adminButtons">
-
-        @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
-        {
-            @if (BookHeaven.Models.User.currentUser.isAdmin == true)
-            {
-                <a href="/Book/showAddNewBook" id="addNewBookButton" class="">Add New Book</a>
-            }
-        }
-
-
-
-    </div>*@
-
 
     <div class="container5">
 
@@ -92,118 +75,84 @@
 
             <button id="filterButton" class="filterButton" onclick="filterButtonOnClick()">Filter</button>
 
-            @{
-                @*<script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        var filterSelects = document.getElementsByClassName("filter-select");
-                        var searchQuery = document.getElementById("searchQueryString").innerText;
-                        var selectedValue = "@ViewBag.SelectedFilter"; // Get the selected filter option from ViewBag
-
-                        for (var i = 0; i < filterSelects.length; i++) {
-                            filterSelects[i].addEventListener("change", function () {
-                                var selectedValue = this.value;
-                                console.log("Selected value: ", selectedValue);
-                                console.log("Search query: ", searchQuery);
-                                var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue + "&searchQuery=" + searchQuery + "&isCategory=" + @Model.isCategory;
-                                window.location.href = editUrl;
-                            });
-
-                            // Show placeholder text if no option is selected
-                            filterSelects[i].addEventListener("click", function () {
-                                if (this.selectedIndex === 0) {
-                                    this.selectedIndex = -1;
-                                }
-                            });
-
-                            // Handle blur event to reset select box if no option is selected
-                            filterSelects[i].addEventListener("blur", function () {
-                                if (this.selectedIndex === -1) {
-                                    this.selectedIndex = 0;
-                                }
-                            });
-                        }
-                    });
-
-                </script>*@
-            }
-
         </div>
 
+        <div class="container">
 
-        <div class="row">
-            <p class="fw-bold display-5 px-3 py-2">You searched for: <span id="searchQueryString">@Model.searchQuery</span></p>
+            <div class="row">
+                <p class="fw-bold display-5 px-3 py-2">You searched for: <span id="searchQueryString">@Model.searchQuery</span></p>
 
-            @foreach (var index in Enumerable.Range(0, Model.books.Count / 4 + (Model.books.Count % 4 == 0 ? 0 : 1)))
-            {
-                <div class="row">
-                    @foreach (Book book in Model.books.Skip(index * 4).Take(4))
-                    {
-                        string sanitizedName = book.name.Replace("'", "\\'"); // Replace single quote with escaped single quote
-                        <div class="col-md-3" onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', '@book.ageLimitation', @book.price, @book.stock, @book.salePrice)">
-                            <div class="item">
-                                <img src="@book.imageUrl" alt="Image" class="img-fluid">
-                                <span class="item-title">@book.name</span>
-                                <p>Date: @book.date</p>
-                                <p>Genre: @book.category</p>
-                                <p>Stock: @book.stock</p>
-                                @if (book.price != book.salePrice && book.salePrice != 0)
-                                {
-                                    <p>Price: <strong>$@book.salePrice</strong> <strike>$@book.price</strike></p>
-                                }
-                                else
-                                {
-                                    <p>Price: $@book.price</p>
-
-                                }
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-    </div>
-
-    <div class="overlay" id="overlay" onclick="closePopup()"></div>
-
-    <div class="popup" id="popup">
-        <span class="close" onclick="closePopup()">❌</span>
-        <div class="popup-content">
-            <div class="popup-image">
-                <img id="popup-image" src="" alt="Book Image">
-            </div>
-            <div class="popup-details">
-                <h2 id="popup-title"></h2>
-                <p><strong>Author: </strong><span id="popup-author"></span></p>
-                <p><strong>Release Date: </strong><span id="popup-date"></span></p>
-                <p><strong>Book Id: </strong><span id="popup-bookId"></span></p>
-                <p><strong>Category: </strong><span id="popup-category"></span></p>
-                <p><strong>Format: </strong><span id="popup-format"></span></p>
-                <p><strong>Age Limitation: </strong><span id="popup-age"></span></p>
-                <p><strong>Price: </strong><span id="popup-price"></span></p>
-                <p><strong>In-Stock: </strong><span id="popup-stock"></span></p>
-            </div>
-        </div>
-
-        <div class="popup-buttons">
-
-            @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
-            {
-                @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+                @foreach (var index in Enumerable.Range(0, Model.books.Count / 4 + (Model.books.Count % 4 == 0 ? 0 : 1)))
                 {
-                    <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
-                    <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
-                    <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
-                }
-            }
-            else
-            {
-                <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
-                <button id="bookNotifyMeButton" class="buttonBlueColor" onclick="showNotifyMessage()">Notify Me</button>
-            }
-        </div>
-    </div>
+                    <div class="row">
+                        @foreach (Book book in Model.books.Skip(index * 4).Take(4))
+                        {
+                            string sanitizedName = book.name.Replace("'", "\\'"); // Replace single quote with escaped single quote
+                            <div class="col-md-3" onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', '@book.ageLimitation', @book.price, @book.stock, @book.salePrice)">
+                                <div class="item">
+                                    <img src="@book.imageUrl" alt="Image" class="img-fluid">
+                                    <span class="item-title">@book.name</span>
+                                    <p>Date: @book.date</p>
+                                    <p>Genre: @book.category</p>
+                                    <p>Stock: @book.stock</p>
+                                    @if (book.price != book.salePrice && book.salePrice != 0)
+                                    {
+                                        <p>Price: <strong>$@book.salePrice</strong> <strike>$@book.price</strike></p>
+                                    }
+                                    else
+                                    {
+                                        <p>Price: $@book.price</p>
 
-    <script src="~/js/site.js"></script>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+        <div class="popup" id="popup">
+            <span class="close" onclick="closePopup()">❌</span>
+            <div class="popup-content">
+                <div class="popup-image">
+                    <img id="popup-image" src="" alt="Book Image">
+                </div>
+                <div class="popup-details">
+                    <h2 id="popup-title"></h2>
+                    <p><strong>Author: </strong><span id="popup-author"></span></p>
+                    <p><strong>Release Date: </strong><span id="popup-date"></span></p>
+                    <p><strong>Book Id: </strong><span id="popup-bookId"></span></p>
+                    <p><strong>Category: </strong><span id="popup-category"></span></p>
+                    <p><strong>Format: </strong><span id="popup-format"></span></p>
+                    <p><strong>Age Limitation: </strong><span id="popup-age"></span></p>
+                    <p><strong>Price: </strong><span id="popup-price"></span></p>
+                    <p><strong>In-Stock: </strong><span id="popup-stock"></span></p>
+                </div>
+            </div>
+
+            <div class="popup-buttons">
+
+                @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+                {
+                    @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+                    {
+                        <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
+                        <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
+                        <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
+                    }
+                }
+                else
+                {
+                    <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
+                    <button id="bookNotifyMeButton" class="buttonBlueColor" onclick="showNotifyMessage()">Notify Me</button>
+                }
+            </div>
+        </div>
+
+        <script src="~/js/site.js"></script>
 </body>
 </html>
 
