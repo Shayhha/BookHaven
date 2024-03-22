@@ -135,3 +135,22 @@
 .bookViewInput {
     width: 75px;
 }
+
+.quantityInput {
+    padding-left: 5px;
+}
+
+.quantityDiv {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center; /* To vertically center align */
+    height: 50px; /* Set height to 50px */
+    height: 100px; /* Set height to 50px */
+}
+
+    .quantityDiv p {
+        margin: 0; /* Remove any default margin */
+        vertical-align: middle; /* Align vertically with input */
+        margin-right: 8px;
+    }
+

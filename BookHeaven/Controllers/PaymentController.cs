@@ -22,7 +22,7 @@ namespace BookHeaven.Controllers
 
         }
 
-        public IActionResult processPayment(int bookId)
+        public IActionResult processPayment(int bookId, int quantity)
         {
             if (Models.User.currentUser != null)
             {
@@ -35,7 +35,7 @@ namespace BookHeaven.Controllers
                     Mode = "payment",
                 };
 
-                CartItem cartItem = new CartItem(1); // Change this with a counter in the HTML
+                CartItem cartItem = new CartItem(quantity); // Change this with a counter in the HTML
                 cartItem.book = SQLHelper.SQLSearchBookById(bookId);
 
                 options = Payment.addItemToCheckout(options, cartItem);
