@@ -55,7 +55,7 @@ namespace BookHeaven.Controllers
         }
 
 
-        public IActionResult filterBooks(string filterBy, string searchQuery = "", int isCategory = 0)
+        public IActionResult showFilteredBooks(string filterBy, string searchQuery = "", int isCategory = 0)
         {
             SearchResults searchResults;
 
@@ -92,9 +92,10 @@ namespace BookHeaven.Controllers
         {
             List<Book> tempBookList = bookList; //save bookList in temp list for sorting
             List<string> filterList = filterBy.Split(',').ToList(); //create a new list from filterBy string
+            ViewBag.FilterList = filterList;
             foreach (string filter in filterList) //iterate over list and filter our temp book list with appropriate filters
             {
-                filterBooks(tempBookList, filter, searchQuery, isCategory); //call helper function for sorting by each filter
+                tempBookList = filterBooks(tempBookList, filter, searchQuery, isCategory); //call helper function for sorting by each filter
             }
             return tempBookList; //return filtered list
         }

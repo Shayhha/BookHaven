@@ -113,8 +113,8 @@
             </div>
 
             <div>
-                <label for="filterPrice" class="filter-label">Filter Date:</label>
-                <select id="filterPrice" class="filter-select">
+                <label for="filterDate" class="filter-label">Filter Date:</label>
+                <select id="filterDate" class="filter-select">
                     <option value="" disabled selected>Select an option</option>
                     <option value="Before 1950">Before 1950</option>
                     <option value="1950 - 2000">1950 - 2000</option>
@@ -135,33 +135,35 @@
             <button id="filterButton" class="filterButton" onclick="filterButtonOnClick()">Filter</button>
 
             @{
-                <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        var filterSelects = document.getElementsByClassName("filter-select");
-                        for (var i = 0; i < filterSelects.length; i++) {
-                            filterSelects[i].addEventListener("change", function () {
-                                var selectedValue = this.value;
-                                console.log("Selected value: ", selectedValue);
-                                var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;
-                                window.location.href = editUrl;
-                            });
 
-                            // Show placeholder text if no option is selected
-                            filterSelects[i].addEventListener("click", function () {
-                                if (this.selectedIndex === 0) {
-                                    this.selectedIndex = -1;
-                                }
-                            });
+                @*<script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var filterSelects = document.getElementsByClassName("filter-select");
+                    for (var i = 0; i < filterSelects.length; i++) {
+                        filterSelects[i].addEventListener("change", function () {
+                            var selectedValue = this.value;
+                            console.log("Selected value: ", selectedValue);
+                            var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;
+                            window.location.href = editUrl;
+                        });
 
-                            // Handle blur event to reset select box if no option is selected
-                            filterSelects[i].addEventListener("blur", function () {
-                                if (this.selectedIndex === -1) {
-                                    this.selectedIndex = 0;
-                                }
-                            });
-                        }
-                    });
-                </script>
+                        // Show placeholder text if no option is selected
+                        filterSelects[i].addEventListener("click", function () {
+                            if (this.selectedIndex === 0) {
+                                this.selectedIndex = -1;
+                            }
+                        });
+
+                        // Handle blur event to reset select box if no option is selected
+                        filterSelects[i].addEventListener("blur", function () {
+                            if (this.selectedIndex === -1) {
+                                this.selectedIndex = 0;
+                            }
+                        });
+                    }
+                });
+            </script>*@
+
             }
 
         </div>
