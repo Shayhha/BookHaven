@@ -18,6 +18,8 @@ function showPopup(url, name, author, date, bookId, category, format, ageLimitat
 
     document.getElementById('overlay').style.display = 'block';
     document.getElementById('popup').style.display = 'block';
+
+    checkStockAvailability()
 }
 
 function closePopup() {
@@ -25,6 +27,36 @@ function closePopup() {
     document.getElementById('popup').style.display = 'none';
 }
 
+function checkStockAvailability() {
+    var stock = document.getElementById('popup-stock').innerText;
+    var notifyButton = document.getElementById('bookNotifyMeButton');
+    var bookInfoButton = document.getElementById('bookInfoPageButton');
+    if (stock.trim() === '0') {
+        notifyButton.style.display = 'block';
+        bookInfoButton.style.display = 'none';
+    } else {
+        notifyButton.style.display = 'none';
+        bookInfoButton.style.display = 'block';
+    }
+}
+
+
+function filterButtonOnClick() {
+    var filterBy = []
+    var searchQuery = document.getElementById("searchQueryString").innerText;
+
+    // Get selected values from each dropdown menu
+    var filterSelectElements = document.getElementsByClassName("filter-select");
+    for (var i = 0; i < filterSelectElements.length; i++) {
+        var selectedValue = filterSelectElements[i].value;
+        if (selectedValue !== "") {
+            filterBy.push(selectedValue);
+        }
+    }
+    filterBy = filterBy.join(','); // Convert the array into a string separated by commas
+
+    window.location.href = '/SearchResults/filterBooks?filterBy=' + filterBy + '&searchQuery=' + searchQuery;
+}
 
 
 function handleSearchButtonClick() {
@@ -133,6 +165,10 @@ function showEmailTakenMessage() {
     alert("This email is already taken. Please choose another one.");
 }
 
+function showNotifyMessage() {
+    alert("You will be notified once this book is restocked on our shelves. Sorry for the inconvenience.");
+}
+
 function deleteAddress() {
     // AJAX request to delete credit card information
     fetch('DeleteAddress', {
@@ -177,30 +213,3 @@ function deleteCreditCard() {
 
 
 
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    var filterSelects = document.getElementsByClassName("filter-select");
-    for (var i = 0; i < filterSelects.length; i++) {
-        filterSelects[i].addEventListener("change", function () {
-            var selectedValue = this.value;
-            console.log("Selected value: ", selectedValue);
-            var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;
-            window.location.href = editUrl;
-        });
-
-        // Show placeholder text if no option is selected
-        filterSelects[i].addEventListener("click", function () {
-            if (this.selectedIndex === 0) {
-                this.selectedIndex = -1;
-            }
-        });
-
-        // Handle blur event to reset select box if no option is selected
-        filterSelects[i].addEventListener("blur", function () {
-            if (this.selectedIndex === -1) {
-                this.selectedIndex = 0;
-            }
-        });
-    }
-});

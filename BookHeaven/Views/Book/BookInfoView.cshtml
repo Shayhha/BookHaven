@@ -12,7 +12,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BookHeaven</title>
-    <link rel="stylesheet" href="~/css/bookPages.css?Version=2">
+    <link rel="stylesheet" href="~/css/bookPages.css?Version=6.0.1">
 </head>
 <body>
     <div class="container">
@@ -85,28 +85,14 @@
                     }
                     else
                     {
-                        if (@Model.stock == 0)
-                        {
-                            <button id="bookNotifyMeButton" class="buttonBlueColor">Notify Me</button>
-                        }
-                        else
-                        {
-                            <button id="bookAddToCartButton" class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button>
-                            <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
-                        }
+                        <button id="bookAddToCartButton" class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button>
+                        <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
                     }
                 }
                 else
                 {
-                    if (@Model.stock == 0)
-                    {
-                        <button id="bookNotifyMeButton" class="buttonBlueColor">Notify Me</button>
-                    }
-                    else
-                    {
-                        <button id="bookAddToCartButton" class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button> 
-                        <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
-                    }
+                    <button id="bookAddToCartButton" class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button> 
+                    <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
                 }
             </div>
         </div>
