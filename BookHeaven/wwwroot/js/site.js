@@ -137,7 +137,7 @@ function removeBookFromSale() {
 
 function buyBook() {
     var bookId = document.getElementById("popup-bookId").textContent;
-    var editUrl = "/Payment/showPaymentView?bookId=" + bookId;
+    var editUrl = "/Payment/processPayment?bookId=" + bookId;
     window.location.href = editUrl;
 }
 
