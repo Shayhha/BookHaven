@@ -1,4 +1,5 @@
 ﻿using BookHeaven.Models;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -298,41 +299,43 @@ namespace BookHeaven.Models
             {
                 connection.Open();
 
-                SqlTransaction transaction = connection.BeginTransaction(); //begin a transaction
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                { //begin a transaction
 
-                try
-                {
-                    string query = @"
+                    try
+                    {
+                        string query = @"
                         INSERT INTO Users(email, password) OUTPUT INSERTED.UserId VALUES(@email, @password);
                         INSERT INTO UserInfo(email, fname, lname) VALUES(@email, @fname, @lname);";
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Transaction = transaction; //associate the command with the transaction
-
-                        command.Parameters.AddWithValue("@email", signup.email);
-                        command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
-                        command.Parameters.AddWithValue("@fname", signup.firstName);
-                        command.Parameters.AddWithValue("@lname", signup.lastName);
-
-                        //execute the command and retrieve the UserId directly
-                        object result = command.ExecuteScalar();
-                        if (result != null)
+                        using (SqlCommand command = new SqlCommand(query, connection))
                         {
-                            transaction.Commit(); //commit the transaction if both insertions are successful
-                            return new User(int.Parse(result.ToString()), signup.email, signup.firstName, signup.lastName);
-                        }
-                        else
-                        {
-                            transaction.Rollback(); //rollback the transaction if the second insertion fails
-                            return null;
+                            command.Transaction = transaction; //associate the command with the transaction
+
+                            command.Parameters.AddWithValue("@email", signup.email);
+                            command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
+                            command.Parameters.AddWithValue("@fname", signup.firstName);
+                            command.Parameters.AddWithValue("@lname", signup.lastName);
+
+                            //execute the command and retrieve the UserId directly
+                            object result = command.ExecuteScalar();
+                            if (result != null)
+                            {
+                                transaction.Commit(); //commit the transaction if both insertions are successful
+                                return new User(int.Parse(result.ToString()), signup.email, signup.firstName, signup.lastName);
+                            }
+                            else
+                            {
+                                transaction.Rollback(); //rollback the transaction if the second insertion fails
+                                return null;
+                            }
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback(); //rollback the transaction in case of an exception
-                    throw ex; //rethrow the exception
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback(); //rollback the transaction in case of an exception
+                        throw ex; //rethrow the exception
+                    }
                 }
             }
         }
@@ -902,6 +905,102 @@ namespace BookHeaven.Models
                     else
                         return false; //failed to delete the credit card
                 }
+            }
+        }
+
+        /// <summary>
+        /// Function for adding order to the database, adds info to orders and orderDetails tables
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="cartItems"></param>
+        /// <param name="orderDate"></param>
+        /// <param name="totalPrice"></param>
+        /// <param name="shippingDate"></param>
+        /// <returns></returns>
+        public static bool SQLAddOrder(int userId, List<CartItem> cartItems, string orderDate, float totalPrice, string shippingDate)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction()) //begin a transaction
+                { 
+                    try
+                    {
+                        string query = @"INSERT INTO Orders(userId, orderDate, totalPrice, shippingDate) VALUES(@userId, @orderDate, @totalPrice, @shippingDate);";
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@userId", userId);
+                            command.Parameters.AddWithValue("@orderDate", orderDate);
+                            command.Parameters.AddWithValue("@totalPrice", totalPrice);
+                            command.Parameters.AddWithValue("@shippingDate", shippingDate);
+
+                            //execute the command and retrieve the orderId
+                            int orderId = (int)command.ExecuteScalar();
+                            if (SQLAddOrderItem(orderId, cartItems, connection, transaction)) //if true we added item successfully to orderDetails table
+                            {
+                                transaction.Commit();
+                                return true;
+                            }
+                            else
+                            {
+                                transaction.Rollback(); //rollback the transaction if failed to insert items
+                                return false;
+                            }
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback(); //rollback the transaction in case of an exception                
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function to add items to the orderDetails table
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="cartItems"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static bool SQLAddOrderItem(int orderId, List<CartItem> cartItems, SqlConnection connection, SqlTransaction transaction)
+        {
+            string query = @"INSERT INTO OrderDetails(orderId, bookId, quantity, price) VALUES(@orderId, @bookId, @quantity, @price);";
+
+            try
+            {
+                using (SqlCommand command = new SqlCommand(query, connection, transaction))
+                {
+                    foreach (CartItem cartItem in cartItems)
+                    {
+                        //set parameter values for the current cart item
+                        command.Parameters.AddWithValue("@orderId", orderId);
+                        command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
+                        command.Parameters.AddWithValue("@quantity", cartItem.amount);
+                        command.Parameters.AddWithValue("@price", cartItem.book.price);
+
+                        //execute the insert command for the current cart item
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected != 1) //check if the insert was successful
+                        {
+                            transaction.Rollback();//rollback the transaction and return false if the insert fails
+                            return false;
+                        }
+                        command.Parameters.Clear(); //clear parameters for next iteration
+                    }
+                    return true; //all items inserted successfully
+                }
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();//rollback the transaction and return false if the insert fails
+                Console.WriteLine(ex.Message); //print the error
+                return false;
             }
         }
 
