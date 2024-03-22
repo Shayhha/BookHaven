@@ -261,9 +261,9 @@
 
 /* Style for the combobox */
 .filter-select {
-    padding: 8px 12px;
+    padding: 4px 8px;
     width: 150px; /* Adjust the width as needed */
-    height: 25px;
+    height: 35px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 5px;
