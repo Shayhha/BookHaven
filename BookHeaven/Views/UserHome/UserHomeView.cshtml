@@ -18,7 +18,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Home Page</title>
-    <link rel="stylesheet" href="~/css/homePage.css?Version=4.2">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.1">
 </head>
 <body>
     @*<div class="genre_container">
@@ -81,7 +81,7 @@
 
         <div class="sidenav">
             <div>
-                <label for="filter" class="filter-label">Filter by:</label>
+                <label for="filter" class="filter-label">Filter By:</label>
                 <select id="filter" class="filter-select">
                     <option value="" disabled selected>Select an option</option>
                     <option value="A - Z">A - Z</option>
@@ -132,6 +132,7 @@
                 </select>
             </div>
 
+            <button id="filterButton" class="filterButton" onclick="filterButtonOnClick()">Filter</button>
 
             @{
                 <script>
@@ -180,6 +181,7 @@
                                 <div class="item">
                                     <img src="@book.imageUrl" alt="Image" class="img-fluid">
                                     <span class="item-title">@book.name</span>
+                                    <p>Date: @book.date</p>
                                     <p>Genre: @book.category</p>
                                     <p>Stock: @book.stock</p>
                                     @if (book.price != book.salePrice && book.salePrice != 0)
