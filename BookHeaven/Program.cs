@@ -1,6 +1,7 @@
 using System.Reflection;
 using BookHeaven.Models;
 using Microsoft.Extensions.Options;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +47,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseSession(); // <---- Sessions 
+app.UseSession(); // <---- Sessions
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseAuthorization();
 

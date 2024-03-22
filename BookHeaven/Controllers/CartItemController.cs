@@ -1,5 +1,7 @@
 ﻿using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Stripe.Checkout;
 
 namespace BookHeaven.Controllers
 {
@@ -103,5 +105,51 @@ namespace BookHeaven.Controllers
             
             return Json(new { success = success });
         }
+
+
+        public IActionResult checkoutFromCart()
+        {
+            if (Models.User.currentUser != null && Models.User.currentUser.cartItems != null) {
+
+                SessionCreateOptions options = new SessionCreateOptions
+                {
+                    SuccessUrl = "https://localhost:7212/CartItem/checkoutWasSuccessful",
+                    CancelUrl = "https://localhost:7212/CartItem/checkoutHasFailed", 
+                    LineItems = new List<SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
+
+                foreach (CartItem cartItem in Models.User.currentUser.cartItems)
+                {
+                      options = Payment.addItemToCheckout(options, cartItem);
+                }
+
+                SessionService service = new SessionService();
+                Session session = service.Create(options);
+
+                Response.Headers.Add("Location", session.Url);
+
+                return new StatusCodeResult(303);
+
+            }
+
+            // Create a ViewBag message for the user
+            return new StatusCodeResult(400); // Bad Request
+        }
+
+
+        public IActionResult checkoutWasSuccessful()
+        {
+            Models.User.currentUser.cartItems.Clear();
+            // Create a ViewBag success message to the user
+            return RedirectToAction("showUserHome", "UserHome");
+        }
+
+        public IActionResult checkoutHasFailed()
+        {
+            // Create a ViewBag failure message to the user
+            return RedirectToAction("showCartView", "CartItem");
+        }
     }
 }
+
