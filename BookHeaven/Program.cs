@@ -49,7 +49,7 @@ app.UseRouting();
 
 app.UseSession(); // <---- Sessions
 
-StripeConfiguration.ApiKey
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseAuthorization();
 
