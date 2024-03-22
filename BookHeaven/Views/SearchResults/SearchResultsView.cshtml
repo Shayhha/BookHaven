@@ -14,11 +14,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results Page</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="~/css/homePage.css?Version=5">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.1">
 </head>
 <body>
 
-    <p class="fw-bold display-5 px-3 py-2">You searched for: <span id="searchQueryString">@Model.searchQuery</span></p>
 
 
     @*<div class="adminButtons">
@@ -40,7 +39,7 @@
 
         <div class="sidenav">
             <div>
-                <label for="filter" class="filter-label">Filter by:</label>
+                <label for="filter" class="filter-label">Filter By:</label>
                 <select id="filter" class="filter-select">
                     <option value="" disabled selected>Select an option</option>
                     <option value="A - Z" selected="@(ViewBag.SelectedFilter == "A - Z")">A - Z</option>
@@ -91,20 +90,14 @@
                 </select>
             </div>
 
+            <button id="filterButton" class="filterButton" onclick="filterButtonOnClick()">Filter</button>
+
             @{
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
-                        var filterSelect = document.getElementsByClassName("filter-select");
+                        var filterSelects = document.getElementsByClassName("filter-select");
                         var searchQuery = document.getElementById("searchQueryString").innerText;
                         var selectedValue = "@ViewBag.SelectedFilter"; // Get the selected filter option from ViewBag
-
-                        // Set the selected value for the dropdown menu
-                        for (var i = 0; i < filterSelect.options.length; i++) {
-                            if (filterSelect.options[i].value === selectedValue) {
-                                filterSelect.selectedIndex = i;
-                                break;
-                            }
-                        }
 
                         for (var i = 0; i < filterSelects.length; i++) {
                             filterSelects[i].addEventListener("change", function () {
@@ -129,9 +122,6 @@
                                 }
                             });
                         }
-
-      
-
                     });
 
                 </script>
@@ -139,7 +129,10 @@
 
         </div>
 
+
         <div class="row">
+            <p class="fw-bold display-5 px-3 py-2">You searched for: <span id="searchQueryString">@Model.searchQuery</span></p>
+
             @foreach (var index in Enumerable.Range(0, Model.books.Count / 4 + (Model.books.Count % 4 == 0 ? 0 : 1)))
             {
                 <div class="row">
@@ -150,6 +143,7 @@
                             <div class="item">
                                 <img src="@book.imageUrl" alt="Image" class="img-fluid">
                                 <span class="item-title">@book.name</span>
+                                <p>Date: @book.date</p>
                                 <p>Genre: @book.category</p>
                                 <p>Stock: @book.stock</p>
                                 @if (book.price != book.salePrice && book.salePrice != 0)

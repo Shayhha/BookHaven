@@ -26,6 +26,23 @@ function closePopup() {
 }
 
 
+function filterButtonOnClick() {
+    var filterBy = []
+    var searchQuery = document.getElementById("searchQueryString").innerText;
+
+    // Get selected values from each dropdown menu
+    var filterSelectElements = document.getElementsByClassName("filter-select");
+    for (var i = 0; i < filterSelectElements.length; i++) {
+        var selectedValue = filterSelectElements[i].value;
+        if (selectedValue !== "") {
+            filterBy.push(selectedValue);
+        }
+    }
+    filterBy = filterBy.join(','); // Convert the array into a string separated by commas
+
+    window.location.href = '/SearchResults/filterBooks?filterBy=' + filterBy + '&searchQuery=' + searchQuery;
+}
+
 
 function handleSearchButtonClick() {
     var searchQuery = document.getElementsByName("searchQuery")[0].value;
@@ -177,30 +194,3 @@ function deleteCreditCard() {
 
 
 
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    var filterSelects = document.getElementsByClassName("filter-select");
-    for (var i = 0; i < filterSelects.length; i++) {
-        filterSelects[i].addEventListener("change", function () {
-            var selectedValue = this.value;
-            console.log("Selected value: ", selectedValue);
-            var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;
-            window.location.href = editUrl;
-        });
-
-        // Show placeholder text if no option is selected
-        filterSelects[i].addEventListener("click", function () {
-            if (this.selectedIndex === 0) {
-                this.selectedIndex = -1;
-            }
-        });
-
-        // Handle blur event to reset select box if no option is selected
-        filterSelects[i].addEventListener("blur", function () {
-            if (this.selectedIndex === -1) {
-                this.selectedIndex = 0;
-            }
-        });
-    }
-});
