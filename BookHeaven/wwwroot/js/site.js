@@ -42,22 +42,6 @@ function checkStockAvailability() {
 
 
 function filterButtonOnClick() {
-    //var filterBy = []
-    //var searchQuery = document.getElementById("searchQueryString").innerText;
-
-    //// Get selected values from each dropdown menu
-    //var filterSelectElements = document.getElementsByClassName("filter-select");
-    //for (var i = 0; i < filterSelectElements.length; i++) {
-    //    var selectedValue = filterSelectElements[i].value;
-    //    if (selectedValue !== "") {
-    //        filterBy.push(selectedValue);
-    //    }
-    //}
-    //filterBy = filterBy.join(','); // Convert the array into a string separated by commas
-
-    //window.location.href = '/SearchResults/showfilteredBooks?filterBy=' + filterBy + '&searchQuery=' + searchQuery;
-
-
     var filterValues = [];
     var searchQueryElement = document.getElementById("searchQueryString");
     var searchQuery = searchQueryElement ? searchQueryElement.innerText : ""; // Assign empty string if searchQueryElement is null
