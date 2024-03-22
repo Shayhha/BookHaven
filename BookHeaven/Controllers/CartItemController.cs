@@ -30,13 +30,18 @@ namespace BookHeaven.Controllers
             {
                 errorMessage = "This book is already in your cart.";
                 return Json(new { success = success, errorMessage = errorMessage });
-
             }
 
             Book book = SQLHelper.SQLSearchBookById(bookId);
 
             if (book != null)
             {
+                if (book.stock == 0)
+                {
+                    errorMessage = "This book is sold out, sorry for your inconvenience.";
+                    return Json(new { success = success, errorMessage = errorMessage });
+                }
+
                 CartItem cartItem = new CartItem(book, 1);
 
                 if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
