@@ -23,7 +23,7 @@ namespace BookHeaven.Controllers
         }
 
 
-        public IActionResult addBookToCart(int bookId)
+        public IActionResult addBookToCart(int bookId, int quantity)
         {
             bool success = false;
             string errorMessage = "";
@@ -43,8 +43,13 @@ namespace BookHeaven.Controllers
                     errorMessage = "This book is sold out, sorry for your inconvenience.";
                     return Json(new { success = success, errorMessage = errorMessage });
                 }
+                else if (quantity > book.stock)
+                {
+                    errorMessage = "You are trying to buy more books than we have in stock, try reducing the quantity.";
+                    return Json(new { success = success, errorMessage = errorMessage });
+                }
 
-                CartItem cartItem = new CartItem(book, 1);
+                CartItem cartItem = new CartItem(book, quantity);
 
                 if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
                 {

@@ -82,8 +82,9 @@ function handleCategoryButtonClick(element) {
 
 function addBookToCart() {
     var bookId = document.getElementById("popup-bookId").textContent;
+    var quantity = document.getElementById("quantityInput").value;
     // Make an AJAX request to call the addBookToCart method
-    fetch(`/CartItem/addBookToCart?bookId=${bookId}`)
+    fetch(`/CartItem/addBookToCart?bookId=${bookId}&quantity=${quantity}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -137,7 +138,8 @@ function removeBookFromSale() {
 
 function buyBook() {
     var bookId = document.getElementById("popup-bookId").textContent;
-    var editUrl = "/Payment/processPayment?bookId=" + bookId;
+    var quantity = document.getElementById("quantityInput").value;
+    var editUrl = "/Payment/processPayment?bookId=" + bookId + "&quantity=" + quantity;
     window.location.href = editUrl;
 }
 
