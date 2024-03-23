@@ -1,5 +1,6 @@
 ﻿@model BookHeaven.Models.User;
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +82,8 @@
         {
             @foreach (CartItem item in Model.cartItems)
             {
-                if (item.book != null) { 
+                if (item.book != null)
+                {
                     <div class="cart-item">
                         <img src="@item.book.imageUrl" alt="Book Image">
                         <div class="cart-item-details">
@@ -118,7 +120,9 @@
         </div>
     </div>
 
-    <script>// Function to update total price
+    <script>let oldQuantities = {};
+
+        // Function to update total price
         function checkQuantity(input) {
             const quantity = parseInt(input.value);
             if (quantity === 0) {
@@ -164,9 +168,12 @@
             const input = event.target;
             const cartItem = input.closest('.cart-item');
             const bookId = cartItem.querySelector('.bookId span').textContent;
-            var quantity = parseInt(input.value);
+            var newQuantity = parseInt(input.value);
+            const oldQuantity = oldQuantities[bookId] || 0; // Get old quantity from stored object or default to 0
+            oldQuantities[bookId] = newQuantity; // Update old quantity in stored object
+
             // Make an AJAX request to call the addBookToCart method
-            fetch(`/CartItem/updateBookInCart?bookId=${bookId}&quantity=${quantity}`)
+            fetch(`/CartItem/updateBookInCart?bookId=${bookId}&newQuantity=${newQuantity}&oldQuantity=${oldQuantity}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -178,7 +185,7 @@
                             pricePerItem = parseFloat(element.textContent);
                         });
 
-                        const totalPrice = quantity * pricePerItem;
+                        const totalPrice = newQuantity * pricePerItem;
                         priceElement.textContent = `$${totalPrice.toFixed(2)}`;
                         updateTotalPrice();
                     } else {
@@ -214,6 +221,13 @@
         const quantityInputs = document.querySelectorAll('.quantity-input');
         quantityInputs.forEach(input => {
             input.addEventListener('input', updateQuantity);
+            input.addEventListener('keydown', function (event) {
+                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                    const cartItem = input.closest('.cart-item');
+                    const bookId = cartItem.querySelector('.bookId span').textContent;
+                    oldQuantities[bookId] = parseInt(input.value); // Save old quantity when arrow keys are pressed
+                }
+            });
         });
 
         // Event listener for delete button
@@ -225,8 +239,20 @@
             });
         });
 
+        // Function to initialize oldQuantities object with initial quantities
+        function initializeOldQuantities() {
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+            quantityInputs.forEach(input => {
+                const cartItem = input.closest('.cart-item');
+                const bookId = cartItem.querySelector('.bookId span').textContent;
+                oldQuantities[bookId] = parseInt(input.value); // Save initial quantity
+            });
+        }
+
         window.onload = function () {
             updateTotalPrice();
+            initializeOldQuantities(); // Initialize oldQuantities object with initial quantities
         };</script>
+
 </body>
 </html>

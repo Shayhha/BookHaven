@@ -13,6 +13,7 @@ namespace BookHeaven.Models
         public Address? address { get; set; }
         public CreditCard? creditCard { get; set; }
         public List<CartItem>? cartItems { get; set; }
+        public List<Order>? orders { get; set; }
         public bool isAdmin { get; set; }
 
         public User() {
@@ -28,6 +29,7 @@ namespace BookHeaven.Models
             this.address = null;
             this.creditCard = null;
             this.cartItems = new List<CartItem>();
+            this.orders = null;
             this.isAdmin = isAdmin;
         }
 
@@ -39,6 +41,7 @@ namespace BookHeaven.Models
             this.fname = fname;
             this.lname = lname;
             this.cartItems = new List<CartItem>();
+            this.orders = null;
             this.isAdmin = isAdmin;
             if (country == "" && city == "" && street == "" && apartNum == 0)
                 this.address = null;
