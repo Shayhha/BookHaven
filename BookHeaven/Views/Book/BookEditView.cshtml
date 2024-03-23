@@ -53,11 +53,27 @@
                 </div>
                 <div class="form-group">
                     <label for="category">Category:</label>
-                    <input type="text" class="form-control" id="category" name="category" value="@Model.category">
+                    <select id="category" class="form-control" name="category">
+                        <option value="" disabled>Select an option</option>
+                        <option value="Fiction" selected="@(Model.category == "Fiction")">Fiction</option>
+                        <option value="Science Fiction" selected="@(Model.category == "Science Fiction")">Science Fiction</option>
+                        <option value="Mystery" selected="@(Model.category == "Mystery")">Mystery</option>
+                        <option value="Fantasy" selected="@(Model.category == "Fantasy")">Fantasy</option>
+                        <option value="Biography" selected="@(Model.category == "Biography")">Biography</option>
+                        <option value="Thriller" selected="@(Model.category == "Thriller")">Thriller</option>
+                        <option value="Drama" selected="@(Model.category == "Drama")">Drama</option>
+                        <option value="Comedy" selected="@(Model.category == "Comedy")">Comedy</option>
+                        <option value="Romance" selected="@(Model.category == "Romance")">Romance</option>
+                        <option value="Education" selected="@(Model.category == "Education")">Education</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="format">Format:</label>
-                    <input type="text" class="form-control" id="format" name="format" value="@Model.format">
+                    <select id="format" class="form-control" name="format">
+                        <option value="" disabled>Select an option</option>
+                        <option value="Paperback" selected="@(Model.format == "Paperback")">Paperback</option>
+                        <option value="Hardcover" selected="@(Model.format == "Hardcover")">Hardcover</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="price">Price:</label>

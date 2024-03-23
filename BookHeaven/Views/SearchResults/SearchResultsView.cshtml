@@ -4,6 +4,8 @@
 
 @{
     string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
+    if (ViewBag.FilterList == null)
+        ViewBag.FilterList = "";
 }
 
 
@@ -14,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results Page</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.2">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.3">
 </head>
 <body>
 
@@ -74,6 +76,7 @@
             </div>
 
             <button id="filterButton" class="filterButton" onclick="filterButtonOnClick()">Filter</button>
+            <button id="clearFilterButton" class="filterButton" onclick="clearFilterButtonOnClick()">Clear</button>
 
         </div>
 
@@ -142,6 +145,11 @@
                         <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
                         <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
                         <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
+                    }
+                    else
+                    {
+                        <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
+                        <button id="bookNotifyMeButton" class="buttonBlueColor" onclick="showNotifyMessage()">Notify Me</button>
                     }
                 }
                 else

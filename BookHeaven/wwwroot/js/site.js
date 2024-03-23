@@ -64,9 +64,15 @@ function filterButtonOnClick() {
     var filterString = filterValues.join(","); // Join the values with commas
     console.log("Selected values: ", filterString);
     window.location.href = '/SearchResults/showfilteredBooks?filterBy=' + filterString + '&searchQuery=' + searchQuery;
-    window.location.href = editUrl;
 }
 
+function clearFilterButtonOnClick() {
+    var filterSelects = document.getElementsByClassName("filter-select");
+    for (var i = 0; i < filterSelects.length; i++) {
+        filterSelects[i].value = "";
+    }
+    window.location.href = '/UserHome/showUserHome';
+}
 
 function handleSearchButtonClick() {
     var searchQuery = document.getElementsByName("searchQuery")[0].value;
@@ -224,3 +230,14 @@ function deleteCreditCard() {
 
 
 
+
+// Clearing the default user's cart when he exits our app or redirects to a different url (outside of our app).
+function handleBeforeUnload(e) {
+    window.addEventListener('beforeunload', function (e) {
+        // Execute your function here
+        fetch(`/CartItem/clearDefaultUserCart`)
+            .then(response => response.json());
+    });
+}
+
+handleBeforeUnload();
