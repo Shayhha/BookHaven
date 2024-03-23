@@ -1,4 +1,5 @@
 ﻿using BookHeaven.Models;
+using Stripe.Climate;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -1447,6 +1448,71 @@ namespace BookHeaven.Models
 
             return dataTable;
         }
+
+        /// <summary>
+        /// Function for getting orders list for specific user from db
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static List<Order> SQLInitUserOrders(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM Orders WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        List<Order> orderList = new List<Order>(); //our order list
+                        while (reader.Read()) //add all orders from Orders table in db
+                        {
+                            Order order = new Order(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetFloat(3), reader.GetString(4), reader.GetString(5)); //create cartItem with book set to null and with amount
+                            orderList.Add(order); //add order to orderList
+                        }
+                        reader.Close(); //close the reader 
+                        for (int i = 0; i < orderList.Count; i++) //iterate over orderList and initialize all orderItem objects in orderItems list
+                        {
+                            int orderId = orderList[i].orderId; //get orderId from order in list
+                            List<OrderItem> orderItems = SQLInitOrderItems(orderId, connection); //get list of orderItems
+                            orderList[i].orderItems = orderItems; //set order object with its orderItem list
+                        }
+                        return orderList; //return initialized orderList
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for initializing orderItem list for a given orderId
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private static List<OrderItem> SQLInitOrderItems(int orderId, SqlConnection connection)
+        {
+            string query = "SELECT * FROM OrderDetails WHERE orderId = @orderId;";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@orderId", orderId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    List<OrderItem> orderItemList = new List<OrderItem>(); //our orderItem list
+                    while (reader.Read()) //add all orderItems from OrderDetails table in db
+                    {
+                        OrderItem orderItem = new OrderItem(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetString(3), reader.GetInt32(4), reader.GetFloat(5)); //create orderItem 
+                        orderItemList.Add(orderItem); //add orderItem to orderItemList
+                    }
+                    return orderItemList;
+                }
+            }
+        }
+
     }
 }
 
