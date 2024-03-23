@@ -52,13 +52,13 @@ namespace BookHeaven.Controllers
 
                 if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
                 {
-                    success = Models.CartItem.addCartItem(Models.User.currentUser.userId, cartItem);
+                    success = Models.CartItem.addCartItemUser(Models.User.currentUser.userId, cartItem);
                     if (!success)
                         errorMessage = "Cound not add the book to cart because we dont have enough in stock. try reducing the quantity.";
                 }
                 else
                 {
-                    success = Models.CartItem.addCartItem(cartItem);
+                    success = Models.CartItem.addCartItemDefault(cartItem);
                 }
 
                 if (success)
@@ -68,22 +68,24 @@ namespace BookHeaven.Controllers
             return Json(new { success = success, errorMessage = errorMessage });
         }
 
-        public IActionResult updateBookInCart(int bookId, int quantity)
+        public IActionResult updateBookInCart(int bookId, int newQuantity, int oldQuantity)
         {
+            Console.WriteLine("new quantity = " + newQuantity + ", old quantity = " + oldQuantity);
+
             bool success = false;
             Book book = SQLHelper.SQLSearchBookById(bookId);
 
             if (book != null)
             {
-                CartItem cartItem = new CartItem(book, quantity);
+                CartItem cartItem = new CartItem(book, newQuantity);
 
                 if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
                 {
-                    success = Models.CartItem.updateCartItem(Models.User.currentUser.userId, cartItem);
+                    success = Models.CartItem.updateCartItemUser(Models.User.currentUser.userId, cartItem, oldQuantity - newQuantity);
                 }
                 else
                 {
-                    success = Models.CartItem.updateCartItem(cartItem);
+                    success = Models.CartItem.updateCartItemDefault(cartItem, oldQuantity - newQuantity);
                 }
 
                 if (success)
@@ -93,19 +95,23 @@ namespace BookHeaven.Controllers
             return Json(new { success = success });
         }
 
-        public IActionResult deleteBookFromCart(int bookId)
+        public IActionResult deleteBookFromCart(int bookId, int amount)
         {
             bool success = false;
-            
-            if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
-            {
-                success = Models.CartItem.deleteCartItem(Models.User.currentUser.userId, bookId);
-            }
-            else
-            {
-                success = Models.CartItem.deleteCartItem(bookId);
-            }
+            Book book = SQLHelper.SQLSearchBookById(bookId);
 
+            if (book != null)
+            {
+                CartItem cartItem = new CartItem(book, amount);
+                if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
+                {
+                    success = Models.CartItem.deleteCartItemUser(Models.User.currentUser.userId, cartItem);
+                }
+                else
+                {
+                    success = Models.CartItem.deleteCartItemDefault(cartItem);
+                }
+            }
             if (success)
                 Console.WriteLine("The book number " + bookId + " has been deleted from the cart");
             
@@ -175,7 +181,7 @@ namespace BookHeaven.Controllers
                     foreach (CartItem cartItem in Models.User.currentUser.cartItems)
                     {
                         if (cartItem.book != null)
-                            SQLHelper.SQLUpdateBookStock(cartItem.book.bookId, cartItem.amount, true);
+                            SQLHelper.SQLUpdateBookStock(cartItem.book.bookId, cartItem.amount);
                     }
                     Models.User.currentUser.cartItems = new List<CartItem>();
                 }

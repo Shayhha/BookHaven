@@ -162,9 +162,9 @@ namespace BookHeaven.Models
         /// <param name="stock"></param>
         /// <param name="isRestock"></param>
         /// <returns></returns>
-        public static bool updateBookStock(int bookId, int stock, bool isRestock = false)
+        public static bool updateBookStock(int bookId, int stock)
         {
-            if (SQLHelper.SQLUpdateBookStock(bookId, stock, isRestock))
+            if (SQLHelper.SQLUpdateBookStock(bookId, stock))
             {
                 return true;
             }

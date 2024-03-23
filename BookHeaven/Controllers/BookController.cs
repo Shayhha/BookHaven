@@ -105,7 +105,7 @@ namespace BookHeaven.Controllers
 
         public IActionResult restockBook(int bookId, int restockAmount)
         {
-            if (Book.updateBookStock(bookId, restockAmount, true))
+            if (Book.updateBookStock(bookId, restockAmount))
             {
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }
