@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="~/css/userInfo.css">
+    <link rel="stylesheet" href="~/css/userInfo.css?Version=6.0.2">
 </head>
 <body>
     <div class="container2">
@@ -105,15 +105,17 @@
 
                         <div class="order-details">
                             <div class="order-info">
-                                <div class="left-info">
+                                <div class="row">
                                     <h5>Order Id: @order.orderId</h5>
+                                    <h5>Tracking Number: @order.shippingNum</h5>
+                                    <h5>Total Price: $@order.totalPrice</h5>
+                                </div>
+                                <div class="row">
+                                    <h5>Order Date: @order.orderDate</h5>
                                     <h5>Shipping Date: @order.shippingDate</h5>
                                 </div>
-                                <div class="right-info">
-                                    <h5>Total Price: $@order.totalPrice</h5>
-                                    <h5>Tracking Number: @order.shippingNum</h5>
-                                </div>
                             </div>
+
                         </div>
                         <div class="purchase-table">
                             <table>
@@ -150,46 +152,6 @@
                     }
                 }
             }
-
-
-
-            <!--<div class="order-details">
-                <div class="order-info">
-                    <div class="left-info">
-                        <h5>Order Id: 9023</h5>
-                        <h5>Shipping Date: dd/mm/yyyy</h5>
-                    </div>
-                    <div class="right-info">
-                        <h5>Total Price: $552</h5>
-                        <h5>Tracking Number: s12sdfc5</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="purchase-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Book Name</th>
-                            <th>Quantity</th>
-                            <th>Price Per Book</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>The Great Gatsby</td>
-                            <td>2</td>
-                            <td>$10.00</td>
-                        </tr>
-                        <tr>
-                            <td>To Kill a Mockingbird</td>
-                            <td>1</td>
-                            <td>$15.00</td>
-                        </tr>-->
-                        <!-- Add more rows for additional purchases -->
-                    <!--</tbody>
-                </table>
-            </div>-->
-
 
         </div>
     </div>
