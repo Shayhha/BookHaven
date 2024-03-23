@@ -290,6 +290,7 @@ namespace BookHeaven.Models
 
         /// <summary>
         /// Function for signup, adds a new user to Users and UserInfo tables and returns its unique id, else returns empty string
+        /// Might through an exception if failed
         /// </summary>
         /// <param name="signup"></param>
         /// <returns></returns>
@@ -299,9 +300,8 @@ namespace BookHeaven.Models
             {
                 connection.Open();
 
-                using (SqlTransaction transaction = connection.BeginTransaction())
-                { //begin a transaction
-
+                using (SqlTransaction transaction = connection.BeginTransaction()) //begin a transaction
+                { 
                     try
                     {
                         string query = @"
@@ -824,6 +824,85 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
+        /// Function for checking if book has sufficient stock 
+        /// </summary>
+        /// <param name="bookId"></param>
+        /// <param name="amount"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private static bool SQLCheckBookStock(int bookId, int amount, SqlConnection connection)
+        {
+            string query = @"SELECT bookId, stock FROM Books WHERE bookId = @bookId";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@bookId", bookId);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read()) //check if data is retrieved
+                    {
+                        int stock = reader.GetInt32(1); //retrieve the stock value from the first column
+                        return stock >= amount; //return true if stock is sufficient, false otherwise
+                    }
+                    else //no data found for the given bookId
+                    {
+                        return false;
+                    }
+
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function for updating book stock using a connection and transaction
+        /// </summary>
+        /// <param name="bookId"></param>
+        /// <param name="amountDifference"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static bool SQLUpdateBookStock(int bookId, int amountDifference, SqlConnection connection, SqlTransaction transaction)
+        {
+            //we need to check if amountDifference is negative, if so we need to remove stock from book in database so we check if we can  
+            //we multiply by -1 for our check stock function
+            if (amountDifference < 0 && !SQLCheckBookStock(bookId, (-1) * amountDifference, connection)) //check if book stock is sufficient
+            {
+                transaction.Rollback(); //rollback the transaction and return false if the update fails
+                return false; 
+            }
+
+            string query = @"UPDATE Books SET stock = stock + @stock WHERE bookId = @bookId;";
+
+            try
+            {
+                using (SqlCommand command = new SqlCommand(query, connection, transaction))
+                {
+                    command.Parameters.AddWithValue("@stock", amountDifference);
+                    command.Parameters.AddWithValue("@bookId", bookId);
+
+                    //execute the command and check if we updated the book stock
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        return true; //stock successfully changed
+                    }
+                    else
+                    {
+                        transaction.Rollback(); //rollback the transaction and return false if the update fails
+                        return false; //failed to change stock
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback(); //rollback the transaction and return false if the update fails
+                Console.WriteLine(ex.Message); //print the error
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Function for adding item to cart in database
         /// </summary>
         /// <param name="userId"></param>
@@ -834,20 +913,43 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"INSERT INTO Cart(userId, bookId, amount) VALUES(@userId, @bookId, @amount);";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (SqlTransaction transaction = connection.BeginTransaction()) //begin a transaction
                 {
-                    command.Parameters.AddWithValue("@userId", userId);
-                    command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
-                    command.Parameters.AddWithValue("@amount", cartItem.amount);
+                    try 
+                    {
+                        if (!SQLUpdateBookStock(cartItem.book.bookId, (-1) * cartItem.amount, connection, transaction))
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
+                        string query = @"INSERT INTO Cart(userId, bookId, amount) VALUES(@userId, @bookId, @amount);";
 
-                    //execute the command and check if we added the credit card
-                    int rowsAffected = command.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                        return true; //credit card successfully added
-                    else
-                        return false; //failed to add the credit card
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@userId", userId);
+                            command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
+                            command.Parameters.AddWithValue("@amount", cartItem.amount);
+
+                            //execute the command and check if we added the item
+                            int rowsAffected = command.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+                                transaction.Commit(); //commit the transaction if we successfully added item
+                                return true; 
+                            }
+                            else
+                            {
+                                transaction.Rollback(); //rollback the transaction if fails
+                                return false; 
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();//rollback the transaction in case of an exception
+                        Console.WriteLine(ex.Message); //print the error
+                        return false;
+                    }
                 }
             }
         }
@@ -857,25 +959,48 @@ namespace BookHeaven.Models
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public static bool SQLUpdateCartItem(int userId, CartItem cartItem)
+        public static bool SQLUpdateCartItem(int userId, CartItem cartItem, int amountDifference)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"UPDATE Cart SET amount = @amount WHERE userId = @userId AND bookId = @bookId;";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (SqlTransaction transaction = connection.BeginTransaction()) //begin a transaction
                 {
-                    command.Parameters.AddWithValue("@userId", userId);
-                    command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
-                    command.Parameters.AddWithValue("@amount", cartItem.amount);
+                    try
+                    {
+                        if (!SQLUpdateBookStock(cartItem.book.bookId, amountDifference, connection, transaction))
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
+                        string query = @"UPDATE Cart SET amount = @amount WHERE userId = @userId AND bookId = @bookId;";
 
-                    //execute the command and check if we updated the credit card
-                    int rowsAffected = command.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                        return true; //credit card successfully updated
-                    else
-                        return false; //failed to update the credit card
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@userId", userId);
+                            command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
+                            command.Parameters.AddWithValue("@amount", cartItem.amount);
+
+                            //execute the command and check if we updated the item
+                            int rowsAffected = command.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+                                transaction.Commit(); //commit the transaction if we successfully updated item
+                                return true;
+                            }
+                            else
+                            {
+                                transaction.Rollback(); //rollback the transaction if fails
+                                return false;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();//rollback the transaction in case of an exception
+                        Console.WriteLine(ex.Message); //print the error
+                        return false;
+                    }
                 }
             }
         }
@@ -886,24 +1011,47 @@ namespace BookHeaven.Models
         /// <param name="userId"></param>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public static bool SQLDeleteCartItem(int userId, int bookId)
+        public static bool SQLDeleteCartItem(int userId, CartItem cartItem)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"DELETE FROM Cart WHERE userId = @userId AND bookId = @bookId;";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (SqlTransaction transaction = connection.BeginTransaction()) //begin a transaction
                 {
-                    command.Parameters.AddWithValue("@userId", userId);
-                    command.Parameters.AddWithValue("@bookId", bookId);
+                    try
+                    {
+                        if (!SQLUpdateBookStock(cartItem.book.bookId, cartItem.amount, connection, transaction))
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
+                        string query = @"DELETE FROM Cart WHERE userId = @userId AND bookId = @bookId;";
 
-                    //execute the command and check if we deleted the credit card
-                    int rowsAffected = command.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                        return true; //credit card successfully deleted
-                    else
-                        return false; //failed to delete the credit card
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@userId", userId);
+                            command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
+
+                            //execute the command and check if we removed the item
+                            int rowsAffected = command.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+                                transaction.Commit(); //commit the transaction if we successfully removed item
+                                return true;
+                            }
+                            else
+                            {
+                                transaction.Rollback(); //rollback the transaction if fails
+                                return false;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();//rollback the transaction in case of an exception
+                        Console.WriteLine(ex.Message); //print the error
+                        return false;
+                    }
                 }
             }
         }
@@ -952,8 +1100,9 @@ namespace BookHeaven.Models
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback(); //rollback the transaction in case of an exception                
-                        throw ex;
+                        transaction.Rollback();//rollback the transaction in case of an exception
+                        Console.WriteLine(ex.Message); //print the error
+                        return false;
                     }
                 }
             }
@@ -1169,26 +1318,29 @@ namespace BookHeaven.Models
 
         /// <summary>
         /// Function for adding more stock to a certain book in Books db
-        /// If we want to restock this specific book, we give it true for admin to add more stock
+        /// we use this function for default users that aren't logged in
         /// </summary>
         /// <param name="bookId"></param>
-        /// <param name="stock"></param>
-        /// <param name="isRestock"></param>
+        /// <param name="amountDifference"></param>
         /// <returns></returns>
-        public static bool SQLUpdateBookStock(int bookId, int stock, bool isRestock = false)
+        public static bool SQLUpdateBookStock(int bookId, int amountDifference)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query;
-                if (isRestock)
-                    query = @"UPDATE Books SET stock += @stock WHERE bookId = @bookId";
-                else
-                    query = @"UPDATE Books SET stock -= @stock WHERE bookId = @bookId";
+
+                //we need to check if amountDifference is negative, if so we need to remove stock from book in database so we check if we can  
+                //we multiply by -1 for our check stock function
+                if (amountDifference < 0 && !SQLCheckBookStock(bookId, (-1) * amountDifference, connection)) //check if book has sufficient stock if user wants to buy
+                {
+                    return false;
+                }
+
+                string query = @"UPDATE Books SET stock = stock + @stock WHERE bookId = @bookId;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@stock", stock);
+                    command.Parameters.AddWithValue("@stock", amountDifference);
                     command.Parameters.AddWithValue("@bookId", bookId);
 
                     //execute the command and check if we updated the book stock
@@ -1202,10 +1354,10 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
-        /// Function for inserting a list of cart items into the database Cart table without openning a new connection for each insert.
-        /// Useing a helper function to convert the given list of items to a DataTable object and then insert that object into the table.
+        /// Function for inserting a list of cart items into the database Cart table without opening a new connection for each insert.
+        /// Using a helper function to convert the given list of items to a DataTable object and then insert that object into the table.
         /// This function ignores items that already exist in the database (for the given userId), meaning it does not create duplicate values in the
-        /// database Cart table, just addes the items that are in the list and not in the database.
+        /// database Cart table, just adds the items that are in the list and not in the database.
         /// </summary>
         /// <param name="userId">The userId of the user that we want to add the cart items to.</param>
         /// <param name="cartItems">The list of cart items that we want to add to the database.</param>
