@@ -308,10 +308,8 @@ namespace BookHeaven.Models
                         INSERT INTO Users(email, password) OUTPUT INSERTED.UserId VALUES(@email, @password);
                         INSERT INTO UserInfo(email, fname, lname) VALUES(@email, @fname, @lname);";
 
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (SqlCommand command = new SqlCommand(query, connection, transaction))
                         {
-                            command.Transaction = transaction; //associate the command with the transaction
-
                             command.Parameters.AddWithValue("@email", signup.email);
                             command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
                             command.Parameters.AddWithValue("@fname", signup.firstName);
@@ -830,14 +828,14 @@ namespace BookHeaven.Models
         /// <param name="amount"></param>
         /// <param name="connection"></param>
         /// <returns></returns>
-        private static bool SQLCheckBookStock(int bookId, int amount, SqlConnection connection)
+        private static bool SQLCheckBookStock(int bookId, int amount, SqlConnection connection, SqlTransaction transaction)
         {
             string query = @"SELECT bookId, stock FROM Books WHERE bookId = @bookId";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
+            using (SqlCommand command = new SqlCommand(query, connection, transaction))
             {
                 command.Parameters.AddWithValue("@bookId", bookId);
-
+                
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.Read()) //check if data is retrieved
@@ -849,7 +847,6 @@ namespace BookHeaven.Models
                     {
                         return false;
                     }
-
                 }
             }
         }
@@ -866,7 +863,7 @@ namespace BookHeaven.Models
         {
             //we need to check if amountDifference is negative, if so we need to remove stock from book in database so we check if we can  
             //we multiply by -1 for our check stock function
-            if (amountDifference < 0 && !SQLCheckBookStock(bookId, (-1) * amountDifference, connection)) //check if book stock is sufficient
+            if (amountDifference < 0 && !SQLCheckBookStock(bookId, (-1) * amountDifference, connection, transaction)) //check if book stock is sufficient
             {
                 transaction.Rollback(); //rollback the transaction and return false if the update fails
                 return false; 
@@ -1076,7 +1073,7 @@ namespace BookHeaven.Models
                     {
                         string query = @"INSERT INTO Orders(userId, orderDate, totalPrice, shippingDate) VALUES(@userId, @orderDate, @totalPrice, @shippingDate);";
 
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (SqlCommand command = new SqlCommand(query, connection, transaction))
                         {
                             command.Parameters.AddWithValue("@userId", userId);
                             command.Parameters.AddWithValue("@orderDate", orderDate);
@@ -1328,27 +1325,45 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-
-                //we need to check if amountDifference is negative, if so we need to remove stock from book in database so we check if we can  
-                //we multiply by -1 for our check stock function
-                if (amountDifference < 0 && !SQLCheckBookStock(bookId, (-1) * amountDifference, connection)) //check if book has sufficient stock if user wants to buy
+                using (SqlTransaction transaction = connection.BeginTransaction()) //begin a transaction
                 {
-                    return false;
-                }
+                    try
+                    {
+                        //we need to check if amountDifference is negative, if so we need to remove stock from book in database so we check if we can  
+                        //we multiply by -1 for our check stock function
+                        if (amountDifference < 0 && !SQLCheckBookStock(bookId, (-1) * amountDifference, connection, transaction)) //check if book has sufficient stock if user wants to buy
+                        {
+                            transaction.Rollback();//rollback the transaction in case of an exception
+                            return false; //failed to change stock
+                        }
 
-                string query = @"UPDATE Books SET stock = stock + @stock WHERE bookId = @bookId;";
+                        string query = @"UPDATE Books SET stock = stock + @stock WHERE bookId = @bookId;";
 
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@stock", amountDifference);
-                    command.Parameters.AddWithValue("@bookId", bookId);
+                        using (SqlCommand command = new SqlCommand(query, connection, transaction))
+                        {
+                            command.Parameters.AddWithValue("@stock", amountDifference);
+                            command.Parameters.AddWithValue("@bookId", bookId);
 
-                    //execute the command and check if we updated the book stock
-                    int rowsAffected = command.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                        return true; //stock successfully changed
-                    else
-                        return false; //failed to change stock
+                            //execute the command and check if we updated the book stock
+                            int rowsAffected = command.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+                                transaction.Commit();
+                                return true; //stock successfully changed
+                            }
+                            else
+                            {
+                                transaction.Rollback();//rollback the transaction in case of an exception
+                                return false; //failed to change stock
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();//rollback the transaction in case of an exception
+                        Console.WriteLine(ex.Message); //print the error
+                        return false;
+                    }
                 }
             }
         }

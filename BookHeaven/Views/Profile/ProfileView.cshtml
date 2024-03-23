@@ -51,20 +51,20 @@
                 <p>
                     <strong>Address:</strong>
                     @if (@Model.address != null)
-                    {
-                        if (Model.address.country != "" && Model.address.city != "" && Model.address.street != "" && Model.address.apartNum != 0)
                         {
+                            if (Model.address.country != "" && Model.address.city != "" && Model.address.street != "" && Model.address.apartNum != 0)
+                            {
                             <span id="addressSpan">@(Model.address.apartNum + ", " + @Model.address.street + ", " + @Model.address.city + ", " + @Model.address.country)</span>
+                            }
+                            else
+                            {
+                            <span id="addressSpan"></span>
+                            }
                         }
                         else
                         {
-                            <span id="addressSpan"></span>
-                        }
-                    }
-                    else
-                    {
                         <span id="addressSpan"></span>
-                    }
+                        }
                     <button class="delete-button" onclick="if(confirmDelete()) deleteAddress()">🗑️</button>
                 </p>
             </div>
@@ -74,65 +74,86 @@
                 <p>
                     <strong>Credit Card:</strong>
                     @if (@Model.creditCard != null)
-                    {
-                        if (Model.creditCard.number != 0 && Model.creditCard.date != "" && Model.creditCard.ccv != 0)
                         {
+                            if (Model.creditCard.number != 0 && Model.creditCard.date != "" && Model.creditCard.ccv != 0)
+                            {
                             <span id="creditCardSpan">@(Model.creditCard.number + " | " + @Model.creditCard.date + " | " + @Model.creditCard.ccv)</span>
+                            }
+                            else
+                            {
+                            <span id="creditCardSpan"></span>
+                            }
                         }
                         else
                         {
-                            <span id="creditCardSpan"></span>
-                        }
-                    }
-                    else
-                    {
                         <span id="creditCardSpan"></span>
-                    }
+                        }
                     <button class="delete-button" onclick="if(confirmDelete()) deleteCreditCard()">🗑️</button>
                 </p>
             </div>
         </div>
+
         <div class="purchase-history">
             <h1>Purchase History</h1>
 
-            <div class="order-details">
-                <div class="order-info">
-                    <div class="left-info">
-                        <h5>Order Id: 4124</h5>
-                        <h5>Shipping Date: dd/mm/yyyy</h5>
-                    </div>
-                    <div class="right-info">
-                        <h5>Total Price: $125</h5>
-                        <h5>Tracking Number: 1d2d19h39</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="purchase-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Book Name</th>
-                            <th>Quantity</th>
-                            <th>Price Per Book</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>The Great Gatsby</td>
-                            <td>2</td>
-                            <td>$10.00</td>
-                        </tr>
-                        <tr>
-                            <td>To Kill a Mockingbird</td>
-                            <td>1</td>
-                            <td>$15.00</td>
-                        </tr>
-                        <!-- Add more rows for additional purchases -->
-                    </tbody>
-                </table>
-            </div>
+            @{
+                if (Model.orders != null && Model.orders.Count != 0)
+                {
 
-            <div class="order-details">
+                    foreach (Order order in Model.orders)
+                    {
+
+                        <div class="order-details">
+                            <div class="order-info">
+                                <div class="left-info">
+                                    <h5>Order Id: @order.orderId</h5>
+                                    <h5>Shipping Date: @order.shippingDate</h5>
+                                </div>
+                                <div class="right-info">
+                                    <h5>Total Price: $@order.totalPrice</h5>
+                                    <h5>Tracking Number: @order.shippingNum</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="purchase-table">
+                            <table>
+
+                                @if (order.orderItems != null)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>Book Name</th>
+                                            <th>Quantity</th>
+                                            <th>Price Per Book</th>
+                                            <th>Total For Item</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (OrderItem orderItem in order.orderItems)
+                                        {
+                                            <tr>
+                                                <td>@orderItem.bookName</td>
+                                                <td>@orderItem.quantity</td>
+                                                <td>$@orderItem.price</td>
+                                                <td>$@(orderItem.quantity * orderItem.price)</td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                }
+
+                            </table>
+                        </div>
+
+
+                    }
+                }
+            }
+
+
+
+            <!--<div class="order-details">
                 <div class="order-info">
                     <div class="left-info">
                         <h5>Order Id: 9023</h5>
@@ -163,11 +184,13 @@
                             <td>To Kill a Mockingbird</td>
                             <td>1</td>
                             <td>$15.00</td>
-                        </tr>
+                        </tr>-->
                         <!-- Add more rows for additional purchases -->
-                    </tbody>
+                    <!--</tbody>
                 </table>
-            </div>
+            </div>-->
+
+
         </div>
     </div>
 </body>

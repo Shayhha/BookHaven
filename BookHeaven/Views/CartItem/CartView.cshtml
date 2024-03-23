@@ -1,5 +1,6 @@
 ﻿@model BookHeaven.Models.User;
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +82,8 @@
         {
             @foreach (CartItem item in Model.cartItems)
             {
-                if (item.book != null) { 
+                if (item.book != null)
+                {
                     <div class="cart-item">
                         <img src="@item.book.imageUrl" alt="Book Image">
                         <div class="cart-item-details">
@@ -118,7 +120,9 @@
         </div>
     </div>
 
-    <script>// Function to update total price
+    <script>let oldQuantities = {};
+
+        // Function to update total price
         function checkQuantity(input) {
             const quantity = parseInt(input.value);
             if (quantity === 0) {
@@ -164,37 +168,49 @@
             const input = event.target;
             const cartItem = input.closest('.cart-item');
             const bookId = cartItem.querySelector('.bookId span').textContent;
-            var quantity = parseInt(input.value);
-            // Make an AJAX request to call the addBookToCart method
-            fetch(`/CartItem/updateBookInCart?bookId=${bookId}&quantity=${quantity}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const priceElement = event.target.closest('.cart-item').querySelector('.cart-item-price-span');
-                        const pricePerBookElements = document.querySelectorAll('.pricePerBook');
-                        let pricePerItem = 0;
+            const newQuantity = parseInt(input.value);
+            const oldQuantity = oldQuantities[bookId] || 0; // Get old quantity from stored object or default to 0
+            oldQuantities[bookId] = newQuantity; // Update old quantity in stored object
 
-                        pricePerBookElements.forEach(element => {
-                            pricePerItem = parseFloat(element.textContent);
-                        });
+            if (newQuantity === 0) {
+                deleteItem(cartItem); // Pass the cartItem associated with the input field
+            } else {
+                // Make an AJAX request to call the addBookToCart method
+                fetch(`/CartItem/updateBookInCart?bookId=${bookId}&newQuantity=${newQuantity}&oldQuantity=${oldQuantity}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const priceElement = event.target.closest('.cart-item').querySelector('.cart-item-price-span');
+                            const pricePerBookElements = document.querySelectorAll('.pricePerBook');
+                            let pricePerItem = 0;
 
-                        const totalPrice = quantity * pricePerItem;
-                        priceElement.textContent = `$${totalPrice.toFixed(2)}`;
-                        updateTotalPrice();
-                    } else {
-                        alert('Failed to delete book from cart. Please try again later.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while deleting the book to cart. Please try again later.');
-                });
+                            pricePerBookElements.forEach(element => {
+                                pricePerItem = parseFloat(element.textContent);
+                            });
+
+                            const totalPrice = newQuantity * pricePerItem;
+                            priceElement.textContent = `$${totalPrice.toFixed(2)}`;
+                            updateTotalPrice();
+                        } else {
+                            alert('Failed to update quantity in the cart. Please try again later.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while updating the quantity in the cart. Please try again later.');
+                    });
+            }
         }
 
-        function deleteItem(cartItem) {
-            var bookId = document.getElementById("bookId").textContent;
-            // Make an AJAX request to call the addBookToCart method
-            fetch(`/CartItem/deleteBookFromCart?bookId=${bookId}`)
+
+        function deleteItem(deleteButton) {
+            const cartItem = deleteButton.closest('.cart-item'); // Find the closest cart item to the delete button
+            const bookId = cartItem.querySelector('.bookId span').textContent;
+            const quantity = parseInt(cartItem.querySelector('.quantity-input').value);
+            const amount = quantity === 0 ? 1 : quantity;
+
+            // Make an AJAX request to call the deleteBookFromCart method
+            fetch(`/CartItem/deleteBookFromCart?bookId=${bookId}&amount=${amount}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -206,14 +222,22 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred while deleting the book to cart. Please try again later.');
+                    alert('An error occurred while deleting the book from the cart. Please try again later.');
                 });
         }
+
 
         // Event listener for quantity change
         const quantityInputs = document.querySelectorAll('.quantity-input');
         quantityInputs.forEach(input => {
             input.addEventListener('input', updateQuantity);
+            input.addEventListener('keydown', function (event) {
+                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                    const cartItem = input.closest('.cart-item');
+                    const bookId = cartItem.querySelector('.bookId span').textContent;
+                    oldQuantities[bookId] = parseInt(input.value); // Save old quantity when arrow keys are pressed
+                }
+            });
         });
 
         // Event listener for delete button
@@ -221,12 +245,24 @@
         deleteButtons.forEach(button => {
             button.addEventListener('click', function () {
                 if (confirmDelete())
-                    deleteItem(this.closest('.cart-item'));
+                    deleteItem(this);
             });
         });
 
+        // Function to initialize oldQuantities object with initial quantities
+        function initializeOldQuantities() {
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+            quantityInputs.forEach(input => {
+                const cartItem = input.closest('.cart-item');
+                const bookId = cartItem.querySelector('.bookId span').textContent;
+                oldQuantities[bookId] = parseInt(input.value); // Save initial quantity
+            });
+        }
+
         window.onload = function () {
             updateTotalPrice();
+            initializeOldQuantities(); // Initialize oldQuantities object with initial quantities
         };</script>
+
 </body>
 </html>

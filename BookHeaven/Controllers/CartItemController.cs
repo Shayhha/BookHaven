@@ -53,8 +53,6 @@ namespace BookHeaven.Controllers
                 if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
                 {
                     success = Models.CartItem.addCartItemUser(Models.User.currentUser.userId, cartItem);
-                    if (!success)
-                        errorMessage = "Cound not add the book to cart because we dont have enough in stock. try reducing the quantity.";
                 }
                 else
                 {
@@ -63,6 +61,9 @@ namespace BookHeaven.Controllers
 
                 if (success)
                     Console.WriteLine("The book '" + book.name + "' has been added to the cart");
+                else
+                    errorMessage = "Cound not add the book to cart because we dont have enough in stock. try reducing the quantity.";
+
             }
 
             return Json(new { success = success, errorMessage = errorMessage });
