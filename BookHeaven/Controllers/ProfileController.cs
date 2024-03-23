@@ -9,21 +9,7 @@ namespace BookHeaven.Controllers
     {
         public IActionResult showProfileView()
         {
-            // creating some temp data:
-            List<Order> orders = new List<Order>();
-            List<OrderItem> orderItems = new List<OrderItem>();
-
-            OrderItem orderItem1 = new OrderItem(1, 1, "Bibi", 2, 20);
-            OrderItem orderItem2 = new OrderItem(2, 1, "Cake", 2, 30);
-            orderItems.Add(orderItem1);
-            orderItems.Add(orderItem2);
-
-            Order order = new Order(1, Models.User.currentUser.userId, "11/05/2024", "25/05/2024", "asdqwe123", 100, orderItems);
-            orders.Add(order);
-            Models.User.currentUser.orders = orders;
-            // -------
-
-            // Call an sql method to load all the user orders
+            Models.User.currentUser.orders = SQLHelper.SQLInitUserOrders(Models.User.currentUser.userId);
             return View("ProfileView", Models.User.currentUser);
         }
 
