@@ -200,8 +200,10 @@
 
         function deleteItem(cartItem) {
             var bookId = document.getElementById("bookId").textContent;
+            var quantity = parseInt(cartItem.querySelector('.quantity-input').value);
+            var amount = quantity === 0 ? 1 : quantity;
             // Make an AJAX request to call the addBookToCart method
-            fetch(`/CartItem/deleteBookFromCart?bookId=${bookId}`)
+            fetch(`/CartItem/deleteBookFromCart?bookId=${bookId}&amount=${amount}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
