@@ -1,6 +1,5 @@
 ﻿using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Stripe.Checkout;
 
 namespace BookHeaven.Controllers
@@ -54,6 +53,8 @@ namespace BookHeaven.Controllers
                 if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
                 {
                     success = Models.CartItem.addCartItem(Models.User.currentUser.userId, cartItem);
+                    if (!success)
+                        errorMessage = "Cound not add the book to cart because we dont have enough in stock. try reducing the quantity.";
                 }
                 else
                 {
@@ -154,6 +155,32 @@ namespace BookHeaven.Controllers
         {
             // Create a ViewBag failure message to the user
             return RedirectToAction("showCartView", "CartItem");
+        }
+
+
+        /// <summary>
+        /// This method only runs when the user redirects to a different site. What it does it clear the default user's cart
+        /// and update the stock of each item in the database according to the amount of each item that was in the user's cart.
+        /// It does not affect the regular logged-in users in the application.
+        /// </summary>
+        /// <returns>Success message to the JavaScript method that calls this function, located in site.js at the bottom.</returns>
+        public IActionResult clearDefaultUserCart()
+        {
+            if (Models.User.currentUser != null && Models.User.currentUser.cartItems != null &&
+                Models.User.currentUser.cartItems.Count != 0)
+            {
+                string isLoggedIn = _contx.HttpContext.Session.GetString("isLoggedIn");
+                if (string.IsNullOrEmpty(isLoggedIn) || isLoggedIn != "true")
+                {
+                    foreach (CartItem cartItem in Models.User.currentUser.cartItems)
+                    {
+                        if (cartItem.book != null)
+                            SQLHelper.SQLUpdateBookStock(cartItem.book.bookId, cartItem.amount, true);
+                    }
+                    Models.User.currentUser.cartItems = new List<CartItem>();
+                }
+            }
+            return Json(new { success = true });
         }
     }
 }
