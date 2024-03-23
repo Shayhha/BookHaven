@@ -924,7 +924,7 @@ namespace BookHeaven.Models
                         }
                         string query = @"INSERT INTO Cart(userId, bookId, amount) VALUES(@userId, @bookId, @amount);";
 
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (SqlCommand command = new SqlCommand(query, connection, transaction))
                         {
                             command.Parameters.AddWithValue("@userId", userId);
                             command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
@@ -975,7 +975,7 @@ namespace BookHeaven.Models
                         }
                         string query = @"UPDATE Cart SET amount = @amount WHERE userId = @userId AND bookId = @bookId;";
 
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (SqlCommand command = new SqlCommand(query, connection, transaction))
                         {
                             command.Parameters.AddWithValue("@userId", userId);
                             command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
@@ -1027,7 +1027,7 @@ namespace BookHeaven.Models
                         }
                         string query = @"DELETE FROM Cart WHERE userId = @userId AND bookId = @bookId;";
 
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (SqlCommand command = new SqlCommand(query, connection, transaction))
                         {
                             command.Parameters.AddWithValue("@userId", userId);
                             command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
