@@ -50,59 +50,75 @@
             <form method="post" action="/Book/addBook">
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" name="name" value="@Model.name" placeholder="Name">
+                    <input type="text" class="form-control" id="name" name="name" value="@Model.name" placeholder="Harry Potter and the Sorcerer's Stone">
                 </div>
                 <div class="form-group">
                     <label for="author">Author:</label>
-                    <input type="text" class="form-control" id="author" name="author" value="@Model.author" placeholder="Author">
+                    <input type="text" class="form-control" id="author" name="author" value="@Model.author" placeholder="J.K. Rowling">
                 </div>
                 <div class="form-group">
                     <label for="date">Date:</label>
-                    <input type="text" class="form-control" id="date" name="date" value="@Model.date" placeholder="Date">
+                    <input type="text" class="form-control" id="date" name="date" value="@Model.date" placeholder="26/06/1997">
                 </div>
                 <div class="form-group">
                     <label for="category">Category:</label>
-                    <input type="text" class="form-control" id="category" name="category" value="@Model.category" placeholder="Category">
+                    <select id="category" class="form-control" name="category">
+                        <option value="" disabled>Select an option</option>
+                        <option value="Fiction" selected="@(Model.category == "Fiction")">Fiction</option>
+                        <option value="Science Fiction" selected="@(Model.category == "Science Fiction")">Science Fiction</option>
+                        <option value="Mystery" selected="@(Model.category == "Mystery")">Mystery</option>
+                        <option value="Fantasy" selected="@(Model.category == "Fantasy")">Fantasy</option>
+                        <option value="Biography" selected="@(Model.category == "Biography")">Biography</option>
+                        <option value="Thriller" selected="@(Model.category == "Thriller")">Thriller</option>
+                        <option value="Drama" selected="@(Model.category == "Drama")">Drama</option>
+                        <option value="Comedy" selected="@(Model.category == "Comedy")">Comedy</option>
+                        <option value="Romance" selected="@(Model.category == "Romance")">Romance</option>
+                        <option value="Education" selected="@(Model.category == "Education")">Education</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="format">Format:</label>
-                    <input type="text" class="form-control" id="format" name="format" value="@Model.format" placeholder="Format">
+                    <select id="format" class="form-control" name="format">
+                        <option value="" disabled>Select an option</option>
+                        <option value="Paperback" selected="@(Model.format == "Paperback")">Paperback</option>
+                        <option value="Hardcover" selected="@(Model.format == "Hardcover")">Hardcover</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="price">Price:</label>
                     @if (Model.price == 0)
                     {
-                        <input type="number" class="form-control" id="price" name="price" value="" placeholder="Price">
+                        <input type="number" class="form-control" id="price" name="price" value="" placeholder="12.34">
                     }
                     else
                     {
-                        <input type="number" class="form-control" id="price" name="price" value="@Model.price" placeholder="Price">
+                        <input type="number" class="form-control" id="price" name="price" value="@Model.price" placeholder="12.34">
                     }
                 </div>
                 <div class="form-group">
                     <label for="stock">Stock:</label>
                     @if (Model.stock == 0)
                     {
-                        <input type="number" class="form-control" id="stock" name="stock" value="" placeholder="Stock">
+                        <input type="number" class="form-control" id="stock" name="stock" value="" placeholder="150">
                     }
                     else
                     {
-                        <input type="number" class="form-control" id="stock" name="stock" value="@Model.stock" placeholder="Stock">
+                        <input type="number" class="form-control" id="stock" name="stock" value="@Model.stock" placeholder="150">
                     }
                 </div>
                 <div class="form-group">
                     <label for="imageUrl">Image URL:</label>
-                    <input type="text" class="form-control" id="imageUrl" name="imageUrl" value="@Model.imageUrl" placeholder="Image URL">
+                    <input type="text" class="form-control" id="imageUrl" name="imageUrl" value="@Model.imageUrl" placeholder="https://m.media-amazon.com/images/I/71RVt35ZAbL._AC_UF1000,1000_QL80_.jpg">
                 </div>
                 <div class="form-group">
                     <label for="ageLimitation">Age Limitation:</label>
                     @if (Model.ageLimitation == 0)
                     {
-                        <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" value="" placeholder="Age Limitation">
+                        <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" value="" placeholder="6">
                     }
                     else
                     {
-                        <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" value="@Model.ageLimitation" placeholder="Age Limitation">
+                        <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" value="@Model.ageLimitation" placeholder="6">
                     }
                 </div>
 
