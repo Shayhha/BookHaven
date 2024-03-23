@@ -35,24 +35,32 @@ namespace BookHeaven.Models
 
         public static bool addCartItem(CartItem cartItem) //for user without db
         {
-            if (Models.User.currentUser.cartItems != null)
+            if (SQLHelper.SQLUpdateBookStock(cartItem.book.bookId, cartItem.amount))
             {
-                Models.User.currentUser.cartItems.Add(cartItem); //add the cartItem
-                return true;
+                if (Models.User.currentUser.cartItems != null)
+                {
+                    Models.User.currentUser.cartItems.Add(cartItem); //add the cartItem
+                    return true;
+                }
+                
             }
-            else
-                return false;
+            return false;
         }
 
         public static bool addCartItem(int userId, CartItem cartItem) //for user with db
         {
+            
             if (SQLHelper.SQLAddCartItem(userId, cartItem))
             {
-                addCartItem(cartItem); //add cartItem to list
+                if (Models.User.currentUser.cartItems != null)
+                {
+                    Models.User.currentUser.cartItems.Add(cartItem); //add the cartItem
+                    return true;
+                }
                 return true;
             }
-            else
-                return false;
+            
+            return false;
         }
 
         public static bool updateCartItem(CartItem cartItem) //for user without db
