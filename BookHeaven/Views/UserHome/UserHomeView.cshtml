@@ -18,65 +18,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Home Page</title>
-    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.2">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.3">
 </head>
 <body>
-    @*<div class="genre_container">
-            <p class="title">Categories</p>
-
-            <div class="row">
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fiction</div>
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Science Fiction</div>
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Mystery</div>
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Fantasy</div>
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Biography</div>
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Thriller</div>
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Drama</div>
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Comedy</div>
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Romance</div>
-                <div class="col rectangle" onclick="handleCategoryButtonClick(this)">Education</div>
-            </div>
-        </div>*@
-
-
-
-    @*<div class="adminButtons">
-
-
-            @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
-            {
-                @if (BookHeaven.Models.User.currentUser.isAdmin == true)
-                {
-                    <a href="/Book/showAddNewBook" id="addNewBookButton" class="">Add New Book</a>
-                }
-            }
-
-            <label for="filter" class="filter-label">Filter by:</label>
-            <select id="filter" class="filter-select">
-                <option value="A - Z">A - Z</option>
-                <option value="Z - A">Z - A</option>
-                <option value="Price Ascending">Price Ascending</option>
-                <option value="Price Descending">Price Descending</option>
-                <option value="Most Popular">Most Popular</option>
-            </select>
-
-            @{
-                <script>document.addEventListener("DOMContentLoaded", function () {
-                        var filterSelect = document.getElementById("filter");
-                        filterSelect.addEventListener("change", function () {
-                            var selectedValue = filterSelect.value;
-                            //var searchQuery = "";
-                            console.log("Selected value: ", selectedValue);
-                            //console.log("Search query: ", searchQuery);
-
-                            var editUrl = "/SearchResults/filterBooks?filterBy=" + selectedValue;// + "&searchQuery=" + searchQuery;
-                            window.location.href = editUrl;
-                        });
-                    });</script>
-            }
-
-        </div>*@
-
+   
     <div class="container5">
 
         <div class="sidenav">
@@ -133,6 +78,7 @@
             </div>
 
             <button id="filterButton" class="filterButton" onclick="filterButtonOnClick()">Filter</button>
+            <button id="clearFilterButton" class="filterButton" onclick="clearFilterButtonOnClick()">Clear</button>
 
         </div>
 
