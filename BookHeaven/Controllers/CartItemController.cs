@@ -181,7 +181,7 @@ namespace BookHeaven.Controllers
                     foreach (CartItem cartItem in Models.User.currentUser.cartItems)
                     {
                         if (cartItem.book != null)
-                            SQLHelper.SQLUpdateBookStock(cartItem.book.bookId, cartItem.amount, true);
+                            SQLHelper.SQLUpdateBookStock(cartItem.book.bookId, cartItem.amount);
                     }
                     Models.User.currentUser.cartItems = new List<CartItem>();
                 }
