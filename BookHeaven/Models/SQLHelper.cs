@@ -1153,7 +1153,7 @@ namespace BookHeaven.Models
                         command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
                         command.Parameters.AddWithValue("@bookName", cartItem.book.name);
                         command.Parameters.AddWithValue("@quantity", cartItem.amount);
-                        command.Parameters.AddWithValue("@price", cartItem.book.price);
+                        command.Parameters.AddWithValue("@price", cartItem.book.salePrice > 0 ? cartItem.book.salePrice : cartItem.book.price);
 
                         //execute the insert command for the current cart item
                         int rowsAffected = command.ExecuteNonQuery();
