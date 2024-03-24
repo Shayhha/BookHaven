@@ -41,29 +41,32 @@
                 <p><strong>In-Stock: </strong>@Model.stock</p>
             </div>
 
-            <div class="quantityDiv">
-                <p>Quantity: </p>
-                <input type="number" class="bookViewInput" id="quantityInput" name="quantityInput" value="1" min="1""/>
-                <script>
-                    var maxStock = @Model.stock;
-                    var quantityInput = document.getElementById('quantityInput');
+            @if (BookHeaven.Models.User.currentUser.isAdmin == false)
+            {
+                <div class="quantityDiv">
+                    <p>Quantity: </p>
+                    <input type="number" class="bookViewInput" id="quantityInput" name="quantityInput" value="1" min="1" />
+                    <script>
+                var maxStock = @Model.stock;
+                var quantityInput = document.getElementById('quantityInput');
 
-                    quantityInput.addEventListener('input', function () {
-                        var inputValue = parseInt(quantityInput.value);
+                quantityInput.addEventListener('input', function () {
+                    var inputValue = parseInt(quantityInput.value);
 
-                        // If the input value is not a number or NaN, set it to 1
-                        if (isNaN(inputValue) || inputValue == 0) {
-                            quantityInput.value = 1;
-                        }
+                    // If the input value is not a number or NaN, set it to 1
+                    if (isNaN(inputValue) || inputValue == 0) {
+                        quantityInput.value = 1;
+                    }
 
-                        // Check if the input value exceeds the maximum stock
-                        if (inputValue > maxStock) {
-                            quantityInput.value = maxStock;
-                        }
-                    });
-                </script>
-            </div>
-
+                    // Check if the input value exceeds the maximum stock
+                    if (inputValue > maxStock) {
+                        quantityInput.value = maxStock;
+                    }
+                });
+                    </script>
+                </div>
+            }
+            
             <div class="buttons">
                 @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
                 {

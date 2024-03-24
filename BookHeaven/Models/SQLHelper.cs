@@ -1055,6 +1055,30 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
+        /// Deletes all the cart items from the database for a given userId. usfull when a user
+        /// buys all the items in his cart.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static bool SQLDeleteUserCart(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"DELETE FROM Cart WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+                    int rowsAffected = command.ExecuteNonQuery(); // Get the number of rows deleted
+                    if (rowsAffected >= 0)
+                        return true;
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
         /// Function for adding order to the database, adds info to orders and orderDetails tables
         /// </summary>
         /// <param name="userId"></param>
@@ -1072,7 +1096,7 @@ namespace BookHeaven.Models
                 { 
                     try
                     {
-                        string query = @"INSERT INTO Orders(userId, orderDate, totalPrice, shippingDate) VALUES(@userId, @orderDate, @totalPrice, @shippingDate);";
+                        string query = @"INSERT INTO Orders(userId, orderDate, totalPrice, shippingDate) OUTPUT INSERTED.orderId VALUES(@userId, @orderDate, @totalPrice, @shippingDate);";
 
                         using (SqlCommand command = new SqlCommand(query, connection, transaction))
                         {
@@ -1116,7 +1140,7 @@ namespace BookHeaven.Models
         /// <returns></returns>
         private static bool SQLAddOrderItem(int orderId, List<CartItem> cartItems, SqlConnection connection, SqlTransaction transaction)
         {
-            string query = @"INSERT INTO OrderDetails(orderId, bookId, quantity, price) VALUES(@orderId, @bookId, @quantity, @price);";
+            string query = @"INSERT INTO OrderDetails(orderId, bookId, bookName, quantity, price) VALUES(@orderId, @bookId, @bookName, @quantity, @price);";
 
             try
             {
@@ -1127,6 +1151,7 @@ namespace BookHeaven.Models
                         //set parameter values for the current cart item
                         command.Parameters.AddWithValue("@orderId", orderId);
                         command.Parameters.AddWithValue("@bookId", cartItem.book.bookId);
+                        command.Parameters.AddWithValue("@bookName", cartItem.book.name);
                         command.Parameters.AddWithValue("@quantity", cartItem.amount);
                         command.Parameters.AddWithValue("@price", cartItem.book.price);
 
