@@ -19,6 +19,8 @@ namespace BookHeaven.Controllers
 
         public IActionResult showUserHome()
         {
+            string message = TempData["GeneralMessage"] as string;
+            ViewBag.GeneralMessage = message;
             return View("UserHomeView", initHomeBooks());
         }
 

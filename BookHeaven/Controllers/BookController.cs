@@ -24,10 +24,12 @@ namespace BookHeaven.Controllers
 
         public IActionResult showBookInfoView(int bookId)
         {
+            string message = TempData["GeneralMessage"] as string;
             Book book = SQLHelper.SQLSearchBookById(bookId);
             if (book != null)
             {
                 ViewBag.addToCartSuccess = TempData["addToCartSuccess"];
+                ViewBag.GeneralMessage = message;
                 return View("BookInfoView", book);
             }
             return RedirectToAction("showUserHome", "UserHome");

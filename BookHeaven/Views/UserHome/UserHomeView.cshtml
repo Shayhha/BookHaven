@@ -12,16 +12,19 @@
     string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
 }
 
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Home Page</title>
-    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.3">
+    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.5">
 </head>
 <body>
-   
+
     <div class="container5">
 
         <div class="sidenav">
@@ -164,6 +167,17 @@
         </div>
     </div>
 
+
     <script src="~/js/site.js"></script>
+
+    <script>
+        @{ string generalMessage = ViewBag.GeneralMessage; }
+        var generalMessage = '@Html.Raw(generalMessage)';
+        if (generalMessage != '') {
+            window.onload = function () {
+                alert(generalMessage);
+            };
+        }
+    </script>
 </body>
 </html>

@@ -69,7 +69,7 @@ namespace BookHeaven.Controllers
         {
 
             User currentUser = Models.User.currentUser;
-            string message = "Could not save your order details. \nPlease contact customer support for further assistance.";
+            string message = "Could not save your order details. Please contact customer support for further assistance.";
 
             if (currentUser != null)
             {
@@ -77,14 +77,14 @@ namespace BookHeaven.Controllers
                 {
                     List<CartItem> tempList = new List<CartItem> { new CartItem(SQLHelper.SQLSearchBookById(bookId), quantity) };
                     if (Payment.AddOrder(currentUser.userId, tempList))
-                        message = "Your payment was processed successfully! \nYou can view your orders in your profile.";
+                        message = "Your payment was processed successfully! You can view your orders in your profile.";
                    
                 }
                 else
-                    message = "Your payment was processed successfully! \nCheck your email for the details.";
+                    message = "Your payment was processed successfully! Check your email for the details.";
             }
 
-            ViewBag.GeneralMessage = message;
+            TempData["GeneralMessage"] = message;
             return RedirectToAction("showUserHome", "UserHome");
         }
 
@@ -96,10 +96,10 @@ namespace BookHeaven.Controllers
             if (currentUser != null)
             {
                 if (!SQLHelper.SQLUpdateBookStock(bookId, quantity))
-                    message = "Your order is canceled. \nBut there was a problem updating the book stock.";
+                    message = "Your order is canceled. But there was a problem updating the book stock.";
             }
 
-            ViewBag.GeneralMessage = message;
+            TempData["GeneralMessage"] = message;
             return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
         }
 
