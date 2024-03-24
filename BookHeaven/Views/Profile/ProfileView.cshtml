@@ -75,7 +75,7 @@
                     <strong>Credit Card:</strong>
                     @if (@Model.creditCard != null)
                         {
-                            if (Model.creditCard.number != 0 && Model.creditCard.date != "" && Model.creditCard.ccv != 0)
+                            if (Model.creditCard.number != "" && Model.creditCard.date != "" && Model.creditCard.ccv != 0)
                             {
                             <span id="creditCardSpan">@(Model.creditCard.number + " | " + @Model.creditCard.date + " | " + @Model.creditCard.ccv)</span>
                             }

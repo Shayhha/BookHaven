@@ -1,6 +1,7 @@
 ﻿using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
 using BookHeaven.Extensions;
+using System.Collections;
 
 
 namespace BookHeaven.Controllers
@@ -19,6 +20,12 @@ namespace BookHeaven.Controllers
 
         public IActionResult showUserHome()
         {
+            //byte[] aeskey = Models.Encryption.generateAESKey();
+            //string asf = Models.Encryption.encryptAES("374245455400126", aeskey);
+            //Console.WriteLine(asf);
+            //string asg1 = Models.Encryption.decryptAES(asf, aeskey);
+            //Console.WriteLine(asg1);
+
             string message = TempData["GeneralMessage"] as string;
             ViewBag.GeneralMessage = message;
             return View("UserHomeView", initHomeBooks());

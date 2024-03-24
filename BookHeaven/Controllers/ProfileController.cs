@@ -89,7 +89,7 @@ namespace BookHeaven.Controllers
             int flag = 0;
             string errorMessage = "";
 
-            if (creditCard.number != 0 && creditCard.date != "" && creditCard.ccv != 0)
+            if (creditCard.number != "" && creditCard.date != "" && creditCard.ccv != 0)
             {
                 if (!Regex.IsMatch(creditCard.number.ToString(), @"^\d{16}$"))
                 {
@@ -122,7 +122,7 @@ namespace BookHeaven.Controllers
                 }
             }
 
-            if (creditCard.number == 0 && (creditCard.date == "" || creditCard.date == null) && creditCard.ccv == 0)
+            if (creditCard.number == "" && (creditCard.date == "" || creditCard.date == null) && creditCard.ccv == 0)
             {
                 if (Models.User.currentUser.creditCard != null)
                 {
@@ -188,7 +188,7 @@ namespace BookHeaven.Controllers
                 user.address = null;
             }
 
-            if (user.creditCard.number == 0 && (user.creditCard.date == "" || user.creditCard.date == null) && user.creditCard.ccv == 0)
+            if (user.creditCard.number == "" && (user.creditCard.date == "" || user.creditCard.date == null) && user.creditCard.ccv == 0)
             {
                 user.creditCard = null;
             }

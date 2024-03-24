@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 
 namespace BookHeaven.Models
 {
@@ -34,7 +35,7 @@ namespace BookHeaven.Models
         }
 
 
-        public User(int userId, string email, string fname, string lname, string country, string city, string street, int apartNum, long number, string date, int ccv, bool isAdmin = false)
+        public User(int userId, string email, string fname, string lname, string country, string city, string street, int apartNum, string number, string date, int ccv, bool isAdmin = false)
         {
             this.userId = userId;
             this.email = email;
@@ -48,7 +49,7 @@ namespace BookHeaven.Models
             else
                 this.address = new Address(userId, country, city, street, apartNum);
 
-            if (number == 0 && date == "" && ccv == 0)
+            if (number == "" && date == "" && ccv == 0)
                 this.creditCard = new CreditCard(userId, number, date, ccv);
             else
                 this.creditCard = null;
@@ -171,13 +172,15 @@ namespace BookHeaven.Models
             return false;
         }
 
-        public void mergeCartLists(User currentDefaltUser)
+        public void mergeCartLists(User currentDefaultUser)
         {
-            if (this.cartItems != null && currentDefaltUser != null && currentDefaltUser.cartItems != null && currentDefaltUser.cartItems.Any())
+            if (this.cartItems != null && currentDefaultUser != null && currentDefaultUser.cartItems != null && currentDefaultUser.cartItems.Any())
             {
                 if (!this.isAdmin)
-                    this.cartItems = SQLHelper.SQLBulkInsertCartItems(this.userId, currentDefaltUser.cartItems);
+                    this.cartItems = SQLHelper.SQLBulkInsertCartItems(this.userId, currentDefaultUser.cartItems);
             }
         }
+
+
     }
 }
