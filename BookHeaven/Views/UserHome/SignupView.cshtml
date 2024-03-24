@@ -1,14 +1,12 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-@model BookHeaven.Models.Signup;
+﻿@model BookHeaven.Models.Signup;
 
 @if (ViewBag.ShowEmailTakenMessage != null && ViewBag.ShowEmailTakenMessage)
 {
     <script>alert("This email is already taken. Please choose another one.");</script>
+}
+
+@{
+    string generalMessage = ViewBag.GeneralMessage;
 }
 
 <!DOCTYPE html>
@@ -17,7 +15,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup Page</title>
-    <link rel="stylesheet" href="~/css/loginSignup.css">
+    <link rel="stylesheet" href="~/css/loginSignup.css?Version=6.0">
 </head>
 <body>
 
@@ -41,6 +39,9 @@
                 <input type="password" class="form-control formInput" name="password" placeholder="Password" value="@Model.password">
                 <span class="validation-error">@Html.ValidationMessageFor(x => x.password)</span>
             </div>
+
+            <span class="validation-error">@generalMessage</span>
+
             <button type="submit" class="btn btn-primary btn-block">Signup</button>
         </form>
 
