@@ -1,13 +1,5 @@
-﻿using BookHeaven.Models;
-using Stripe.Climate;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 namespace BookHeaven.Models
 {
@@ -26,27 +18,6 @@ namespace BookHeaven.Models
         {
             _configuration = configuration;
             connectionString = _configuration.GetConnectionString("myConnection");
-        }
-
-
-        /// <summary>
-        /// Function to generate SHA-256 hash for strings
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public static string ToSHA256(string text)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(text);
-            using (SHA256 sha256Hash = SHA256.Create())
-            {
-                byte[] hash = sha256Hash.ComputeHash(bytes);
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < hash.Length; i++)
-                {
-                    builder.Append(hash[i].ToString("x2"));
-                }
-                return builder.ToString();
-            }
         }
 
         /// <summary>
@@ -155,7 +126,7 @@ namespace BookHeaven.Models
                     if (reader.Read())
                     {
                         //initialize credit card object with database information
-                        return new CreditCard(reader.GetInt32(0), reader.GetInt64(1), reader.GetString(2), reader.GetInt32(3));
+                        return new CreditCard(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3));
                     }
                 }
             }
@@ -270,7 +241,7 @@ namespace BookHeaven.Models
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@email", login.email);
-                    command.Parameters.AddWithValue("@password", ToSHA256(login.password));
+                    command.Parameters.AddWithValue("@password", Encryption.toSHA256(login.password));
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -312,7 +283,7 @@ namespace BookHeaven.Models
                         using (SqlCommand command = new SqlCommand(query, connection, transaction))
                         {
                             command.Parameters.AddWithValue("@email", signup.email);
-                            command.Parameters.AddWithValue("@password", ToSHA256(signup.password));
+                            command.Parameters.AddWithValue("@password", Encryption.toSHA256(signup.password));
                             command.Parameters.AddWithValue("@fname", signup.firstName);
                             command.Parameters.AddWithValue("@lname", signup.lastName);
 
@@ -321,7 +292,10 @@ namespace BookHeaven.Models
                             if (result != null)
                             {
                                 transaction.Commit(); //commit the transaction if both insertions are successful
-                                return new User(int.Parse(result.ToString()), signup.email, signup.firstName, signup.lastName);
+                                int userId = int.Parse(result.ToString()); //represents the new userId assigned to new user
+                                byte[] key = Encryption.generateAESKey(); //generate aes key for user
+                                Encryption.writeKeyToFile(userId, key); //add user's secret key to file
+                                return new User(userId, signup.email, signup.firstName, signup.lastName); //return new user
                             }
                             else
                             {
@@ -730,7 +704,7 @@ namespace BookHeaven.Models
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
-                            return new CreditCard(reader.GetInt32(0), reader.GetInt64(1), reader.GetString(2), reader.GetInt32(3));
+                            return new CreditCard(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetInt32(3));
                         else
                             return null;
                     }
@@ -1055,7 +1029,7 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
-        /// Deletes all the cart items from the database for a given userId. usfull when a user
+        /// Deletes all the cart items from the database for a given userId. useful when a user
         /// buys all the items in his cart.
         /// </summary>
         /// <param name="userId"></param>
@@ -1193,8 +1167,8 @@ namespace BookHeaven.Models
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@userId", userId);
-                    command.Parameters.AddWithValue("@oldPassword", ToSHA256(oldPassword));
-                    command.Parameters.AddWithValue("@newPassword", ToSHA256(newPassword));
+                    command.Parameters.AddWithValue("@oldPassword", Encryption.toSHA256(oldPassword));
+                    command.Parameters.AddWithValue("@newPassword", Encryption.toSHA256(newPassword));
 
                     //execute the command and check if we updated the password
                     int rowsAffected = command.ExecuteNonQuery();

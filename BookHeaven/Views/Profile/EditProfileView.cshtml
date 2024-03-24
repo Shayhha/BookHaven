@@ -90,7 +90,7 @@
                     }
                     else
                     {
-                        @if (Model.creditCard.number == 0)
+                        @if (Model.creditCard.number == "")
                         {
                             <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
                         }
