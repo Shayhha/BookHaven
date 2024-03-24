@@ -43,13 +43,13 @@ namespace BookHeaven.Controllers
                         CancelUrl = "https://localhost:7212/Payment/checkoutHasFailed?bookId=" + bookId + "&quantity=" + quantity,
                         LineItems = new List<SessionLineItemOptions>(),
                         Mode = "payment",
+                        CustomerEmail = Models.User.currentUser.email,
                     };
 
                     CartItem cartItem = new CartItem(quantity); // Change this with a counter in the HTML
                     cartItem.book = SQLHelper.SQLSearchBookById(bookId);
 
                     options = Payment.addItemToCheckout(options, cartItem);
-
 
                     SessionService service = new SessionService();
                     Session session = service.Create(options);

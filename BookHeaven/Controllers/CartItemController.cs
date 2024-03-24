@@ -130,6 +130,7 @@ namespace BookHeaven.Controllers
                     CancelUrl = "https://localhost:7212/CartItem/checkoutHasFailed", 
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
+                    CustomerEmail = Models.User.currentUser.email
                 };
 
                 foreach (CartItem cartItem in Models.User.currentUser.cartItems)
