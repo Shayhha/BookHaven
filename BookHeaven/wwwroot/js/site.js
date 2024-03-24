@@ -101,6 +101,7 @@ function addBookToCart() {
                 else
                     alert(data.errorMessage);
             }
+            location.reload();
         })
         .catch(error => {
             console.error('Error:', error);
