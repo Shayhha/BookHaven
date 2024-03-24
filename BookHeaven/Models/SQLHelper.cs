@@ -726,8 +726,13 @@ namespace BookHeaven.Models
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    byte[] userKey = Encryption.getKeyFromFile(creditCard.userId); //call our function for retrieving user's key
+                    if(userKey == null) //check if we found user's key in file
+                    {
+                        return false; //indicating we couldn't find user's key in file
+                    }
                     command.Parameters.AddWithValue("@userId", creditCard.userId);
-                    command.Parameters.AddWithValue("@number", creditCard.number);
+                    command.Parameters.AddWithValue("@number", Encryption.encryptAES(creditCard.number, userKey)); //add encrypted credit card number
                     command.Parameters.AddWithValue("@date", creditCard.date);
                     command.Parameters.AddWithValue("@ccv", creditCard.ccv);
 
@@ -755,8 +760,13 @@ namespace BookHeaven.Models
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    byte[] userKey = Encryption.getKeyFromFile(creditCard.userId); //call our function for retrieving user's key
+                    if (userKey == null) //check if we found user's key in file
+                    {
+                        return false; //indicating we couldn't find user's key in file
+                    }
                     command.Parameters.AddWithValue("@userId", creditCard.userId);
-                    command.Parameters.AddWithValue("@number", creditCard.number);
+                    command.Parameters.AddWithValue("@number", Encryption.encryptAES(creditCard.number, userKey)); //add encrypted credit card number
                     command.Parameters.AddWithValue("@date", creditCard.date);
                     command.Parameters.AddWithValue("@ccv", creditCard.ccv);
 
