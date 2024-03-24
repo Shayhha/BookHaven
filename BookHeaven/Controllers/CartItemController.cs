@@ -122,8 +122,8 @@ namespace BookHeaven.Controllers
 
         public IActionResult checkoutFromCart()
         {
-            if (Models.User.currentUser != null && Models.User.currentUser.cartItems != null) {
-
+            if (Models.User.currentUser != null && Models.User.currentUser.cartItems != null)
+            {
                 SessionCreateOptions options = new SessionCreateOptions
                 {
                     SuccessUrl = "https://localhost:7212/CartItem/checkoutWasSuccessful",
@@ -153,14 +153,38 @@ namespace BookHeaven.Controllers
 
         public IActionResult checkoutWasSuccessful()
         {
-            Models.User.currentUser.cartItems.Clear();
-            // Create a ViewBag success message to the user
-            return RedirectToAction("showUserHome", "UserHome");
+            User currentUser = Models.User.currentUser;
+            string message = "Could not save your order details. \nPlease contact customer support for further assistance.";
+
+            if (currentUser != null && currentUser.cartItems != null)
+            {
+                if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
+                {
+                    if (Payment.AddOrder(currentUser.userId, currentUser.cartItems))
+                    {
+                        if (SQLHelper.SQLDeleteUserCart(currentUser.userId))
+                        {
+                            currentUser.cartItems.Clear();
+                            message = "Your payment was processed successfully! \nYou can view your orders in your profile.";
+                        }
+                        else
+                            message = "Your payment was processed successfully. \nBut there was an error when updating your cart. \nPlease contant customer support.";
+                    }
+                }
+                else
+                {
+                    currentUser.cartItems.Clear();
+                    message = "Your payment was processed successfully! \nCheck your email for the details.";
+                }
+            }
+
+            ViewBag.GeneralMessage = message;
+            return RedirectToAction("showUserHome", "UserHome"); 
         }
 
         public IActionResult checkoutHasFailed()
         {
-            // Create a ViewBag failure message to the user
+            ViewBag.GeneralMessage = "Could not process your payment. \nTry again later.";
             return RedirectToAction("showCartView", "CartItem");
         }
 
