@@ -1188,6 +1188,38 @@ namespace BookHeaven.Models
         }
 
         /// <summary>
+        /// Checking if the given password is the correct user password
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="oldPassword"></param>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
+        public static bool SQLCheckCurrentPassword(int userId, string currentPassword)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"SELECT password FROM Users WHERE userId = @userId;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read()) //add all orders from Orders table in db
+                        {
+                            string password = reader.GetString(0);
+                            if (password == Encryption.toSHA256(currentPassword))
+                                return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Function for adding book into the Books db
         /// </summary>
         /// <param name="book"></param>

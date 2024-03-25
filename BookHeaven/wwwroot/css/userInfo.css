@@ -23,9 +23,21 @@
     cursor: pointer;
 }
 
-.logout_button {
+.changePasswordButton {
     position: absolute;
     top: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout_button {
+    position: absolute;
+    top: 120px;
     right: 20px;
     background-color: #ff4500; /*red*/
     color: #fff;

@@ -178,6 +178,13 @@ function confirmDelete() {
 }
 
 
+function showChangePasswordPage() {
+    window.location.href = '/Profile/showChangePasswordView';
+}
+
+function backFromChangePasswordPage() {
+    window.location.href = '/Profile/showProfileView';
+}
 
 function editUserInfoButtonClick() {
     window.location.href = '/Profile/showEditProfileView';
