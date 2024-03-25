@@ -155,7 +155,7 @@ namespace BookHeaven.Controllers
         public IActionResult checkoutWasSuccessful()
         {
             User currentUser = Models.User.currentUser;
-            string message = "Could not save your order details. \nPlease contact customer support for further assistance.";
+            string message = "Could not save your order details. Please contact customer support for further assistance.";
 
             if (currentUser != null && currentUser.cartItems != null)
             {
@@ -166,26 +166,26 @@ namespace BookHeaven.Controllers
                         if (SQLHelper.SQLDeleteUserCart(currentUser.userId))
                         {
                             currentUser.cartItems.Clear();
-                            message = "Your payment was processed successfully! \nYou can view your orders in your profile.";
+                            message = "Your payment was processed successfully! You can view your orders in your profile.";
                         }
                         else
-                            message = "Your payment was processed successfully. \nBut there was an error when updating your cart. \nPlease contant customer support.";
+                            message = "Your payment was processed successfully. But there was an error when updating your cart. \nPlease contant customer support.";
                     }
                 }
                 else
                 {
                     currentUser.cartItems.Clear();
-                    message = "Your payment was processed successfully! \nCheck your email for the details.";
+                    message = "Your payment was processed successfully! Check your email for the details.";
                 }
             }
 
-            ViewBag.GeneralMessage = message;
+            TempData["GeneralMessage"] = message;
             return RedirectToAction("showUserHome", "UserHome"); 
         }
 
         public IActionResult checkoutHasFailed()
         {
-            ViewBag.GeneralMessage = "Could not process your payment. \nTry again later.";
+            TempData["GeneralMessage"] = "Could not process your payment. Try again later.";
             return RedirectToAction("showCartView", "CartItem");
         }
 

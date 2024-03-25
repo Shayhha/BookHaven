@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections;
+using System.Net;
 using System.Text.RegularExpressions;
 using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace BookHeaven.Controllers
         public IActionResult showProfileView()
         {
             Models.User.currentUser.orders = SQLHelper.SQLInitUserOrders(Models.User.currentUser.userId);
+            ViewBag.cardNumber = saveCardNumberInViewBag();
             return View("ProfileView", Models.User.currentUser);
         }
 
@@ -20,10 +22,9 @@ namespace BookHeaven.Controllers
 
         public IActionResult showEditProfileView()
         {
-
+            ViewBag.cardNumber = saveCardNumberInViewBag();
             return View("EditProfileView", Models.User.currentUser);
         }
-
 
         private bool userAddressValidation(Address address)
         {
@@ -91,7 +92,7 @@ namespace BookHeaven.Controllers
 
             if (creditCard.number != "" && creditCard.date != "" && creditCard.ccv != 0)
             {
-                if (!Regex.IsMatch(creditCard.number.ToString(), @"^\d{16}$"))
+                if (!Regex.IsMatch(creditCard.number, @"^\d{16}$"))
                 {
                     errorMessage += "Invalid Card Number. ";
                     flag = 1;
@@ -122,7 +123,9 @@ namespace BookHeaven.Controllers
                 }
             }
 
-            if (creditCard.number == "" && (creditCard.date == "" || creditCard.date == null) && creditCard.ccv == 0)
+            if ((creditCard.number == "" || creditCard.number == null) &&
+                (creditCard.date == "" || creditCard.date == null) &&
+                creditCard.ccv == 0)
             {
                 if (Models.User.currentUser.creditCard != null)
                 {
@@ -170,7 +173,7 @@ namespace BookHeaven.Controllers
             }
 
             if (SaveUserData(user))
-                return View("ProfileView", user);
+                return RedirectToAction("showProfileView");
             else
             {
                 ViewBag.generalErrorMessage = "Unable to save the changes, something went wrong please try again.";
@@ -188,7 +191,9 @@ namespace BookHeaven.Controllers
                 user.address = null;
             }
 
-            if (user.creditCard.number == "" && (user.creditCard.date == "" || user.creditCard.date == null) && user.creditCard.ccv == 0)
+            if ((user.creditCard.number == "" || user.creditCard.number == null ) &&
+                (user.creditCard.date == "" || user.creditCard.date == null) &&
+                user.creditCard.ccv == 0)
             {
                 user.creditCard = null;
             }
@@ -218,6 +223,25 @@ namespace BookHeaven.Controllers
             }
             else
                 return BadRequest(); //return badRequest indicating that we were unable to delete address
+        }
+
+        private string saveCardNumberInViewBag()
+        {
+            string cardNumber = null;
+
+            if (Models.User.currentUser != null && Models.User.currentUser.creditCard != null)
+            {
+                // Getting credit card encryption key for this user
+                byte[] key = Encryption.getKeyFromFile(Models.User.currentUser.userId);
+                if (key != null)
+                {
+                    cardNumber = Encryption.decryptAES(Models.User.currentUser.creditCard.number, key);
+                    Array.Clear(key, 0, key.Length);
+                    return cardNumber;
+                }
+            }
+
+            return cardNumber;
         }
     }
 }

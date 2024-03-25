@@ -1,10 +1,10 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model BookHeaven.Models.User;
 
-@model BookHeaven.Models.User;
+@{
+    string cardNumber = ViewBag.cardNumber;
+    if (cardNumber == null)
+        cardNumber = ""; 
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -51,20 +51,20 @@
                 <p>
                     <strong>Address:</strong>
                     @if (@Model.address != null)
+                    {
+                        if (Model.address.country != "" && Model.address.city != "" && Model.address.street != "" && Model.address.apartNum != 0)
                         {
-                            if (Model.address.country != "" && Model.address.city != "" && Model.address.street != "" && Model.address.apartNum != 0)
-                            {
                             <span id="addressSpan">@(Model.address.apartNum + ", " + @Model.address.street + ", " + @Model.address.city + ", " + @Model.address.country)</span>
-                            }
-                            else
-                            {
-                            <span id="addressSpan"></span>
-                            }
                         }
                         else
                         {
-                        <span id="addressSpan"></span>
+                            <span id="addressSpan"></span>
                         }
+                    }
+                    else
+                    {
+                        <span id="addressSpan"></span>
+                    }
                     <button class="delete-button" onclick="if(confirmDelete()) deleteAddress()">🗑️</button>
                 </p>
             </div>
@@ -74,20 +74,20 @@
                 <p>
                     <strong>Credit Card:</strong>
                     @if (@Model.creditCard != null)
+                    {
+                        if (Model.creditCard.number != "" && Model.creditCard.date != "" && Model.creditCard.ccv != 0)
                         {
-                            if (Model.creditCard.number != "" && Model.creditCard.date != "" && Model.creditCard.ccv != 0)
-                            {
-                            <span id="creditCardSpan">@(Model.creditCard.number + " | " + @Model.creditCard.date + " | " + @Model.creditCard.ccv)</span>
-                            }
-                            else
-                            {
-                            <span id="creditCardSpan"></span>
-                            }
+                            <span id="creditCardSpan">@(cardNumber + " | " + @Model.creditCard.date + " | " + @Model.creditCard.ccv)</span>
                         }
                         else
                         {
-                        <span id="creditCardSpan"></span>
+                            <span id="creditCardSpan"></span>
                         }
+                    }
+                    else
+                    {
+                        <span id="creditCardSpan"></span>
+                    }
                     <button class="delete-button" onclick="if(confirmDelete()) deleteCreditCard()">🗑️</button>
                 </p>
             </div>

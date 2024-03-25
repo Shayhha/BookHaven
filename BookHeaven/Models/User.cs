@@ -92,6 +92,7 @@ namespace BookHeaven.Models
                     return false;
                 this.setUser(updatedUser.email, updatedUser.fname, updatedUser.lname);
             }
+
             //check the address
             if (updatedUser.address != null)
             {
@@ -110,22 +111,35 @@ namespace BookHeaven.Models
                 }
                 this.address = updatedUser.address;
             }
+
             //check the credit card
             if (updatedUser.creditCard != null)
             {
-                if (this.creditCard != null)
+                // Encrypting the updated credit card number
+                byte[] key = Encryption.getKeyFromFile(this.userId);
+                if (key != null)
                 {
-                    if (CreditCard.checkCreditCard(this.creditCard, updatedUser.creditCard) == false)
+                    updatedUser.creditCard.number = Encryption.encryptAES(updatedUser.creditCard.number, key);
+                    Array.Clear(key, 0, key.Length);
+
+                    if (this.creditCard != null)
                     {
-                        if (SQLHelper.SQLUpdateCreditCard(updatedUser.creditCard) == false)
+                        if (CreditCard.checkCreditCard(this.creditCard, updatedUser.creditCard) == false)
+                        {
+                            if (SQLHelper.SQLUpdateCreditCard(updatedUser.creditCard) == false)
+                                return false;
+                        }
+                    }
+                    else
+                    {
+                        if (SQLHelper.SQLAddCreditCard(updatedUser.creditCard) == false)
                             return false;
                     }
+
                 }
                 else
-                {
-                    if (SQLHelper.SQLAddCreditCard(updatedUser.creditCard) == false)
-                        return false;
-                }
+                    return false;
+
                 this.creditCard = updatedUser.creditCard;
             }
             return true;
