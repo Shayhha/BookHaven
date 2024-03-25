@@ -1,9 +1,15 @@
 ﻿@model BookHeaven.Models.User;
 
 @{
+    string maskedCardNumber;
     string cardNumber = ViewBag.cardNumber;
     if (cardNumber == null)
-        cardNumber = ""; 
+        cardNumber = "";
+    else
+    {
+        maskedCardNumber = !string.IsNullOrEmpty(cardNumber) && cardNumber.Length >= 12 ? "************" + cardNumber.Substring(12) : "Invalid card number";
+        cardNumber = maskedCardNumber;
+    }
 }
 
 <!DOCTYPE html>
