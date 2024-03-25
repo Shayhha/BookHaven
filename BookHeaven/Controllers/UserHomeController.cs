@@ -21,10 +21,10 @@ namespace BookHeaven.Controllers
         public IActionResult showUserHome()
         {
             //byte[] aeskey = Models.Encryption.generateAESKey();
-            //string asf = Models.Encryption.encryptAES("374245455400126", aeskey);
-            //Console.WriteLine(asf);
-            //string asg1 = Models.Encryption.decryptAES(asf, aeskey);
-            //Console.WriteLine(asg1);
+            //string ciphertext = Models.Encryption.encryptAES("4242424242424242", aeskey);
+            //Console.WriteLine(ciphertext);
+            //string originalText = Models.Encryption.decryptAES(ciphertext, aeskey);
+            //Console.WriteLine(originalText);
 
             return View("UserHomeView", initHomeBooks());
         }

@@ -99,6 +99,7 @@ namespace BookHeaven.Models
                 aes.KeySize = 256;
                 aes.Key = key;
                 aes.Mode = CipherMode.ECB;
+                aes.Padding = PaddingMode.Zeros;
 
                 ICryptoTransform encryptor = aes.CreateEncryptor();
 
@@ -136,6 +137,7 @@ namespace BookHeaven.Models
                     aes.KeySize = 256;
                     aes.Key = key;
                     aes.Mode = CipherMode.ECB;
+                    aes.Padding = PaddingMode.Zeros;
 
                     ICryptoTransform decryptor = aes.CreateDecryptor();
 
