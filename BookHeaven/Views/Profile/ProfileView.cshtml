@@ -2,6 +2,8 @@
 
 @{
     string cardNumber = ViewBag.cardNumber;
+    if (cardNumber == null)
+        cardNumber = ""; 
 }
 
 <!DOCTYPE html>

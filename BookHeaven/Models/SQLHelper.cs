@@ -695,7 +695,7 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM CreditCard WHERE userId = @userId;";
+                string query = "SELECT * FROM CreditCards WHERE userId = @userId;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -726,15 +726,15 @@ namespace BookHeaven.Models
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    byte[] userKey = Encryption.getKeyFromFile(creditCard.userId); //call our function for retrieving user's key
-                    if(userKey == null) //check if we found user's key in file
-                    {
-                        return false; //indicating we couldn't find user's key in file
-                    }
-                    string temp = Encryption.encryptAES(creditCard.number, userKey);
-                    int size = temp.Length;
+                    //byte[] userKey = Encryption.getKeyFromFile(creditCard.userId); //call our function for retrieving user's key
+                    //if(userKey == null) //check if we found user's key in file
+                    //{
+                    //    return false; //indicating we couldn't find user's key in file
+                    //}
+                    //string temp = Encryption.encryptAES(creditCard.number, userKey);
+                    //int size = temp.Length;
                     command.Parameters.AddWithValue("@userId", creditCard.userId);
-                    command.Parameters.AddWithValue("@number", temp); //add encrypted credit card number
+                    command.Parameters.AddWithValue("@number", creditCard.number); //Gets an already encrypted card number
                     command.Parameters.AddWithValue("@date", creditCard.date);
                     command.Parameters.AddWithValue("@ccv", creditCard.ccv);
 
@@ -787,7 +787,7 @@ namespace BookHeaven.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = @"DELETE FROM CreditCard WHERE userId = @userId;";
+                string query = @"DELETE FROM CreditCards WHERE userId = @userId;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {

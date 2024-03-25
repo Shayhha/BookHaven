@@ -11,7 +11,7 @@ namespace BookHeaven.Controllers
         public IActionResult showProfileView()
         {
             Models.User.currentUser.orders = SQLHelper.SQLInitUserOrders(Models.User.currentUser.userId);
-            saveCardNumberInViewBag();
+            ViewBag.cardNumber = saveCardNumberInViewBag();
             return View("ProfileView", Models.User.currentUser);
         }
 
@@ -22,7 +22,7 @@ namespace BookHeaven.Controllers
 
         public IActionResult showEditProfileView()
         {
-            saveCardNumberInViewBag();
+            ViewBag.cardNumber = saveCardNumberInViewBag();
             return View("EditProfileView", Models.User.currentUser);
         }
 
@@ -173,7 +173,7 @@ namespace BookHeaven.Controllers
             }
 
             if (SaveUserData(user))
-                return View("ProfileView", user);
+                return RedirectToAction("showProfileView");
             else
             {
                 ViewBag.generalErrorMessage = "Unable to save the changes, something went wrong please try again.";
@@ -225,31 +225,23 @@ namespace BookHeaven.Controllers
                 return BadRequest(); //return badRequest indicating that we were unable to delete address
         }
 
-
-        private void saveCardNumberInViewBag()
+        private string saveCardNumberInViewBag()
         {
-            if (Models.User.currentUser != null)
-            {
-                if (Models.User.currentUser.creditCard != null)
-                {
-                    // Getting credit card encryption key for this user
-                    byte[] key = Encryption.getKeyFromFile(Models.User.currentUser.userId);
-                    if (key != null)
-                    {
-                        ViewBag.cardNumber = Encryption.decryptAES(Models.User.currentUser.creditCard.number, key);
-                        Array.Clear(key, 0, key.Length);
-                        return;
-                    }
-                    else
-                    {
-                        ViewBag.cardNumber = "";
-                        return;
-                    }
+            string cardNumber = null;
 
+            if (Models.User.currentUser != null && Models.User.currentUser.creditCard != null)
+            {
+                // Getting credit card encryption key for this user
+                byte[] key = Encryption.getKeyFromFile(Models.User.currentUser.userId);
+                if (key != null)
+                {
+                    cardNumber = Encryption.decryptAES(Models.User.currentUser.creditCard.number, key);
+                    Array.Clear(key, 0, key.Length);
+                    return cardNumber;
                 }
             }
 
-            ViewBag.cardNumber = "";
+            return cardNumber;
         }
     }
 }

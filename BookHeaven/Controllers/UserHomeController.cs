@@ -21,17 +21,17 @@ namespace BookHeaven.Controllers
         public IActionResult showUserHome()
         {
             //byte[] aeskey = Models.Encryption.generateAESKey();
-<<<<<<< HEAD
+
             //string asf = Models.Encryption.encryptAES("4242424242424242", aeskey);
             //Console.WriteLine(asf);
             //string asg1 = Models.Encryption.decryptAES(asf, aeskey);
             //Console.WriteLine(asg1);
-=======
+
             //string ciphertext = Models.Encryption.encryptAES("4242424242424242", aeskey);
             //Console.WriteLine(ciphertext);
             //string originalText = Models.Encryption.decryptAES(ciphertext, aeskey);
             //Console.WriteLine(originalText);
->>>>>>> 696665242c751e5a21c32e09d8b7a14578726133
+
 
             string message = TempData["GeneralMessage"] as string;
             ViewBag.GeneralMessage = message;
