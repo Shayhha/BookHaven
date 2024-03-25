@@ -1,5 +1,8 @@
-﻿
-@model BookHeaven.Models.User;
+﻿@model BookHeaven.Models.User;
+
+@{
+    string cardNumber = ViewBag.cardNumber;
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -96,7 +99,7 @@
                         }
                         else
                         {
-                            <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="@Model.creditCard.number">
+                            <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="@cardNumber">
                         }
 
                         <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="@Model.creditCard.date">
