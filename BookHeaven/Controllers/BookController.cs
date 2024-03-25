@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookHeaven.Models;
-using System.Net;
 
 namespace BookHeaven.Controllers
 {
@@ -47,7 +46,7 @@ namespace BookHeaven.Controllers
                 if (Models.Book.addBook(newBook)) //add the book to database 
                 {
                     Console.WriteLine("The book " + newBook.name + " has been added to the website.");
-                    return RedirectToAction("showUserHome", "UserHome");
+                    return RedirectToAction("showAdminHome", "AdminHome");
                 }
                 else 
                 {
@@ -69,7 +68,7 @@ namespace BookHeaven.Controllers
                 {
                     Console.WriteLine("The book with id = " + updatedBook.bookId + " has been updated.");
                     //SQLHelper.SQLUpdateBookStock(updatedBook.bookId, 25, true);
-                    return RedirectToAction("showUserHome", "UserHome");
+                    return RedirectToAction("showAdminHome", "AdminHome");
                 }
                 else
                 {
@@ -90,17 +89,17 @@ namespace BookHeaven.Controllers
                 if (Models.Book.deleteBook(bookId)) //delete book from database 
                 {
                     Console.WriteLine("The book with id = " + bookId + " has been deleted form the website.");
-                    return RedirectToAction("showUserHome", "UserHome");
+                    return RedirectToAction("showAdminHome", "AdminHome");
                 }
                 else
                 {
                     ViewBag.errorMessage = "Unable to remove book, try again later.";
-                    return RedirectToAction("showUserHome", "UserHome");
+                    return RedirectToAction("showAdminHome", "AdminHome");
                 }
             }
             else
             {
-                return RedirectToAction("showUserHome", "UserHome");
+                return RedirectToAction("showAdminHome", "AdminHome");
             }
         }
 

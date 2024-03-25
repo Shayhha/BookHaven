@@ -1,8 +1,4 @@
-﻿@*@{
-        var isLoggedIn = ViewBag.IsLoggedIn ?? false;
-    }*@
-
-@inject IHttpContextAccessor HttpContextAccessor
+﻿@inject IHttpContextAccessor HttpContextAccessor
 
 @{
     string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
@@ -20,7 +16,21 @@
 <body>
     <header>
         <div class="navbar">
-            <div class="site-title"><a href="/UserHome/showUserHome">BookHeaven</a></div>
+            @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+            {
+                @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+                {
+                    <div class="site-title"><a href="/AdminHome/showAdminHome">BookHeaven</a></div>
+                }
+                else
+                {
+                    <div class="site-title"><a href="/UserHome/showUserHome">BookHeaven</a></div>
+                }
+            }
+            else
+            {
+                <div class="site-title"><a href="/UserHome/showUserHome">BookHeaven</a></div>
+            }
             <div class="search-container">
                 <input type="text" class="searchInput" name="searchQuery" placeholder="Search..">
                 <button class="searchButton" type="button" onclick="handleSearchButtonClick()">🔍</button>
@@ -42,7 +52,6 @@
                 else
                 {
                     <a href="/CartItem/showCartView" class="btn" id="cartButton">🛒</a>
-
                     <a href="/UserHome/showLoginView" id="loginButton">Login</a>
                     <a href="/UserHome/showSignupView" id="signupButton">Sign Up</a>
                 }
