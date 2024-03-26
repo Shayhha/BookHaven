@@ -1,5 +1,11 @@
 ﻿@model BookHeaven.Models.Book
 
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,7 +102,17 @@
 
                 <div class="buttons">
                     <button type="submit" class="buttonBlueColor">Update</button>
-                    <a href="/UserHome/showUserHome" id="backButton" class="buttonRedColor">Back</a>
+                    @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+                    {
+                        @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+                        {
+                            <a href="/AdminHome/showAdminHome" id="backButton" class="buttonRedColor">Back</a>
+                        }
+                        else
+                        {
+                            <a href="/UserHome/showUserHome" id="backButton" class="buttonRedColor">Back</a>
+                        }
+                    }
                 </div>
             </form>
 

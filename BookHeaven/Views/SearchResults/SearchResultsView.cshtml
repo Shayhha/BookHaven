@@ -8,7 +8,6 @@
         ViewBag.FilterList = "";
 }
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,7 +75,21 @@
             </div>
 
             <button id="filterButton" class="filterButton" onclick="filterButtonOnClick()">Filter</button>
-            <button id="clearFilterButton" class="filterButton" onclick="clearFilterButtonOnClick()">Clear</button>
+            @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+            {
+                @if (BookHeaven.Models.User.currentUser.isAdmin == true)
+                {
+                    <button id="clearFilterButton" class="filterButton" onclick="clearFilterButtonOnClickAdmin()">Clear</button>
+                }
+                else
+                {
+                    <button id="clearFilterButton" class="filterButton" onclick="clearFilterButtonOnClickUser()">Clear</button>
+                }
+            }
+            else
+            {
+                <button id="clearFilterButton" class="filterButton" onclick="clearFilterButtonOnClickUser()">Clear</button>
+            }
 
         </div>
 

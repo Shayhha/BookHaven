@@ -66,7 +66,15 @@ function filterButtonOnClick() {
     window.location.href = '/SearchResults/showfilteredBooks?filterBy=' + filterString + '&searchQuery=' + searchQuery;
 }
 
-function clearFilterButtonOnClick() {
+function clearFilterButtonOnClickAdmin() {
+    var filterSelects = document.getElementsByClassName("filter-select");
+    for (var i = 0; i < filterSelects.length; i++) {
+        filterSelects[i].value = "";
+    }
+    window.location.href = '/AdminHome/showAdminHome';
+}
+
+function clearFilterButtonOnClickUser() {
     var filterSelects = document.getElementsByClassName("filter-select");
     for (var i = 0; i < filterSelects.length; i++) {
         filterSelects[i].value = "";
@@ -170,6 +178,13 @@ function confirmDelete() {
 }
 
 
+function showChangePasswordPage() {
+    window.location.href = '/Profile/showChangePasswordView';
+}
+
+function backFromChangePasswordPage() {
+    window.location.href = '/Profile/showProfileView';
+}
 
 function editUserInfoButtonClick() {
     window.location.href = '/Profile/showEditProfileView';

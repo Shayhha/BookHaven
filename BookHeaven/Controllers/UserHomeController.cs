@@ -1,7 +1,6 @@
 ﻿using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
 using BookHeaven.Extensions;
-using System.Collections;
 
 
 namespace BookHeaven.Controllers
@@ -20,20 +19,8 @@ namespace BookHeaven.Controllers
 
         public IActionResult showUserHome()
         {
-            //byte[] aeskey = Models.Encryption.generateAESKey();
-
-            //string asf = Models.Encryption.encryptAES("4242424242424242", aeskey);
-            //Console.WriteLine(asf);
-            //string asg1 = Models.Encryption.decryptAES(asf, aeskey);
-            //Console.WriteLine(asg1);
-
-            //string ciphertext = Models.Encryption.encryptAES("4242424242424242", aeskey);
-            //Console.WriteLine(ciphertext);
-            //string originalText = Models.Encryption.decryptAES(ciphertext, aeskey);
-            //Console.WriteLine(originalText);
-
-
             string message = TempData["GeneralMessage"] as string;
+            TempData["GeneralMessage"] = "";
             ViewBag.GeneralMessage = message;
             return View("UserHomeView", initHomeBooks());
         }
@@ -65,7 +52,12 @@ namespace BookHeaven.Controllers
                     Console.WriteLine(user.fname + " " + user.lname); //print user name from the user object
                     _contx.HttpContext.Session.SetString("isLoggedIn", "true"); //open new session for user
                     ViewBag.GeneralMessage = "Login successful. Welcome back!";
-                    return View("UserHomeView", initHomeBooks());
+                    TempData["GeneralMessage"] = "Login successful. Welcome back!";
+
+                    if (Models.User.currentUser.isAdmin)
+                        return RedirectToAction("showAdminHome", "AdminHome");
+                    else
+                        return RedirectToAction("showUserHome", "UserHome");
                 }
                 else
                 {
@@ -129,11 +121,5 @@ namespace BookHeaven.Controllers
             _contx.HttpContext.Session.SetObjectAsJson("listOfBooks", searchResults.books); // Store the initial list in session
             return searchResults;
         }
-
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
     }
 }

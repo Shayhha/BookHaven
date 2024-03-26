@@ -1,5 +1,150 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model BookHeaven.Models.SearchResults;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Home Page</title>
+    <link rel="stylesheet" href="~/css/homePage.css?Version=6.0.5">
+</head>
+<body>
+
+    <div class="container5">
+
+        <div class="sidenav">
+            <div>
+                <label for="filter" class="filter-label">Filter By:</label>
+                <select id="filter" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="A - Z">A - Z</option>
+                    <option value="Z - A">Z - A</option>
+                    <option value="Price Ascending">Price Ascending</option>
+                    <option value="Price Descending">Price Descending</option>
+                    <option value="Most Popular">Most Popular</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterFormat" class="filter-label">Filter Format:</label>
+                <select id="filterFormat" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Paperback">Paperback</option>
+                    <option value="Hardcover">Hardcover</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterPrice" class="filter-label">Filter Price:</label>
+                <select id="filterPrice" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Less Than $10">Less Than $10</option>
+                    <option value="$10 - $20">$10 - $20</option>
+                    <option value="$20 - $30">$20 - $30</option>
+                    <option value="More Than $30">More Than $30</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterDate" class="filter-label">Filter Date:</label>
+                <select id="filterDate" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Before 1950">Before 1950</option>
+                    <option value="1950 - 2000">1950 - 2000</option>
+                    <option value="After 2000">After 2000</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterAge" class="filter-label">Filter Age:</label>
+                <select id="filterAge" class="filter-select">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Below 10">Below 10</option>
+                    <option value="10 - 18">10 - 18</option>
+                    <option value="Above 18">Above 18</option>
+                </select>
+            </div>
+
+            <button id="filterButton" class="filterButton" onclick="filterButtonOnClick()">Filter</button>
+            <button id="clearFilterButton" class="filterButton" onclick="clearFilterButtonOnClickAdmin()">Clear</button>
+
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+
+                @foreach (var index in Enumerable.Range(0, Model.books.Count / 4 + (Model.books.Count % 4 == 0 ? 0 : 1)))
+                {
+                    <div class="row">
+
+                        @foreach (Book book in Model.books.Skip(index * 4).Take(4))
+                        {
+                            string sanitizedName = book.name.Replace("'", "\\'"); // Replace single quote with escaped single quote
+                            <div class="col-md-3" onclick="showPopup('@book.imageUrl', '@sanitizedName', '@book.author', '@book.date', @book.bookId, '@book.category', '@book.format', '@book.ageLimitation', @book.price, @book.stock, @book.salePrice)">
+                                <div class="item">
+                                    <img src="@book.imageUrl" alt="Image" class="img-fluid">
+                                    <span class="item-title">@book.name</span>
+                                    <p>Date: @book.date</p>
+                                    <p>Genre: @book.category</p>
+                                    <p>Stock: @book.stock</p>
+                                    @if (book.price != book.salePrice && book.salePrice != 0)
+                                    {
+                                        <p>Price: <strong>$@book.salePrice</strong> <strike>$@book.price</strike></p>
+                                    }
+                                    else
+                                    {
+                                        <p>Price: $@book.price</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+    <div class="popup" id="popup">
+        <span class="close" onclick="closePopup()">❌</span>
+        <div class="popup-content">
+            <div class="popup-image">
+                <img id="popup-image" src="" alt="Book Image">
+            </div>
+            <div class="popup-details">
+                <h2 id="popup-title"></h2>
+                <p><strong>Author: </strong><span id="popup-author"></span></p>
+                <p><strong>Release Date: </strong><span id="popup-date"></span></p>
+                <p><strong>Book Id: </strong><span id="popup-bookId"></span></p>
+                <p><strong>Category: </strong><span id="popup-category"></span></p>
+                <p><strong>Format: </strong><span id="popup-format"></span></p>
+                <p><strong>Age Limitation: </strong><span id="popup-age"></span></p>
+                <p><strong>Price: </strong><span id="popup-price"></span></p>
+                <p><strong>In-Stock: </strong><span id="popup-stock"></span></p>
+            </div>
+        </div>
+
+        <div class="popup-buttons">
+            <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
+            <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook()">Delete Book</button>
+            <button id="bookInfoPageButton" class="buttonBlueColor" onclick="goToBookInfoPage()">Book Info Page</button>
+        </div>
+    </div>
+
+    <script src="~/js/site.js"></script>
+
+    <script>
+        @{ string generalMessage = ViewBag.GeneralMessage; }
+        var generalMessage = '@Html.Raw(generalMessage)';
+        if (generalMessage != '') {
+            window.onload = function () {
+                alert(generalMessage);
+            };
+        }
+    </script>
+</body>
+</html>

@@ -18,13 +18,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="~/css/userInfo.css?Version=6.0.2">
+    <link rel="stylesheet" href="~/css/userInfo.css?Version=6.0.3">
 </head>
 <body>
     <div class="container2">
         <h1>User Profile</h1>
         <button class="logout_button" onclick="userLogout()">Logout</button>
         <button class="edit-button" onclick="editUserInfoButtonClick()">Edit</button>
+        <button class="changePasswordButton" onclick="showChangePasswordPage()">Change Password</button>
         <div class="profile-info">
             <h2>User Information</h2>
 
@@ -161,6 +162,16 @@
 
         </div>
     </div>
+
+    <script>
+        @{ string generalMessage = ViewBag.GeneralMessage; }
+        var generalMessage = '@Html.Raw(generalMessage)';
+        if (generalMessage != '') {
+            window.onload = function () {
+                alert(generalMessage);
+            };
+        }
+    </script>
 </body>
 </html>
 
