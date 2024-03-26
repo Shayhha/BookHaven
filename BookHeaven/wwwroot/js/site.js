@@ -183,7 +183,7 @@ function showChangePasswordPage() {
 }
 
 function backFromChangePasswordPage() {
-    window.location.href = '/Profile/showProfileView';
+    window.location.href = '/Profile/handleCancelButton';
 }
 
 function editUserInfoButtonClick() {

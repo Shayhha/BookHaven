@@ -15,6 +15,11 @@ namespace BookHeaven.Controllers
             return View("ProfileView", Models.User.currentUser);
         }
 
+        public IActionResult handleCancelButton()
+        {
+            return View("ProfileView", Models.User.currentUser);
+        }
+
         public IActionResult showSettingsView()
         {
             return View("SettingsView");
@@ -33,17 +38,21 @@ namespace BookHeaven.Controllers
             string message = TempData["GeneralMessage"] as string;
             ViewBag.GeneralMessage = message;
             ViewBag.CurrentPass = TempData["CurrentPass"] as string;
+            ViewBag.NewPass = TempData["NewPass"] as string;
+            ViewBag.ConfirmPass = TempData["ConfirmPass"] as string;
             return View("ChangePasswordView");
         }
 
 
         public IActionResult changePassword(string currentPassword, string newPassword, string confirmPassword)
         {
+            TempData["CurrentPass"] = currentPassword;
+            TempData["newPass"] = newPassword;
+            TempData["confirmPass"] = confirmPassword;
+
             if (newPassword != confirmPassword)
             {
                 TempData["GeneralMessage"] = "New password and confirm password are not the same.";
-                TempData["CurrentPass"] = currentPassword;
-                // !!! Do this in all error messages, save the correct data
                 return RedirectToAction("showChangePasswordView", "Profile");
             }
             else if (currentPassword == newPassword)
@@ -76,6 +85,9 @@ namespace BookHeaven.Controllers
             }
 
             TempData["GeneralMessage"] = "Your password has been updated successfully.";
+            TempData["CurrentPass"] = "";
+            TempData["newPass"] = "";
+            TempData["confirmPass"] = "";
             return RedirectToAction("showProfileView", "Profile");
         }
 
@@ -202,6 +214,11 @@ namespace BookHeaven.Controllers
             // Perform custom user info validation
             if (user.email == null || !Regex.IsMatch(user.email, @"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$"))
                 ModelState.AddModelError("email", "Email can't be null.");
+            else
+            {
+                if (SQLHelper.SQLCheckEmail(user.email))
+                    ModelState.AddModelError("email", "This email already in use, try a different one.");
+            }
 
             if (user.fname == null || !Regex.IsMatch(user.fname, @"^[a-zA-Z]{2,20}$"))
                 ModelState.AddModelError("fname", "First can't be null.");

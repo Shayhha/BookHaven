@@ -47,6 +47,18 @@
     cursor: pointer;
 }
 
+.cancel_button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #ff4500; /*red*/
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 /* Adjust container width for smaller screens */
 @media (max-width: 767px) {
     .container2 {
