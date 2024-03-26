@@ -13,6 +13,9 @@
 BookHeaven/appsettings.json
 appsettings.json
 
+BookHeaven/appData.txt
+appData.txt
+
 *.DS_Store
 .DS_Store
 
