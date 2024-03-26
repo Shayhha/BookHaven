@@ -203,45 +203,51 @@ function showNotifyMessage() {
 }
 
 function deleteAddress() {
-    // AJAX request to delete credit card information
-    fetch('DeleteAddress', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            console.log('Address deleted');
-            document.getElementById('addressSpan').innerHTML = '<span></span>';
+    var addressSpan = document.getElementById("addressSpan");
+    if (addressSpan.textContent != '') {
+        fetch('DeleteAddress', { // AJAX request to delete address information
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
         })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                document.getElementById('addressSpan').innerHTML = '<span></span>';
+                alert("Your address info has been deleted from our database successfully.");
+            })
+            .catch(error => {
+                alert("There was a problem with deleting your address info from our database, please contact customer support.");
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
 }
 
 function deleteCreditCard() {
-    // AJAX request to delete credit card information
-    fetch('DeleteCreditCard', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            console.log('Credit Card deleted');
-            document.getElementById('creditCardSpan').innerHTML = '<span></span>';
+    var creditCardSpan = document.getElementById("creditCardSpan");
+    if (creditCardSpan.textContent != '') {
+        fetch('DeleteCreditCard', { // AJAX request to delete credit card information
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
         })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                document.getElementById('creditCardSpan').innerHTML = '<span></span>';
+                alert("Your credit card info has been deleted from our database successfully.");
+            })
+            .catch(error => {
+                alert("There was a problem with deleting your credit card info from our database, please contact customer support.");
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
 }
 
 
