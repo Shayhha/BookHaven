@@ -29,6 +29,8 @@ namespace BookHeaven.Controllers
                 searchResults = SQLHelper.SQLSearchBook(searchResults);
 
             _contx.HttpContext.Session.SetObjectAsJson("listOfBooks", searchResults.books); // Store the book list in session
+            if (searchResults.books.Count() == 0)
+                ViewBag.NoResutlsMessage = "No books found, try searching for something else...";
 
             return View("SearchResultsView", searchResults);
         }
@@ -75,6 +77,9 @@ namespace BookHeaven.Controllers
             {
                 searchResults.books.Add(book);
             }
+
+            if (searchResults.books.Count() == 0)
+                ViewBag.NoResutlsMessage = "No books found, try searching for something else...";
 
             ViewBag.SelectedFilter = filterBy;
             return View("SearchResultsView", searchResults);

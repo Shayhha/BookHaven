@@ -129,7 +129,10 @@
     left: 30px;
     top: 40%;
     transform: translateY(-50%);
-    max-width: 350px;
+    width: 300px;
+    max-width: 300px;
+    margin: 20px;
+    margin-bottom: 0px;
 }
 
 .bookViewInput {
