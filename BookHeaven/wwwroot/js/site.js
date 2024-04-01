@@ -153,10 +153,17 @@ function removeBookFromSale() {
     window.location.href = editUrl;
 }
 
+function buyBookWithStripe() {
+    var bookId = document.getElementById("popup-bookId").textContent;
+    var quantity = document.getElementById("quantityInput").value;
+    var editUrl = "/Payment/processPaymentWithStripe?bookId=" + bookId + "&quantity=" + quantity;
+    window.location.href = editUrl;
+}
+
 function buyBook() {
     var bookId = document.getElementById("popup-bookId").textContent;
     var quantity = document.getElementById("quantityInput").value;
-    var editUrl = "/Payment/processPayment?bookId=" + bookId + "&quantity=" + quantity;
+    var editUrl = "/Payment/showPaymentView?bookId=" + bookId + "&quantity=" + quantity;
     window.location.href = editUrl;
 }
 
@@ -193,6 +200,8 @@ function editUserInfoButtonClick() {
 }
 
 function userLogout() {
+    //window.history.forward();
+    //window.onunload = function () { };
     window.location.href = '/UserHome/userLogout';
 }
 

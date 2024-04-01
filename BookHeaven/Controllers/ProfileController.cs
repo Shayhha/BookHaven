@@ -11,7 +11,7 @@ namespace BookHeaven.Controllers
             string message = TempData["GeneralMessage"] as string;
             ViewBag.GeneralMessage = message;
             Models.User.currentUser.orders = SQLHelper.SQLInitUserOrders(Models.User.currentUser.userId);
-            ViewBag.cardNumber = saveCardNumberInViewBag();
+            ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
             return View("ProfileView", Models.User.currentUser);
         }
 
@@ -29,7 +29,7 @@ namespace BookHeaven.Controllers
         {
             string message = TempData["GeneralMessage"] as string;
             ViewBag.GeneralMessage = message;
-            ViewBag.cardNumber = saveCardNumberInViewBag();
+            ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
             return View("EditProfileView", Models.User.currentUser);
         }
 
@@ -297,25 +297,6 @@ namespace BookHeaven.Controllers
             }
             else
                 return BadRequest(); //return badRequest indicating that we were unable to delete address
-        }
-
-        private string saveCardNumberInViewBag()
-        {
-            string cardNumber = null;
-
-            if (Models.User.currentUser != null && Models.User.currentUser.creditCard != null)
-            {
-                // Getting credit card encryption key for this user
-                byte[] key = Encryption.getKeyFromFile(Models.User.currentUser.userId);
-                if (key != null)
-                {
-                    cardNumber = Encryption.decryptAES(Models.User.currentUser.creditCard.number, key);
-                    Array.Clear(key, 0, key.Length);
-                    return cardNumber;
-                }
-            }
-
-            return cardNumber;
         }
     }
 }

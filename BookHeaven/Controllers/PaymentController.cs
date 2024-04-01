@@ -1,5 +1,7 @@
-﻿using BookHeaven.Models;
+﻿using System.Net;
+using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 using Stripe.Checkout;
 
 namespace BookHeaven.Controllers
@@ -15,45 +17,135 @@ namespace BookHeaven.Controllers
         }
         // # # #
 
-        public IActionResult showPaymentView(int bookId)
+        public IActionResult showPaymentView(int bookId, int quantity)
         {
-            Book book = SQLHelper.SQLSearchBookById(bookId);
-            if (book != null)
+            if (Models.User.currentUser != null)
             {
-                if (book.stock == 0)
+                User tempUser = Models.User.currentUser;
+                Book book = SQLHelper.SQLSearchBookById(bookId);
+                if (book != null)
                 {
-                    // Create and show a viewbag error message that the book is not in stock
-                    return RedirectToAction("showUserHome", "UserHome");
-                }
-                return View("PaymentView", book);
-            }
-            return RedirectToAction("showUserHome", "UserHome");
+                    if (book.stock == 0)
+                    {
+                        TempData["GeneralMessage"] = "The book you are tring to buy is currently out of stock, please try again later.";
+                        return RedirectToAction("showUserHome", "UserHome");
+                    }
 
+                    Payment payment = new Payment(book, quantity, tempUser.creditCard, tempUser.address);
+
+                    ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
+                    return View("PaymentView", payment);
+                }
+            }
+            
+            TempData["GeneralMessage"] = "An error has occured, please try again later.";
+            return RedirectToAction("showUserHome", "UserHome");
         }
 
-        public IActionResult processPayment(int bookId, int quantity)
+        public IActionResult returnToPaymentView(Payment payment, string errorMessage)
+        {
+            ViewBag.GeneralMessage = errorMessage;
+            ViewBag.cardNumber = payment.creditCard.number;
+            return View("PaymentView", payment);
+        }
+
+
+        public IActionResult processPayment(Payment payment)
+        {
+            if (payment.address != null)
+            {
+                string errorMessage = Models.Address.addressValidation(payment.address, Models.User.currentUser);
+                if (errorMessage != "valid")
+                    return returnToPaymentView(payment, errorMessage);
+            }
+
+            if (payment.creditCard != null)
+            {
+                string errorMessage = CreditCard.creditCardValidation(payment.creditCard, Models.User.currentUser);
+                if (errorMessage != "valid")
+                    return returnToPaymentView(payment, errorMessage);
+            }
+
+            if (SQLHelper.SQLUpdateBookStock(payment.book.bookId, (-1) * payment.quantity))
+                return checkoutWasSuccessful(payment.book.bookId, payment.quantity);
+            else
+                return checkoutHasFailed(payment.book.bookId, payment.quantity);
+        }
+
+
+        public IActionResult processPaymentWithStripe(int bookId, int quantity)
         {
             if (SQLHelper.SQLUpdateBookStock(bookId, (-1) * quantity))
             {
                 if (Models.User.currentUser != null)
                 {
+                    User tempUser = Models.User.currentUser;
+                    //string[] date = tempUser.creditCard.date.Split('/');
+
+                    //TokenCreateOptions tokenOptions = new TokenCreateOptions
+                    //{
+                    //    Card = new TokenCardOptions
+                    //    {
+                    //        Number = "4242424242424242",
+                    //        ExpMonth = "12",
+                    //        ExpYear = "2043",
+                    //        Cvc = "123",
+                    //    }
+                    //};
+
+                    //TokenService tokenService = new TokenService();
+                    //Token stripeToken = tokenService.Create(tokenOptions);
+
+
+                    //PaymentMethodCreateOptions paymentMethodCardOptions = new PaymentMethodCreateOptions
+                    //{
+                    //    Type = "card",
+                    //    Card = new PaymentMethodCardOptions
+                    //    {
+                    //        Token = "tok_visa",
+                    //    },
+                    //    //Customer = customer.Id,
+                    //};
+
+                    //PaymentMethodService paymentMethodService = new PaymentMethodService();
+                    //PaymentMethod paymentMethod = paymentMethodService.Create(paymentMethodCardOptions);
+
+
+                    CustomerCreateOptions customerOptions = new CustomerCreateOptions
+                    {
+                        Name = tempUser.fname + " " + tempUser.lname,
+                        Email = tempUser.email,
+                        PaymentMethod = "pm_card_visa",
+                    };
+
+                    CustomerService customerService = new CustomerService();
+                    Customer customer = customerService.Create(customerOptions);
+
                     SessionCreateOptions options = new SessionCreateOptions
                     {
                         SuccessUrl = "https://localhost:7212/Payment/checkoutWasSuccessful?bookId=" + bookId + "&quantity=" + quantity,
                         CancelUrl = "https://localhost:7212/Payment/checkoutHasFailed?bookId=" + bookId + "&quantity=" + quantity,
                         LineItems = new List<SessionLineItemOptions>(),
                         Mode = "payment",
-                        CustomerEmail = Models.User.currentUser.email,
+                        Customer = customer.Id,
+                        PaymentMethodTypes = new List<string> { "card" },
+
+                        //PaymentMethodConfiguration = paymentMethod.Id,
+                        //PaymentIntentData = new SessionPaymentIntentDataOptions
+                        //{
+                        //    SetupFutureUsage = "off_session",
+                        //},
+                        //BillingAddressCollection = "required",
                     };
 
                     CartItem cartItem = new CartItem(quantity); // Change this with a counter in the HTML
                     cartItem.book = SQLHelper.SQLSearchBookById(bookId);
 
                     options = Payment.addItemToCheckout(options, cartItem);
-
+                    
                     SessionService service = new SessionService();
                     Session session = service.Create(options);
-
+                    
                     Response.Headers.Add("Location", session.Url);
 
                     return new StatusCodeResult(303);
@@ -61,8 +153,8 @@ namespace BookHeaven.Controllers
                 }
             }
 
-            // Create a ViewBag message for the user
-            return new StatusCodeResult(400); // Bad Request
+            TempData["GeneralMessage"] = "You are trying to buy more books than we have in stock, try reducing the quantity.";
+            return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
         }
 
         public IActionResult checkoutWasSuccessful(int bookId, int quantity)
@@ -102,6 +194,5 @@ namespace BookHeaven.Controllers
             TempData["GeneralMessage"] = message;
             return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
         }
-
     }
 }

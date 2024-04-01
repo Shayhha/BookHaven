@@ -35,7 +35,7 @@ namespace BookHeaven.Models
             int secretIndex = (userId << 3) ^ userId; //this represents the secret index of our user in txt file
             string encryptedSecretIndex = toSHA256(secretIndex.ToString()); //we encrypt the secretIndex in sha256 for extra diffusion
             string encryptionKeyString = Convert.ToBase64String(encryptionKey); //convert byte array to string
-            Console.WriteLine(BitConverter.ToString(encryptionKey).Replace("-", " "));
+            //Console.WriteLine(BitConverter.ToString(encryptionKey).Replace("-", " "));
             //open or create the text file and append to the end
             using (StreamWriter writer = new StreamWriter("appData.txt", true))
             {
@@ -63,7 +63,7 @@ namespace BookHeaven.Models
                     if (parts.Length == 2 && parts[0] == encryptedSecretIndex) //if true we found our secret index in txt file
                     {
                         //convert string back to byte array and return
-                        Console.WriteLine(BitConverter.ToString(Convert.FromBase64String(parts[1])).Replace("-", " ")); //print key
+                        //Console.WriteLine(BitConverter.ToString(Convert.FromBase64String(parts[1])).Replace("-", " ")); //print key
                         return Convert.FromBase64String(parts[1]); //return aes key for user
                     }
                 }
