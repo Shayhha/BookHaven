@@ -11,7 +11,7 @@ namespace BookHeaven.Controllers
             string message = TempData["GeneralMessage"] as string;
             ViewBag.GeneralMessage = message;
             Models.User.currentUser.orders = SQLHelper.SQLInitUserOrders(Models.User.currentUser.userId);
-            ViewBag.cardNumber = saveCardNumberInViewBag();
+            ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
             return View("ProfileView", Models.User.currentUser);
         }
 
@@ -29,7 +29,7 @@ namespace BookHeaven.Controllers
         {
             string message = TempData["GeneralMessage"] as string;
             ViewBag.GeneralMessage = message;
-            ViewBag.cardNumber = saveCardNumberInViewBag();
+            ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
             return View("EditProfileView", Models.User.currentUser);
         }
 
@@ -99,18 +99,18 @@ namespace BookHeaven.Controllers
                 int flag = 0;
                 string errorMessage = "";
 
-                if (address.country == null || !Regex.IsMatch(address.country, @"^[a-zA-Z]{2,25}$"))
+                if (address.country == null || !Regex.IsMatch(address.country, @"^[a-zA-Z\s]{2,25}$"))
                 {
                     errorMessage += "Invalid Country. ";
                     flag = 1;
                 }
 
-                if (address.city == null || !Regex.IsMatch(address.city, @"^[a-zA-Z]{2,25}$")) {
+                if (address.city == null || !Regex.IsMatch(address.city, @"^[a-zA-Z\s]{2,25}$")) {
                     errorMessage += "Invalid City. ";
                     flag = 1;
                 }
 
-                if (address.street == null || !Regex.IsMatch(address.street, @"^[a-zA-Z]{2,25}$")) {
+                if (address.street == null || !Regex.IsMatch(address.street, @"^[a-zA-Z\s]{2,25}$")) {
                     errorMessage += "Invalid Street. ";
                     flag = 1;
                 }
@@ -213,18 +213,18 @@ namespace BookHeaven.Controllers
 
             // Perform custom user info validation
             if (user.email == null || !Regex.IsMatch(user.email, @"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$"))
-                ModelState.AddModelError("email", "Email can't be null.");
+                ModelState.AddModelError("email", "Email follow the general email template: example@abc.xyz");
             else
             {
-                if (SQLHelper.SQLCheckEmail(user.email))
+                if ((Models.User.currentUser.email != user.email) && SQLHelper.SQLCheckEmail(user.email))
                     ModelState.AddModelError("email", "This email already in use, try a different one.");
             }
 
             if (user.fname == null || !Regex.IsMatch(user.fname, @"^[a-zA-Z]{2,20}$"))
-                ModelState.AddModelError("fname", "First can't be null.");
+                ModelState.AddModelError("fname", "First name should be only letters.");
 
             if (user.lname == null || !Regex.IsMatch(user.lname, @"^[a-zA-Z]{2,20}$"))
-                ModelState.AddModelError("lname", "Last can't be null.");
+                ModelState.AddModelError("lname", "Last name should be only letters.");
 
             // Perform custom address validation
             if (!userAddressValidation(user.address))
@@ -245,12 +245,12 @@ namespace BookHeaven.Controllers
 
             if (SaveUserData(user))
             {
-                ViewBag.generalErrorMessage = "Updates to your profile information have been saved succesfully.";
+                TempData["GeneralMessage"] = "Updates to your profile information have been saved succesfully.";
                 return RedirectToAction("showProfileView");
             }
             else
             {
-                ViewBag.generalErrorMessage = "Unable to save the changes, something went wrong please try again.";
+                TempData["GeneralMessage"] = "Unable to save the changes, something went wrong please try again.";
                 return View("EditProfileView", user);
             }
         }
@@ -297,25 +297,6 @@ namespace BookHeaven.Controllers
             }
             else
                 return BadRequest(); //return badRequest indicating that we were unable to delete address
-        }
-
-        private string saveCardNumberInViewBag()
-        {
-            string cardNumber = null;
-
-            if (Models.User.currentUser != null && Models.User.currentUser.creditCard != null)
-            {
-                // Getting credit card encryption key for this user
-                byte[] key = Encryption.getKeyFromFile(Models.User.currentUser.userId);
-                if (key != null)
-                {
-                    cardNumber = Encryption.decryptAES(Models.User.currentUser.creditCard.number, key);
-                    Array.Clear(key, 0, key.Length);
-                    return cardNumber;
-                }
-            }
-
-            return cardNumber;
         }
     }
 }

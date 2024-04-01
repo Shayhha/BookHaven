@@ -12,7 +12,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BookHeaven</title>
-    <link rel="stylesheet" href="~/css/bookPages.css?Version=6.0.2">
+    <link rel="stylesheet" href="~/css/bookPages.css?Version=6.0.3">
 </head>
 <body>
     <div class="container">
@@ -67,60 +67,62 @@
                 </div>
             }
 
-            <div class="buttons">
-                @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+        <div class="buttons">
+            @if (!string.IsNullOrEmpty(isLoggedIn) && isLoggedIn == "true")
+            {
+                @if (BookHeaven.Models.User.currentUser.isAdmin == true)
                 {
-                    @if (BookHeaven.Models.User.currentUser.isAdmin == true)
-                    {
-                        <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
-                        <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook2()">Delete Book</button>
+                    <button id="bookEditButton" class="buttonBlueColor" onclick="editBook()">Edit</button>
+                    <button id="bookDeleteButton" class="buttonRedColor" onclick="if(confirmDelete()) deleteBook2()">Delete Book</button>
 
-                        @if (Model.salePrice != 0)
-                        {
-                            <button id="bookRemoveFromSaleButton" class="buttonBlueColor" onclick="removeBookFromSale()">End Sale</button>
-                        }
-                        else
-                        {
-                            <div style="display:inline-flex">
-                                <input type="number" class="bookViewInput" id="salePrice" name="salePrice" value="@(Model.price - 0.05)">
-                                <script>
+                    @if (Model.salePrice != 0)
+                    {
+                        <button id="bookRemoveFromSaleButton" class="buttonBlueColor" onclick="removeBookFromSale()">End Sale</button>
+                    }
+                    else
+                    {
+                        <div style="display:inline-flex">
+                            <input type="number" class="bookViewInput" id="salePrice" name="salePrice" value="@(Model.price - 0.05)">
+                            <script>
                                     document.getElementById("salePrice").addEventListener("input", function () {
                                         var max = parseFloat(@Model.price) - 0.05;
                                         if (parseFloat(this.value) > max) {
                                             this.value = max; // Set value to maximum if it exceeds the maximum allowed
                                         }
                                     });
-                                </script>
-                                <button id="bookPutOnSaleButton" class="buttonBlueColor" onclick="putBookOnSale()">Put On Sale</button>
-                            </div>
-                        }
-
-                        if (Model.stock < 200)
-                        {
-                            <div style="display:inline-flex">
-                                <input type="number" class="bookViewInput" id="restockAmount" name="restockAmount" value="0" min="0" max="800" />
-                                <script>document.getElementById("restockAmount").addEventListener("input", function () {
-                                        var max = parseFloat(this.getAttribute("max"));
-                                        if (parseFloat(this.value) > max) {
-                                            this.value = max; // Set value to maximum if it exceeds the maximum allowed
-                                        }
-                                    });</script>
-                                <button id="bookRestockButton" class="buttonBlueColor" onclick="restockBook()">Restock</button>
-                            </div>
-                        }
+                            </script>
+                            <button id="bookPutOnSaleButton" class="buttonBlueColor" onclick="putBookOnSale()">Put On Sale</button>
+                        </div>
                     }
-                    else
+
+                    if (Model.stock < 200)
                     {
-                        <button id="bookAddToCartButton" class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button>
-                        <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
+                        <div style="display:inline-flex">
+                            <input type="number" class="bookViewInput" id="restockAmount" name="restockAmount" value="0" min="0" max="800" />
+                            <script>document.getElementById("restockAmount").addEventListener("input", function () {
+                                    var max = parseFloat(this.getAttribute("max"));
+                                    if (parseFloat(this.value) > max) {
+                                        this.value = max; // Set value to maximum if it exceeds the maximum allowed
+                                    }
+                                });</script>
+                            <button id="bookRestockButton" class="buttonBlueColor" onclick="restockBook()">Restock</button>
+                        </div>
                     }
                 }
                 else
                 {
                     <button id="bookAddToCartButton" class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button>
+                    <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBookWithStripe()">Buy With Stripe</button>
                     <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
                 }
-            </div>
+            }
+            else
+            {
+                <button id="bookAddToCartButton" class="buttonBlueColor" onclick="addBookToCart()">Add to Cart</button>
+                <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBookWithStripe()">Buy With Stripe</button>
+                <button id="bookBuyNowButton" class="buttonBlueColor" onclick="buyBook()">Buy Now</button>
+            }
+        </div>
         </div>
     </div>
 

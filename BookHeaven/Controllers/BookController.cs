@@ -38,14 +38,14 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Models.Book.checkBook(newBook)) //check if given book already exists
+                if (Book.checkBook(newBook)) //check if given book already exists
                 {
-                    ViewBag.errorMessage = "Book already exists.";
+                    ViewBag.errorMessage = "The book you are trying to add already exists. Try a different Name, Author or Date.";
                     return View("AddNewBookView", newBook);
                 }
-                if (Models.Book.addBook(newBook)) //add the book to database 
+                if (Book.addBook(newBook)) //add the book to database 
                 {
-                    Console.WriteLine("The book " + newBook.name + " has been added to the website.");
+                    TempData["GeneralMessage"] = "The book " + newBook.name + " has been successfully added to the website.";
                     return RedirectToAction("showAdminHome", "AdminHome");
                 }
                 else 
@@ -64,15 +64,21 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Models.Book.updateBook(updatedBook)) //update the book to database 
+                
+                if (SQLHelper.SQLCheckBook(updatedBook.name, updatedBook.author, updatedBook.date))
                 {
-                    Console.WriteLine("The book with id = " + updatedBook.bookId + " has been updated.");
-                    //SQLHelper.SQLUpdateBookStock(updatedBook.bookId, 25, true);
+                    ViewBag.errorMessage = "Unable to update the book " + updatedBook.name + " because there exist a book with the same Name, Author and Date.";
+                    return View("BookEditView", updatedBook);
+                }
+
+                if (Book.updateBook(updatedBook)) //update the book to database 
+                {
+                    TempData["GeneralMessage"] = "The book " + updatedBook.name + " has been successfully updated.";
                     return RedirectToAction("showAdminHome", "AdminHome");
                 }
                 else
                 {
-                    ViewBag.errorMessage = "Unable to update book, try again later.";
+                    ViewBag.errorMessage = "Unable to update the book " + updatedBook.name + ", try again later.";
                     return View("BookEditView", updatedBook);
                 }
             }
@@ -86,14 +92,14 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Models.Book.deleteBook(bookId)) //delete book from database 
+                if (Book.deleteBook(bookId)) //delete book from database 
                 {
-                    Console.WriteLine("The book with id = " + bookId + " has been deleted form the website.");
+                    TempData["GeneralMessage"] = "The book with id = " + bookId + " has been successfully deleted form the website.";
                     return RedirectToAction("showAdminHome", "AdminHome");
                 }
                 else
                 {
-                    ViewBag.errorMessage = "Unable to remove book, try again later.";
+                    ViewBag.errorMessage = "Unable to remove book with id = " + bookId + ", try again later.";
                     return RedirectToAction("showAdminHome", "AdminHome");
                 }
             }
@@ -108,11 +114,12 @@ namespace BookHeaven.Controllers
         {
             if (Book.updateBookStock(bookId, restockAmount))
             {
+                TempData["GeneralMessage"] = "The book with id = " + bookId + " has been successfully restocked.";
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }
             else
             {
-                ViewBag.errorMessage = "Unable to restock the book ..., try again later.";
+                TempData["GeneralMessage"] = "Unable to restock the book with id = " + bookId + " ..., try again later.";
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }
         }
@@ -121,11 +128,12 @@ namespace BookHeaven.Controllers
         {
             if (Book.updateBookPrice(bookId, salePrice, true))
             {
+                TempData["GeneralMessage"] = "The book with id = " + bookId + " is on sale.";
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }
             else
             {
-                ViewBag.errorMessage = "Unable to put the book on sale ..., try again later.";
+                TempData["GeneralMessage"] = "Unable to put the book with id = " + bookId + " on sale ..., try again later.";
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }
         }
@@ -134,11 +142,12 @@ namespace BookHeaven.Controllers
         {
             if (Book.updateBookPrice(bookId, 0, true))
             {
+                TempData["GeneralMessage"] = "The book with id = " + bookId + " is no longer on sale.";
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }
             else
             {
-                ViewBag.errorMessage = "Unable to put the book on sale ..., try again later.";
+                TempData["GeneralMessage"] = "Unable to remove the book with id = " + bookId + " from sale ..., try again later.";
                 return RedirectToAction("showBookInfoView", "Book", new { bookId = bookId });
             }
         }

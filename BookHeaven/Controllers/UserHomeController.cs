@@ -40,6 +40,10 @@ namespace BookHeaven.Controllers
 
         public IActionResult tryToLogin(Login login)
         {
+            //Response.Headers.Add("Cache-Control", "no-cache, no-store");
+            //Response.Headers.Add("Pragma", "no-cache");
+            //Response.Headers.Add("Expires", "-1");
+
             if (ModelState.IsValid)
             {
                 User user = SQLHelper.SQLLogin(login); //try to login with user credentials, if succeed we get a user object

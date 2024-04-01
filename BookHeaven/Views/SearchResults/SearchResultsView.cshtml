@@ -96,7 +96,11 @@
         <div class="container">
 
             <div class="row">
-                <p class="fw-bold display-5 px-3 py-2">You searched for: <span id="searchQueryString">@Model.searchQuery</span></p>
+
+                <div style="display: flex; flex-direction: column;">
+                    <p class="fw-bold display-5 px-3 py-2">You searched for: <span id="searchQueryString">@Model.searchQuery</span></p>
+                    <span id="noRestultsSpan" class="py-2">@ViewBag.NoResutlsMessage</span>
+                </div>
 
                 @foreach (var index in Enumerable.Range(0, Model.books.Count / 4 + (Model.books.Count % 4 == 0 ? 0 : 1)))
                 {

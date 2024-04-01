@@ -1,13 +1,10 @@
 ﻿@model BookHeaven.Models.Book
 
-@{
-    string errorMessage = ViewBag.errorMessage;
-}
-
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
     string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
+    string errorMessage = ViewBag.errorMessage;
 }
 
 <!DOCTYPE html>

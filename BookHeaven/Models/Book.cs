@@ -183,6 +183,7 @@ namespace BookHeaven.Models
             {
                 if (book.salePrice > book.price) //we set salePrice to 0 to indicate that its not on sale
                     book.salePrice = 0;
+
                 if (SQLHelper.SQLUpdateBook(book)) //we update the book info
                     return true;
             }

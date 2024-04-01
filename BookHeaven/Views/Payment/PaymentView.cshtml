@@ -1,4 +1,11 @@
-﻿@model BookHeaven.Models.Book;
+﻿@model BookHeaven.Models.Payment;
+
+@{
+    string generalMessage = ViewBag.GeneralMessage;
+    string cardNumber = ViewBag.cardNumber;
+    if (cardNumber == null)
+        cardNumber = "";
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,20 +28,21 @@
         }
 
         .image-side {
-            flex: 25%;
+            flex: 40%;
+            margin-right: 25px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
             .image-side img {
-                max-width: 100%;
-                max-height: 100%;
-                padding-right: 20px;
+                width: 375px;
+                height: 609px;
+                object-fit: fill;
             }
 
         .content-side {
-            flex: 75%;
+            flex: 60%;
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
@@ -121,9 +129,9 @@
             align-items: center; /* Center align items */
         }
 
-        .payment-summary p {
-            padding: 0px 10px;
-        }
+            .payment-summary p {
+                padding: 0px 10px;
+            }
 
         .quantity-group {
             display: flex;
@@ -137,9 +145,10 @@
             flex-direction: row; /* Display payment summary in one line */
             justify-content: center; /* Display payment summary in one line */
             align-items: center; /* Center align items */
+            margin-bottom: 50px;
         }
 
-            .payment-buttons a {
+            .payment-buttons a, .payment-buttons button {
                 display: block;
                 color: #f2f2f2;
                 text-align: center;
@@ -151,7 +160,7 @@
                 transition: all 0.3s ease-in-out; /*Add this line to enable smooth animation*/
             }
 
-                .payment-buttons a:hover {
+                .payment-buttons a:hover, .payment-buttons button:hover {
                     background-color: #ddd;
                     color: black;
                     transform: scale(1.1); /*Increase size to 110% when hovered */
@@ -167,82 +176,185 @@
             border: 1px solid #4CAF50; /* Add border to the buttons */
         }
 
+        .generalMessage {
+            color: red;
+            paddding: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="payment-container">
         <div class="container">
             <div class="image-side">
-                <img src="@Model.imageUrl" alt="Book Image">
+                <img src="@Model.book.imageUrl" alt="Book Image">
             </div>
             <div class="content-side">
                 <h1>Checkout</h1>
                 <div class="book-info">
-                    <p><strong>Name: </strong>@Model.name</p>
-                    <p><strong>Author: </strong>@Model.author</p>
+                    <p><strong>Name: </strong>@Model.book.name</p>
+                    <p><strong>Author: </strong>@Model.book.author</p>
                 </div>
                 <div class="book-info">
-                    @if (Model.price != Model.salePrice && Model.salePrice != 0)
+                    @if (Model.book.price != Model.book.salePrice && Model.book.salePrice != 0)
                     {
-                        <p><strong>Price: $@Model.salePrice</strong> <strike>$@Model.price</strike></p>
+                        <p><strong>Price: $@Model.book.salePrice</strong> <strike>$@Model.book.price</strike></p>
                     }
                     else
                     {
-                        <p><strong>Price: </strong>$@Model.price</p>
+                        <p><strong>Price: </strong>$@Model.book.price</p>
 
                     }
-                    <p><strong>In-Stock: </strong>@Model.stock</p>
+                    <p><strong>In-Stock: </strong>@Model.book.stock</p>
+                    <p><strong>Quantity: </strong>@Model.quantity</p>
                 </div>
-                <div class="quantity-group">
-                    <label for="quantity">Quantity:</label>
-                    <input type="number" id="quantity" name="quantity" min="1" max="999" value="1" style="width: 50px;">
-                </div>
-                <div class="input-groups">
-                    <div class="address-group">
-                        <div class="input-group">
-                            <label for="country">Country:</label>
-                            <input type="text" id="country" name="country" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="city">City:</label>
-                            <input type="text" id="city" name="city" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="street">Street:</label>
-                            <input type="text" id="street" name="street" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="apartNum">Apartment Number:</label>
-                            <input type="text" id="apartNum" name="apartNum" required>
-                        </div>
-                    </div>
-                    <div class="card-group">
-                        <div class="input-group">
-                            <label for="ccNumber">Card Number:</label>
-                            <input type="text" id="ccNumber" name="ccNumber" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="expDate">Expiration Date:</label>
-                            <input type="text" id="expDate" name="expDate" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="ccv">CCV:</label>
-                            <input type="text" id="ccv" name="ccv" required>
-                        </div>
-                    </div>
-                </div>
+
                 <h2>Payment Summary</h2>
                 <div class="payment-summary">
-                    <p><strong>Total: </strong>$@Model.price  -ths is a placeholder-</p> @* Here i need to find out how to calculate the total on the fly using quantity and the price *@
+                    @if (Model.book.salePrice != 0)
+                    {
+                        <p><strong>Total: </strong>$@(Model.book.salePrice * Model.quantity)</p>
+                    }
+                    else
+                    {
+                        <p><strong>Total: </strong>$@(Model.book.price * Model.quantity)</p>
+                    }
                 </div>
 
-                <div class="payment-buttons">
-                    <a href="/UserHome/showUserHome" id="backButton">Back</a>
-                    <a href="/Payment/processPayment" id="processPaymentButton">Proceed to Payment</a> @* The url here is remporary *@
-                </div>
+                <span class="generalMessage">@generalMessage</span>
 
+                <div class="input-groups">
+                    <form asp-controller="Payment" asp-action="processPayment" method="post">
+                        <div class="address-group">
+                            <input type="hidden" asp-for="book.bookId" value="@Model.book.bookId" />
+                            <input type="hidden" asp-for="book.name" value="@Model.book.name" />
+                            <input type="hidden" asp-for="book.author" value="@Model.book.author" />
+                            <input type="hidden" asp-for="book.date" value="@Model.book.date" />
+                            <input type="hidden" asp-for="book.category" value="@Model.book.category" />
+                            <input type="hidden" asp-for="book.format" value="@Model.book.format" />
+                            <input type="hidden" asp-for="book.price" value="@Model.book.price" />
+                            <input type="hidden" asp-for="book.salePrice" value="@Model.book.salePrice" />
+                            <input type="hidden" asp-for="book.stock" value="@Model.book.stock" />
+                            <input type="hidden" asp-for="book.imageUrl" value="@Model.book.imageUrl" />
+                            <input type="hidden" asp-for="book.ageLimitation" value="@Model.book.ageLimitation" />
+
+                            <input type="hidden" asp-for="quantity" value="@Model.quantity" />
+
+                            @if (Model.address == null)
+                            {
+                                <div class="input-group">
+                                    <label for="country">Country:</label>
+                                    <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="city">City:</label>
+                                    <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="street">Street:</label>
+                                    <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="apartNum">Apartment Number:</label>
+                                    <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <label for="country">Country:</label>
+                                    <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="@Model.address.country">
+                                </div>
+                                <div class="input-group">
+                                    <label for="city">City:</label>
+                                    <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="@Model.address.city">
+                                </div>
+                                <div class="input-group">
+                                    <label for="street">Street:</label>
+                                    <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="@Model.address.street">
+                                </div>
+
+                                @if (Model.address.apartNum == 0)
+                                {
+                                    <div class="input-group">
+                                        <label for="apartNum">Apartment Number:</label>
+                                        <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <label for="apartNum">Apartment Number:</label>
+                                        <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="@Model.address.apartNum">
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <div class="card-group">
+                            @if (Model.creditCard == null)
+                            {
+                                <div class="input-group">
+                                    <label for="ccNumber">Card Number:</label>
+                                    <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="expDate">Expiration Date:</label>
+                                    <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="ccv">CCV:</label>
+                                    <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
+                                </div>
+                            }
+                            else
+                            {
+                                @if (Model.creditCard.number == "")
+                                {
+                                    <div class="input-group">
+                                        <label for="ccNumber">Card Number:</label>
+                                        <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <label for="ccNumber">Card Number:</label>
+                                        <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="@cardNumber">
+                                    </div>
+                                }
+
+                                <div class="input-group">
+                                    <label for="expDate">Expiration Date:</label>
+                                    <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="@Model.creditCard.date">
+                                </div>
+
+                                @if (Model.creditCard.ccv == 0)
+                                {
+                                    <div class="input-group">
+                                        <label for="ccv">CCV:</label>
+                                        <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <label for="ccv">CCV:</label>
+                                        <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="@Model.creditCard.ccv">
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <div class="payment-buttons">
+                            <a href="/UserHome/showUserHome" class="edit-button" id="backButton">Back</a>
+                            <button id="processPaymentButton" class="edit-button" type="submit">Proceed to Payment</button>
+                        </div>
+
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
 </body>
 </html>

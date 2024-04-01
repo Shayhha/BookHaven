@@ -134,8 +134,10 @@ function editBook() {
 function restockBook() {
     var bookId = document.getElementById("popup-bookId").innerText;
     var restockAmount = document.getElementById("restockAmount").value; // Use value instead of textContent
-    var editUrl = "/Book/restockBook?bookId=" + bookId + "&restockAmount=" + restockAmount;
-    window.location.href = editUrl;
+    if (restockAmount > 0) {
+        var editUrl = "/Book/restockBook?bookId=" + bookId + "&restockAmount=" + restockAmount;
+        window.location.href = editUrl;
+    }
 }
 
 function putBookOnSale() {
@@ -151,10 +153,17 @@ function removeBookFromSale() {
     window.location.href = editUrl;
 }
 
+function buyBookWithStripe() {
+    var bookId = document.getElementById("popup-bookId").textContent;
+    var quantity = document.getElementById("quantityInput").value;
+    var editUrl = "/Payment/processPaymentWithStripe?bookId=" + bookId + "&quantity=" + quantity;
+    window.location.href = editUrl;
+}
+
 function buyBook() {
     var bookId = document.getElementById("popup-bookId").textContent;
     var quantity = document.getElementById("quantityInput").value;
-    var editUrl = "/Payment/processPayment?bookId=" + bookId + "&quantity=" + quantity;
+    var editUrl = "/Payment/showPaymentView?bookId=" + bookId + "&quantity=" + quantity;
     window.location.href = editUrl;
 }
 
@@ -191,6 +200,8 @@ function editUserInfoButtonClick() {
 }
 
 function userLogout() {
+    //window.history.forward();
+    //window.onunload = function () { };
     window.location.href = '/UserHome/userLogout';
 }
 
@@ -203,45 +214,51 @@ function showNotifyMessage() {
 }
 
 function deleteAddress() {
-    // AJAX request to delete credit card information
-    fetch('DeleteAddress', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            console.log('Address deleted');
-            document.getElementById('addressSpan').innerHTML = '<span></span>';
+    var addressSpan = document.getElementById("addressSpan");
+    if (addressSpan.textContent != '') {
+        fetch('DeleteAddress', { // AJAX request to delete address information
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
         })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                document.getElementById('addressSpan').innerHTML = '<span></span>';
+                alert("Your address info has been deleted from our database successfully.");
+            })
+            .catch(error => {
+                alert("There was a problem with deleting your address info from our database, please contact customer support.");
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
 }
 
 function deleteCreditCard() {
-    // AJAX request to delete credit card information
-    fetch('DeleteCreditCard', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            console.log('Credit Card deleted');
-            document.getElementById('creditCardSpan').innerHTML = '<span></span>';
+    var creditCardSpan = document.getElementById("creditCardSpan");
+    if (creditCardSpan.textContent != '') {
+        fetch('DeleteCreditCard', { // AJAX request to delete credit card information
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
         })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                document.getElementById('creditCardSpan').innerHTML = '<span></span>';
+                alert("Your credit card info has been deleted from our database successfully.");
+            })
+            .catch(error => {
+                alert("There was a problem with deleting your credit card info from our database, please contact customer support.");
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
 }
 
 

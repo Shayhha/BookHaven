@@ -4,6 +4,7 @@
 
 @{
     string isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("isLoggedIn");
+    string errorMessage = ViewBag.errorMessage;
 }
 
 <!DOCTYPE html>
@@ -12,12 +13,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Book Page</title>
-    <link rel="stylesheet" href="~/css/bookPages.css?Version=6.0.1">
+    <link rel="stylesheet" href="~/css/bookPages.css?Version=6.0.4">
 </head>
 <body>
     <div class="container">
 
         <div class="errorMessagesDiv">
+            @if (errorMessage != null)
+            {<span class="validation-error">@errorMessage</span>}
 
             @if (Html.ValidationMessageFor(x => x.name) != null)
             {<span class="validation-error">@Html.ValidationMessageFor(x => x.name)</span><br />}

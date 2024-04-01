@@ -18,6 +18,9 @@ namespace BookHeaven.Controllers
 
         public IActionResult showCartView()
         {
+            string message = TempData["GeneralMessage"] as string;
+            TempData["GeneralMessage"] = "";
+            ViewBag.GeneralMessage = message;
             return View("CartView", Models.User.currentUser);
         }
 
@@ -122,8 +125,12 @@ namespace BookHeaven.Controllers
 
         public IActionResult checkoutFromCart()
         {
-            if (Models.User.currentUser != null && Models.User.currentUser.cartItems != null)
+            User tempUser = Models.User.currentUser;
+            if (tempUser != null && tempUser.cartItems != null)
             {
+                if (tempUser.cartItems.Count() == 0)
+                    return showCartView();
+                
                 SessionCreateOptions options = new SessionCreateOptions
                 {
                     SuccessUrl = "https://localhost:7212/CartItem/checkoutWasSuccessful",
@@ -169,7 +176,7 @@ namespace BookHeaven.Controllers
                             message = "Your payment was processed successfully! You can view your orders in your profile.";
                         }
                         else
-                            message = "Your payment was processed successfully. But there was an error when updating your cart. \nPlease contant customer support.";
+                            message = "Your payment was processed successfully. But there was an error when updating your cart. Please contant customer support.";
                     }
                 }
                 else
