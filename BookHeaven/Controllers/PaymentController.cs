@@ -59,7 +59,7 @@ namespace BookHeaven.Controllers
             {
                 User tempUser = Models.User.currentUser;
                 string total = TempData["totalPayment"] as string;
-                Payment payment = new Payment(null, 0, float.Parse(total), tempUser.creditCard, tempUser.address);
+                Payment payment = new Payment(null, 0, (total == null ? 0 : float.Parse(total)), tempUser.creditCard, tempUser.address);
                 ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
                 //ViewBag.totalPayment = TempData["totalPayment"] as string;
                 return View("PaymentCartView", payment);
