@@ -143,8 +143,10 @@ function restockBook() {
 function putBookOnSale() {
     var bookId = document.getElementById("popup-bookId").innerText;
     var salePrice = document.getElementById("salePrice").value; // Use value instead of textContent
-    var editUrl = "/Book/putBookOnSale?bookId=" + bookId + "&salePrice=" + salePrice;
-    window.location.href = editUrl;
+    if (salePrice >= 1) {
+        var editUrl = "/Book/putBookOnSale?bookId=" + bookId + "&salePrice=" + salePrice;
+        window.location.href = editUrl;
+    }
 }
 
 function removeBookFromSale() {

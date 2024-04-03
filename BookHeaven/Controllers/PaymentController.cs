@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using BookHeaven.Extensions;
 using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
@@ -16,6 +16,17 @@ namespace BookHeaven.Controllers
             _contx = contx;
         }
         // # # #
+
+        public IActionResult openPaymentCartView()
+        {
+            Payment payment = HttpContext.Session.GetObjectFromJson<Payment>("PaymentObject");
+            HttpContext.Session.Remove("PaymentObject");
+
+            ViewBag.GeneralMessage = TempData["GeneralMessage"] as string;
+            ViewBag.cardNumber = payment.creditCard.number;
+
+            return View("PaymentCartView", payment);
+        }
 
         public IActionResult showPaymentView(int bookId, int quantity)
         {
@@ -37,7 +48,23 @@ namespace BookHeaven.Controllers
                     return View("PaymentView", payment);
                 }
             }
-            
+
+            TempData["GeneralMessage"] = "An error has occured, please try again later.";
+            return RedirectToAction("showUserHome", "UserHome");
+        }
+
+        public IActionResult showPaymentViewFromCart()
+        {
+            if (Models.User.currentUser != null)
+            {
+                User tempUser = Models.User.currentUser;
+                string total = TempData["totalPayment"] as string;
+                Payment payment = new Payment(null, 0, float.Parse(total), tempUser.creditCard, tempUser.address);
+                ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
+                //ViewBag.totalPayment = TempData["totalPayment"] as string;
+                return View("PaymentCartView", payment);
+            }
+
             TempData["GeneralMessage"] = "An error has occured, please try again later.";
             return RedirectToAction("showUserHome", "UserHome");
         }
@@ -69,7 +96,10 @@ namespace BookHeaven.Controllers
             if (SQLHelper.SQLUpdateBookStock(payment.book.bookId, (-1) * payment.quantity))
                 return checkoutWasSuccessful(payment.book.bookId, payment.quantity);
             else
-                return checkoutHasFailed(payment.book.bookId, payment.quantity);
+            {
+                TempData["GeneralMessage"] = "The book you are tring to buy is now out of stock, please try again later.";
+                return RedirectToAction("showUserHome", "UserHome");
+            }
         }
 
 
@@ -80,36 +110,6 @@ namespace BookHeaven.Controllers
                 if (Models.User.currentUser != null)
                 {
                     User tempUser = Models.User.currentUser;
-                    //string[] date = tempUser.creditCard.date.Split('/');
-
-                    //TokenCreateOptions tokenOptions = new TokenCreateOptions
-                    //{
-                    //    Card = new TokenCardOptions
-                    //    {
-                    //        Number = "4242424242424242",
-                    //        ExpMonth = "12",
-                    //        ExpYear = "2043",
-                    //        Cvc = "123",
-                    //    }
-                    //};
-
-                    //TokenService tokenService = new TokenService();
-                    //Token stripeToken = tokenService.Create(tokenOptions);
-
-
-                    //PaymentMethodCreateOptions paymentMethodCardOptions = new PaymentMethodCreateOptions
-                    //{
-                    //    Type = "card",
-                    //    Card = new PaymentMethodCardOptions
-                    //    {
-                    //        Token = "tok_visa",
-                    //    },
-                    //    //Customer = customer.Id,
-                    //};
-
-                    //PaymentMethodService paymentMethodService = new PaymentMethodService();
-                    //PaymentMethod paymentMethod = paymentMethodService.Create(paymentMethodCardOptions);
-
 
                     CustomerCreateOptions customerOptions = new CustomerCreateOptions
                     {
@@ -129,13 +129,6 @@ namespace BookHeaven.Controllers
                         Mode = "payment",
                         Customer = customer.Id,
                         PaymentMethodTypes = new List<string> { "card" },
-
-                        //PaymentMethodConfiguration = paymentMethod.Id,
-                        //PaymentIntentData = new SessionPaymentIntentDataOptions
-                        //{
-                        //    SetupFutureUsage = "off_session",
-                        //},
-                        //BillingAddressCollection = "required",
                     };
 
                     CartItem cartItem = new CartItem(quantity); // Change this with a counter in the HTML
@@ -149,7 +142,6 @@ namespace BookHeaven.Controllers
                     Response.Headers.Add("Location", session.Url);
 
                     return new StatusCodeResult(303);
-
                 }
             }
 

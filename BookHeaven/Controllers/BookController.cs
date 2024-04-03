@@ -64,13 +64,17 @@ namespace BookHeaven.Controllers
         {
             if (ModelState.IsValid)
             {
-                
-                if (SQLHelper.SQLCheckBook(updatedBook.name, updatedBook.author, updatedBook.date))
+                // find the book and see if the name, date or author has changed
+                Book oldBookInfo = SQLHelper.SQLSearchBookById(updatedBook.bookId);
+                if (!oldBookInfo.Equals(updatedBook))
                 {
-                    ViewBag.errorMessage = "Unable to update the book " + updatedBook.name + " because there exist a book with the same Name, Author and Date.";
-                    return View("BookEditView", updatedBook);
+                    if (SQLHelper.SQLCheckBook(updatedBook.name, updatedBook.author, updatedBook.date))
+                    {
+                        ViewBag.errorMessage = "Unable to update the book " + oldBookInfo.name + " because there exist a book with the same Name, Author and Date.";
+                        return View("BookEditView", oldBookInfo);
+                    }
                 }
-
+                
                 if (Book.updateBook(updatedBook)) //update the book to database 
                 {
                     TempData["GeneralMessage"] = "The book " + updatedBook.name + " has been successfully updated.";
