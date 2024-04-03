@@ -151,6 +151,8 @@ namespace BookHeaven.Controllers
                     return bookList.Where(book => book.format == "Paperback").ToList();
                 case "Hardcover":
                     return bookList.Where(book => book.format == "Hardcover").ToList();
+                case "On Sale":
+                    return bookList.Where(book => book.salePrice > 0).ToList();
                 default:
                     return bookList;
             }
