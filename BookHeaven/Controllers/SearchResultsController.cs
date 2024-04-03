@@ -125,6 +125,8 @@ namespace BookHeaven.Controllers
                     return bookList.OrderBy(book => book.salePrice > 0 ? book.salePrice : book.price).ToList();
                 case "Price Descending":
                     return bookList.OrderByDescending(book => book.salePrice > 0 ? book.salePrice : book.price).ToList();
+                case "On Sale":
+                    return bookList.Where(book => book.salePrice > 0).ToList();
                 case "Most Popular":
                     return sortByMostPopular(searchQuery, isCategory);
                 case "Before 1950":
