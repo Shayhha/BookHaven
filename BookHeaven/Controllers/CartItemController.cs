@@ -1,4 +1,5 @@
-﻿using BookHeaven.Models;
+﻿using BookHeaven.Extensions;
+using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 
@@ -130,11 +131,64 @@ namespace BookHeaven.Controllers
             {
                 if (tempUser.cartItems.Count() == 0)
                     return showCartView();
-                
+
+                float total = 0;
+                foreach (CartItem item in tempUser.cartItems)
+                {
+                    float price = item.book.salePrice == 0 ? item.book.price : item.book.salePrice;
+                    total += (item.amount * price);
+                }
+                TempData["totalPayment"] = total.ToString();
+                return RedirectToAction("showPaymentViewFromCart", "Payment");
+            }
+
+            TempData["GeneralMessage"] = "Error occured when checking out from cart.";
+            return showCartView();
+        }
+
+        public IActionResult processPaymentFromCart(Payment payment)
+        {
+            if (payment.address != null)
+            {
+                string errorMessage = Address.addressValidation(payment.address, Models.User.currentUser);
+                if (errorMessage != "valid")
+                {
+                    return returnToPaymentView(payment, errorMessage);
+                }
+            }
+
+            if (payment.creditCard != null)
+            {
+                string errorMessage = CreditCard.creditCardValidation(payment.creditCard, Models.User.currentUser);
+                if (errorMessage != "valid")
+                {
+                    return returnToPaymentView(payment, errorMessage);
+                }
+            }
+
+            return checkoutWasSuccessful();
+        }
+
+        public IActionResult returnToPaymentView(Payment payment, string errorMessage)
+        {
+            HttpContext.Session.SetObjectAsJson("PaymentObject", payment);
+            TempData["GeneralMessage"] = errorMessage;
+            return RedirectToAction("openPaymentCartView", "Payment");
+        }
+
+
+        public IActionResult checkoutFromCartWithStripe()
+        {
+            User tempUser = Models.User.currentUser;
+            if (tempUser != null && tempUser.cartItems != null)
+            {
+                if (tempUser.cartItems.Count() == 0)
+                    return showCartView();
+
                 SessionCreateOptions options = new SessionCreateOptions
                 {
                     SuccessUrl = "https://localhost:7212/CartItem/checkoutWasSuccessful",
-                    CancelUrl = "https://localhost:7212/CartItem/checkoutHasFailed", 
+                    CancelUrl = "https://localhost:7212/CartItem/checkoutHasFailed",
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
                     CustomerEmail = Models.User.currentUser.email
@@ -142,7 +196,7 @@ namespace BookHeaven.Controllers
 
                 foreach (CartItem cartItem in Models.User.currentUser.cartItems)
                 {
-                      options = Payment.addItemToCheckout(options, cartItem);
+                    options = Payment.addItemToCheckout(options, cartItem);
                 }
 
                 SessionService service = new SessionService();

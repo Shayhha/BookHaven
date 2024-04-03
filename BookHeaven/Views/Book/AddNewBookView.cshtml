@@ -18,46 +18,24 @@
 <body>
     <div class="container">
 
-        <div class="errorMessagesDiv">
-            @if (errorMessage != null)
-            {<span class="validation-error">@errorMessage</span>}
-
-            @if (Html.ValidationMessageFor(x => x.name) != null)
-            {<span class="validation-error">@Html.ValidationMessageFor(x => x.name)</span><br />}
-            @if (Html.ValidationMessageFor(x => x.author) != null)
-            {<span class="validation-error">@Html.ValidationMessageFor(x => x.author)</span><br />}
-            @if (Html.ValidationMessageFor(x => x.date) != null)
-            {<span class="validation-error">@Html.ValidationMessageFor(x => x.date)</span><br />}
-            @if (Html.ValidationMessageFor(x => x.category) != null)
-            {<span class="validation-error">@Html.ValidationMessageFor(x => x.category)</span><br />}
-            @if (Html.ValidationMessageFor(x => x.format) != null)
-            {<span class="validation-error">@Html.ValidationMessageFor(x => x.format)</span><br />}
-            @if (Html.ValidationMessageFor(x => x.price) != null)
-            {<span class="validation-error">@Html.ValidationMessageFor(x => x.price)</span><br />}
-            @if (Html.ValidationMessageFor(x => x.stock) != null)
-            {<span class="validation-error">@Html.ValidationMessageFor(x => x.stock)</span><br />}
-            @if (Html.ValidationMessageFor(x => x.imageUrl) != null)
-            {<span class="validation-error">@Html.ValidationMessageFor(x => x.imageUrl)</span><br />}
-            @if (Html.ValidationMessageFor(x => x.ageLimitation) != null)
-            {<span class="validation-error">@Html.ValidationMessageFor(x => x.ageLimitation)</span><br />}
-
-        </div>
-
         <div class="editForm">
             <h2>Add New Book</h2>
-
+            <span class="validation-error">@errorMessage</span>
             <form method="post" action="/Book/addBook">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" class="form-control" id="name" name="name" value="@Model.name" placeholder="Harry Potter and the Sorcerer's Stone">
+                    <span class="validation-error">@Html.ValidationMessageFor(x => x.name)</span><br />
                 </div>
                 <div class="form-group">
                     <label for="author">Author:</label>
                     <input type="text" class="form-control" id="author" name="author" value="@Model.author" placeholder="J.K. Rowling">
+                    <span class="validation-error">@Html.ValidationMessageFor(x => x.author)</span><br />
                 </div>
                 <div class="form-group">
                     <label for="date">Date:</label>
                     <input type="text" class="form-control" id="date" name="date" value="@Model.date" placeholder="26/06/1997">
+                    <span class="validation-error">@Html.ValidationMessageFor(x => x.date)</span><br />
                 </div>
                 <div class="form-group">
                     <label for="category">Category:</label>
@@ -74,6 +52,7 @@
                         <option value="Romance" selected="@(Model.category == "Romance")">Romance</option>
                         <option value="Education" selected="@(Model.category == "Education")">Education</option>
                     </select>
+                    <span class="validation-error">@Html.ValidationMessageFor(x => x.category)</span><br />
                 </div>
                 <div class="form-group">
                     <label for="format">Format:</label>
@@ -82,17 +61,19 @@
                         <option value="Paperback" selected="@(Model.format == "Paperback")">Paperback</option>
                         <option value="Hardcover" selected="@(Model.format == "Hardcover")">Hardcover</option>
                     </select>
+                    <span class="validation-error">@Html.ValidationMessageFor(x => x.format)</span><br />
                 </div>
                 <div class="form-group">
                     <label for="price">Price:</label>
                     @if (Model.price == 0)
                     {
-                        <input type="number" class="form-control" id="price" name="price" value="" placeholder="12.34">
+                        <input type="text" class="form-control" id="price" name="price" value="" placeholder="12.34">
                     }
                     else
                     {
-                        <input type="number" class="form-control" id="price" name="price" value="@Model.price" placeholder="12.34">
+                        <input type="text" class="form-control" id="price" name="price" value="@Model.price" placeholder="12.34">
                     }
+                    <span class="validation-error">@Html.ValidationMessageFor(x => x.price)</span><br />
                 </div>
                 <div class="form-group">
                     <label for="stock">Stock:</label>
@@ -104,10 +85,12 @@
                     {
                         <input type="number" class="form-control" id="stock" name="stock" value="@Model.stock" placeholder="150">
                     }
+                    <span class="validation-error">@Html.ValidationMessageFor(x => x.stock)</span><br />
                 </div>
                 <div class="form-group">
                     <label for="imageUrl">Image URL:</label>
                     <input type="text" class="form-control" id="imageUrl" name="imageUrl" value="@Model.imageUrl" placeholder="https://m.media-amazon.com/images/I/71RVt35ZAbL._AC_UF1000,1000_QL80_.jpg">
+                    <span class="validation-error">@Html.ValidationMessageFor(x => x.imageUrl)</span><br />
                 </div>
                 <div class="form-group">
                     <label for="ageLimitation">Age Limitation:</label>
@@ -119,6 +102,7 @@
                     {
                         <input type="number" class="form-control" id="ageLimitation" name="ageLimitation" value="@Model.ageLimitation" placeholder="6">
                     }
+                    <span class="validation-error">@Html.ValidationMessageFor(x => x.ageLimitation)</span><br />
                 </div>
 
                 <div class="buttons">

@@ -1,0 +1,337 @@
+﻿@model BookHeaven.Models.Payment;
+
+@{
+    string generalMessage = ViewBag.GeneralMessage;
+    string cardNumber = ViewBag.cardNumber;
+    if (cardNumber == null)
+        cardNumber = "";
+    //string totalPayment = ViewBag.totalPayment;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BookHeaven</title>
+    <style>
+        .payment-container {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: start;
+            min-height: 100vh;
+            margin-top: 15px;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .image-side {
+            flex: 40%;
+            margin-right: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .image-side img {
+                width: 375px;
+                height: 609px;
+                object-fit: fill;
+            }
+
+        .content-side {
+            flex: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+            .content-side h1 {
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+
+        .book-info {
+            display: flex;
+            flex-direction: row; /* Display payment summary in one line */
+            justify-content: space-between; /* Display payment summary in one line */
+            align-items: center; /* Center align items */
+        }
+
+            .book-info p {
+                padding: 0px 10px;
+            }
+
+        .input-groups {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 0px;
+        }
+
+        .address-group,
+        .card-group {
+            flex: 1;
+            margin-right: 10px; /* Adjust as needed */
+            align-content: center;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .actions {
+            margin: 20px 0px;
+        }
+
+            .actions button {
+                margin: 0 10px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease-in-out;
+            }
+
+        #backBtn,
+        #proceedToPaymentBtn {
+            margin-bottom: 10px;
+        }
+
+        #addCreditCardBtn,
+        #addShippingAddressBtn {
+            display: none;
+        }
+
+        .card-details {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .payment-summary {
+            display: flex;
+            flex-direction: row; /* Display payment summary in one line */
+            justify-content: space-between; /* Display payment summary in one line */
+            align-items: center; /* Center align items */
+        }
+
+            .payment-summary p {
+                padding: 0px 10px;
+            }
+
+        .quantity-group {
+            display: flex;
+            flex-direction: row; /* Display payment summary in one line */
+            justify-content: center; /* Display payment summary in one line */
+            align-items: center; /* Center align items */
+        }
+
+        .payment-buttons {
+            display: flex;
+            flex-direction: row; /* Display payment summary in one line */
+            justify-content: center; /* Display payment summary in one line */
+            align-items: center; /* Center align items */
+            margin-bottom: 50px;
+        }
+
+            .payment-buttons a, .payment-buttons button {
+                display: block;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                border: 1px solid #f2f2f2; /* Add border to the buttons */
+                margin: 0 10px; /*Add some space between the buttons */
+                border-radius: 5px; /*Add border radius */
+                transition: all 0.3s ease-in-out; /*Add this line to enable smooth animation*/
+            }
+
+                .payment-buttons a:hover, .payment-buttons button:hover {
+                    background-color: #ddd;
+                    color: black;
+                    transform: scale(1.1); /*Increase size to 110% when hovered */
+                }
+
+        #backButton {
+            background-color: #007bff;
+            border: 1px solid #007bff; /* Add border to the buttons 4CAF50*/
+        }
+
+        #processPaymentButton {
+            background-color: #4CAF50;
+            border: 1px solid #4CAF50; /* Add border to the buttons */
+        }
+
+        .generalMessage {
+            color: red;
+            paddding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="container">
+            <div class="content-side">
+                <h1>Checkout From Cart</h1>
+
+                <h2>Payment Summary</h2>
+                <div class="payment-summary">
+                    @*<p><strong>Total Cart Value: </strong>$@totalPayment</p>*@
+                    <p><strong>Total Cart Value: </strong>$@Model.total</p>
+                </div>
+
+                <span class="generalMessage">@generalMessage</span>
+
+                <div class="input-groups">
+                    <form asp-controller="CartItem" asp-action="processPaymentFromCart" method="post">
+                        <div class="address-group">
+
+                            <input type="hidden" asp-for="book.bookId" value="" />
+                            <input type="hidden" asp-for="book.name" value="" />
+                            <input type="hidden" asp-for="book.author" value="" />
+                            <input type="hidden" asp-for="book.date" value="" />
+                            <input type="hidden" asp-for="book.category" value="" />
+                            <input type="hidden" asp-for="book.format" value="" />
+                            <input type="hidden" asp-for="book.price" value="" />
+                            <input type="hidden" asp-for="book.salePrice" value="" />
+                            <input type="hidden" asp-for="book.stock" value="0" />
+                            <input type="hidden" asp-for="book.imageUrl" value="" />
+                            <input type="hidden" asp-for="book.ageLimitation" value="0" />
+
+                            <input type="hidden" asp-for="quantity" value="0" />
+                            <input type="hidden" asp-for="total" value="@Model.total" />
+
+                            @if (Model.address == null)
+                            {
+                                <div class="input-group">
+                                    <label for="country">Country:</label>
+                                    <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="city">City:</label>
+                                    <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="street">Street:</label>
+                                    <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="apartNum">Apartment Number:</label>
+                                    <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <label for="country">Country:</label>
+                                    <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="@Model.address.country">
+                                </div>
+                                <div class="input-group">
+                                    <label for="city">City:</label>
+                                    <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="@Model.address.city">
+                                </div>
+                                <div class="input-group">
+                                    <label for="street">Street:</label>
+                                    <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="@Model.address.street">
+                                </div>
+
+                                @if (Model.address.apartNum == 0)
+                                {
+                                    <div class="input-group">
+                                        <label for="apartNum">Apartment Number:</label>
+                                        <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <label for="apartNum">Apartment Number:</label>
+                                        <input type="number" placeholder="Apartment Number" class="input-field small-input" id="apartmentInput" asp-for="address.apartNum" value="@Model.address.apartNum">
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <div class="card-group">
+                            @if (Model.creditCard == null)
+                            {
+                                <div class="input-group">
+                                    <label for="ccNumber">Card Number:</label>
+                                    <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="expDate">Expiration Date:</label>
+                                    <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="">
+                                </div>
+                                <div class="input-group">
+                                    <label for="ccv">CCV:</label>
+                                    <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
+                                </div>
+                            }
+                            else
+                            {
+                                @if (Model.creditCard.number == "")
+                                {
+                                    <div class="input-group">
+                                        <label for="ccNumber">Card Number:</label>
+                                        <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <label for="ccNumber">Card Number:</label>
+                                        <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="@cardNumber">
+                                    </div>
+                                }
+
+                                <div class="input-group">
+                                    <label for="expDate">Expiration Date:</label>
+                                    <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="@Model.creditCard.date">
+                                </div>
+
+                                @if (Model.creditCard.ccv == 0)
+                                {
+                                    <div class="input-group">
+                                        <label for="ccv">CCV:</label>
+                                        <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group">
+                                        <label for="ccv">CCV:</label>
+                                        <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="@Model.creditCard.ccv">
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <div class="payment-buttons">
+                            <a href="/CartItem/showCartView" class="edit-button" id="backButton">Back</a>
+                            <button id="processPaymentButton" class="edit-button" type="submit">Proceed to Payment</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

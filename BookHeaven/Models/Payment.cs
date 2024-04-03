@@ -6,14 +6,12 @@ namespace BookHeaven.Models
     {
         public Book? book { get; set; }
         public int quantity { get; set; }
+        public float total { get; set; }
         public CreditCard? creditCard { get; set; }
         public Address? address { get; set; }
 
-        public Payment()
-        {
-            // Default constructor
-        }
-
+        public Payment() {} // Default constructor
+        
         public Payment(Book book, int quantity, CreditCard creditCard, Address address)
         {
             this.book = book;
@@ -22,10 +20,20 @@ namespace BookHeaven.Models
             this.address = address;
         }
 
-        public Payment(string name, string author, string bookDate, int bookId, string category, string format, float price, int stock, string imageUrl, int ageLimitation, int salePrice, int quantity, string number, string date, int ccv, string country, string city, string street, int apartNum)
+        public Payment(Book book, int quantity, float total, CreditCard creditCard, Address address)
+        {
+            this.book = book;
+            this.quantity = quantity;
+            this.total = total;
+            this.creditCard = creditCard;
+            this.address = address;
+        }
+
+        public Payment(string name, string author, string bookDate, int bookId, string category, string format, float price, int stock, string imageUrl, int ageLimitation, int salePrice, int quantity, float total, string number, string date, int ccv, string country, string city, string street, int apartNum)
         {
             this.quantity = quantity;
             this.book = new Book(name,author,bookDate, bookId,category,format,price,stock,imageUrl,ageLimitation,salePrice);
+            this.total = total;
             this.creditCard = new CreditCard(Models.User.currentUser.userId, number, date, ccv);
             this.address = new Address(Models.User.currentUser.userId, country, city, street, apartNum);
         }

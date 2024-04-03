@@ -86,6 +86,20 @@ namespace BookHeaven.Models
             this.salePrice = 0;
         }
 
+        public override bool Equals(object otherBook)
+        {
+            if (!(otherBook is Book))
+            {
+                return false;
+            }
+
+            Book other = (Book)otherBook;
+
+            return this.name == other.name &&
+                   this.author == other.author &&
+                   this.date == other.date;
+        }
+
         //These functions are for admin for making changes in the books//
 
         /// <summary>
