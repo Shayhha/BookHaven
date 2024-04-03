@@ -132,15 +132,15 @@
                         {
                             <div class="input-group">
                                 <label for="country">Country:</label>
-                                <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="">
+                                <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="" maxlength="100">
                             </div>
                             <div class="input-group">
                                 <label for="city">City:</label>
-                                <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="">
+                                <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="" maxlength="100">
                             </div>
                             <div class="input-group">
                                 <label for="street">Street:</label>
-                                <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="">
+                                <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="" maxlength="100">
                             </div>
                             <div class="input-group">
                                 <label for="apartNum">Apartment Number:</label>
@@ -151,15 +151,15 @@
                         {
                             <div class="input-group">
                                 <label for="country">Country:</label>
-                                <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="@Model.address.country">
+                                <input type="text" placeholder="Country" class="input-field" id="countryInput" asp-for="address.country" value="@Model.address.country" maxlength="100">
                             </div>
                             <div class="input-group">
                                 <label for="city">City:</label>
-                                <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="@Model.address.city">
+                                <input type="text" placeholder="City" class="input-field" id="cityInput" asp-for="address.city" value="@Model.address.city" maxlength="100">
                             </div>
                             <div class="input-group">
                                 <label for="street">Street:</label>
-                                <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="@Model.address.street">
+                                <input type="text" placeholder="Street" class="input-field" id="streetInput" asp-for="address.street" value="@Model.address.street" maxlength="100">
                             </div>
 
                             @if (Model.address.apartNum == 0)
@@ -184,15 +184,15 @@
                         {
                             <div class="input-group">
                                 <label for="ccNumber">Card Number:</label>
-                                <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
+                                <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="" maxlength="16">
                             </div>
                             <div class="input-group">
                                 <label for="expDate">Expiration Date:</label>
-                                <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="">
+                                <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="" maxlength="5">
                             </div>
                             <div class="input-group">
                                 <label for="ccv">CCV:</label>
-                                <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
+                                <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="" maxlength="4">
                             </div>
                         }
                         else
@@ -201,34 +201,34 @@
                             {
                                 <div class="input-group">
                                     <label for="ccNumber">Card Number:</label>
-                                    <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="">
+                                    <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="" maxlength="16">
                                 </div>
                             }
                             else
                             {
                                 <div class="input-group">
                                     <label for="ccNumber">Card Number:</label>
-                                    <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="@cardNumber">
+                                    <input type="text" placeholder="Card Number" class="input-field" id="cardNumberInput" asp-for="creditCard.number" value="@cardNumber" maxlength="16">
                                 </div>
                             }
 
                             <div class="input-group">
                                 <label for="expDate">Expiration Date:</label>
-                                <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="@Model.creditCard.date">
+                                <input type="text" placeholder="MM/YY" class="input-field small-input" id="expirationInput" asp-for="creditCard.date" value="@Model.creditCard.date" maxlength="5">
                             </div>
 
                             @if (Model.creditCard.ccv == 0)
                             {
                                 <div class="input-group">
                                     <label for="ccv">CCV:</label>
-                                    <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="">
+                                    <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="" maxlength="4">
                                 </div>
                             }
                             else
                             {
                                 <div class="input-group">
                                     <label for="ccv">CCV:</label>
-                                    <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="@Model.creditCard.ccv">
+                                    <input type="text" placeholder="CCV" class="input-field small-input" id="ccvInput" asp-for="creditCard.ccv" value="@Model.creditCard.ccv" maxlength="4">
                                 </div>
                             }
                         }

@@ -19,10 +19,10 @@
 
         <form action="tryToLogin" method="post">
             <div class="mb-3">
-                <input type="text" class="form-control formInput" name="email" placeholder="Email" value="@Model.email">
+                <input type="text" class="form-control formInput" name="email" placeholder="Email" value="@Model.email" maxlength="100">
             </div>
             <div class="mb-3">
-                <input type="password" class="form-control formInput" name="password" placeholder="Password" value="@Model.password">
+                <input type="password" class="form-control formInput" name="password" placeholder="Password" value="@Model.password" maxlength="100">
             </div>
 
             @if (Html.ValidationMessageFor(x => x.email) != null)
