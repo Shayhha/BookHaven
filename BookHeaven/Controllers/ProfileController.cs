@@ -17,6 +17,7 @@ namespace BookHeaven.Controllers
 
         public IActionResult handleCancelButton()
         {
+            ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
             return View("ProfileView", Models.User.currentUser);
         }
 
