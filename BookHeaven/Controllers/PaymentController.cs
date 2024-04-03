@@ -79,6 +79,9 @@ namespace BookHeaven.Controllers
 
         public IActionResult processPayment(Payment payment)
         {
+            if (Models.User.currentUser.isAdmin)
+                return RedirectToAction("showUserHome", "UserHome");
+
             if (payment.address != null)
             {
                 string errorMessage = Models.Address.addressValidation(payment.address, Models.User.currentUser);
@@ -105,6 +108,9 @@ namespace BookHeaven.Controllers
 
         public IActionResult processPaymentWithStripe(int bookId, int quantity)
         {
+            if (Models.User.currentUser.isAdmin)
+                return RedirectToAction("showUserHome", "UserHome");
+
             if (SQLHelper.SQLUpdateBookStock(bookId, (-1) * quantity))
             {
                 if (Models.User.currentUser != null)

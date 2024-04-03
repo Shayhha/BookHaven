@@ -127,6 +127,10 @@ namespace BookHeaven.Controllers
         public IActionResult checkoutFromCart()
         {
             User tempUser = Models.User.currentUser;
+
+            if (tempUser.isAdmin)
+                return RedirectToAction("showUserHome", "UserHome");
+
             if (tempUser != null && tempUser.cartItems != null)
             {
                 if (tempUser.cartItems.Count() == 0)
@@ -180,6 +184,10 @@ namespace BookHeaven.Controllers
         public IActionResult checkoutFromCartWithStripe()
         {
             User tempUser = Models.User.currentUser;
+
+            if (tempUser.isAdmin)
+                return RedirectToAction("showUserHome", "UserHome");
+
             if (tempUser != null && tempUser.cartItems != null)
             {
                 if (tempUser.cartItems.Count() == 0)
