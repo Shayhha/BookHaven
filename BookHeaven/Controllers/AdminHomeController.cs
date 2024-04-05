@@ -18,10 +18,8 @@ namespace BookHeaven.Controllers
 
         public IActionResult showAdminHome()
         {
-            if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
-                CachingHelper.PreventCaching(HttpContext);
-
-            ViewBag.GeneralMessage = TempData["GeneralMessage"] as string;
+            string message = TempData["GeneralMessage"] as string;
+            ViewBag.GeneralMessage = message;
             return View("AdminHomeView", initHomeBooks());
         }
 
