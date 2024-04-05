@@ -78,7 +78,7 @@ namespace BookHeaven.Models
                 return new List<string> { "email", "Email follow the general email template: example@abc.xyz" };
             else
             {
-                if ((User.currentUser.email != user.email) && SQLHelper.SQLCheckEmail(user.email))
+                if ((currentUser.email != user.email) && SQLHelper.SQLCheckEmail(user.email))
                     return new List<string> { "email", "This email already in use, try a different one." };
             }
 
