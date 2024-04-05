@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BookHeaven.Controllers
 {
@@ -93,158 +94,58 @@ namespace BookHeaven.Controllers
         }
 
 
-        private bool userAddressValidation(Address address)
-        {
-            if (address.country != "" && address.city != "" && address.street != "" && address.apartNum != 0)
-            {
-                int flag = 0;
-                string errorMessage = "";
-
-                if (address.country == null || !Regex.IsMatch(address.country, @"^[a-zA-Z\s]{2,25}$"))
-                {
-                    errorMessage += "Invalid Country. ";
-                    flag = 1;
-                }
-
-                if (address.city == null || !Regex.IsMatch(address.city, @"^[a-zA-Z\s]{2,25}$")) {
-                    errorMessage += "Invalid City. ";
-                    flag = 1;
-                }
-
-                if (address.street == null || !Regex.IsMatch(address.street, @"^[a-zA-Z\s]{2,25}$")) {
-                    errorMessage += "Invalid Street. ";
-                    flag = 1;
-                }
-
-                if (address.apartNum == 0)
-                {
-                    errorMessage += "Invalid Apartment Number. ";
-                    flag = 1;
-                }
-
-                if (flag == 1)
-                {
-                    ModelState.AddModelError("address", errorMessage);
-                    return false;
-                }
-                else
-                {
-                    address.userId = Models.User.currentUser.userId;
-                    return true;
-                }
-            }
-
-            if ((address.country == "" || address.country == null) &&
-                (address.city == "" || address.city == null) &&
-                (address.street == "" || address.street == null) &&
-                address.apartNum == 0)
-            {
-                if (Models.User.currentUser.address != null)
-                {
-                    ModelState.AddModelError("address", "You can't delete the address in this page.");
-                    return false;
-                }
-
-                address.userId = Models.User.currentUser.userId;
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool userCreditCardValidation(CreditCard creditCard)
-        {
-            int flag = 0;
-            string errorMessage = "";
-
-            if (creditCard.number != "" && creditCard.date != "" && creditCard.ccv != 0)
-            {
-                if (!Regex.IsMatch(creditCard.number, @"^\d{16}$"))
-                {
-                    errorMessage += "Invalid Card Number. ";
-                    flag = 1;
-                }
-
-                if (!Regex.IsMatch(creditCard.date, @"^(0[1-9]|1[0-2])\/\d{2}$"))
-
-                {
-                    errorMessage += "Invalid Experation Date. ";
-                    flag = 1;
-                }
-
-                if (!Regex.IsMatch(creditCard.ccv.ToString(), @"^[1-9]\d{2}$"))
-                {
-                    errorMessage += "Invalid CCV Number. ";
-                    flag = 1;
-                }
-
-                if (flag == 1)
-                {
-                    ModelState.AddModelError("creditCard", errorMessage);
-                    return false;
-                }
-                else
-                {
-                    creditCard.userId = Models.User.currentUser.userId;
-                    return true;
-                }
-            }
-
-            if ((creditCard.number == "" || creditCard.number == null) &&
-                (creditCard.date == "" || creditCard.date == null) &&
-                creditCard.ccv == 0)
-            {
-                if (Models.User.currentUser.creditCard != null)
-                {
-                    ModelState.AddModelError("creditCard", "You can't delete the credit card in this page.");
-                    return false;
-                }
-
-                creditCard.userId = Models.User.currentUser.userId;
-                return true;
-            }
-
-            return false;
-        }
-
         public IActionResult CheckUsersInput(User user)
         {
+            ViewBag.cardNumber = user.creditCard.number;
+
             ModelState.Clear();
             user.userId = Models.User.currentUser.userId;
 
-            // Perform custom user info validation
-            if (user.email == null || !Regex.IsMatch(user.email, @"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$"))
-                ModelState.AddModelError("email", "Email follow the general email template: example@abc.xyz");
-            else
-            {
-                if ((Models.User.currentUser.email != user.email) && SQLHelper.SQLCheckEmail(user.email))
-                    ModelState.AddModelError("email", "This email already in use, try a different one.");
+            List<string> validationResults = Models.User.validateUserInfo(user);
+            if (validationResults[0] != "valid") { // [0] is the type, for example email. [1] is the error message it self.
+                ModelState.AddModelError(validationResults[0], validationResults[1]);
             }
-
-            if (user.fname == null || !Regex.IsMatch(user.fname, @"^[a-zA-Z]{2,20}$"))
-                ModelState.AddModelError("fname", "First name should be only letters.");
-
-            if (user.lname == null || !Regex.IsMatch(user.lname, @"^[a-zA-Z]{2,20}$"))
-                ModelState.AddModelError("lname", "Last name should be only letters.");
 
             // Perform custom address validation
-            if (!userAddressValidation(user.address))
+            if (!Address.checkIsEmpty(user.address))
             {
-                ModelState.AddModelError("address", "Address validation failed. ");
+                if (!Address.checkMissingValues(user.address))
+                {
+                    string addressErrorMessage = Address.addressValidation(user.address, user);
+                    if (addressErrorMessage != "valid")
+                        ModelState.AddModelError("address", addressErrorMessage);
+                }
+                else
+                    ModelState.AddModelError("address", "Fill in all address values");  
             }
+            else
+                user.address = null;
+            
 
             // Perform custom credit card validation
-            if (!userCreditCardValidation(user.creditCard))
+            if (!CreditCard.checkIsEmpty(user.creditCard))
             {
-                ModelState.AddModelError("creditCard", "Credit card validation failed. ");
+                if (!CreditCard.checkMissingValues(user.creditCard))
+                {
+                    string creditCardErrorMessage = CreditCard.creditCardValidation(user.creditCard, user);
+                    if (creditCardErrorMessage != "valid")
+                    {
+                        ModelState.AddModelError("creditCard", creditCardErrorMessage);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("creditCard", "Fill in all credit card values");
+                }
             }
+            else
+                user.creditCard = null;
+            
 
             if (!ModelState.IsValid)
-            {
                 return View("EditProfileView", user);
-            }
-
-            if (SaveUserData(user))
+            
+            if (Models.User.currentUser.updateInfo(user))
             {
                 TempData["GeneralMessage"] = "Updates to your profile information have been saved succesfully.";
                 return RedirectToAction("showProfileView");
@@ -254,26 +155,6 @@ namespace BookHeaven.Controllers
                 TempData["GeneralMessage"] = "Unable to save the changes, something went wrong please try again.";
                 return View("EditProfileView", user);
             }
-        }
-
-        public bool SaveUserData(User user)
-        {
-            if ((user.address.country == "" || user.address.country == null) &&
-                (user.address.city == "" || user.address.city == null) &&
-                (user.address.street == "" || user.address.street == null) &&
-                user.address.apartNum == 0)
-            {
-                user.address = null;
-            }
-
-            if ((user.creditCard.number == "" || user.creditCard.number == null ) &&
-                (user.creditCard.date == "" || user.creditCard.date == null) &&
-                user.creditCard.ccv == 0)
-            {
-                user.creditCard = null;
-            }
-
-            return Models.User.currentUser.updateInfo(user);
         }
 
         [HttpPost]
