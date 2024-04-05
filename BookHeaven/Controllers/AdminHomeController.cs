@@ -18,8 +18,10 @@ namespace BookHeaven.Controllers
 
         public IActionResult showAdminHome()
         {
-            string message = TempData["GeneralMessage"] as string;
-            ViewBag.GeneralMessage = message;
+            if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
+                CachingHelper.PreventCaching(HttpContext);
+
+            ViewBag.GeneralMessage = TempData["GeneralMessage"] as string;
             return View("AdminHomeView", initHomeBooks());
         }
 
@@ -28,7 +30,7 @@ namespace BookHeaven.Controllers
             Console.WriteLine(Models.User.currentUser.fname + " has logged out"); //print user name from the user object
             Models.User.currentUser = new User();
             _contx.HttpContext.Session.SetString("isLoggedIn", "false");
-            return RedirectToAction("showUserHome");
+            return RedirectToAction("showUserHome", "UserHome");
         }
 
         private SearchResults initHomeBooks()

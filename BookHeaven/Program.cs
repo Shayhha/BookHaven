@@ -1,6 +1,5 @@
-using System.Reflection;
+using System.Data.SqlClient;
 using BookHeaven.Models;
-using Microsoft.Extensions.Options;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +26,16 @@ builder.Services.AddHttpContextAccessor();
 
 // Initialize SQLHelper
 SQLHelper.Initialize(builder.Configuration);
+try
+{
+    SqlConnection connection = new SqlConnection(SQLHelper.connectionString);
+    connection.Open();
+    connection.Close();
+} catch(Exception e)
+{
+    Console.WriteLine("Cound not connect to the server. Try again later.\n", e);
+    return;
+}
 
 var app = builder.Build();
 
