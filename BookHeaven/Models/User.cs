@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace BookHeaven.Models
 {
@@ -69,6 +70,25 @@ namespace BookHeaven.Models
                 return true;
             else
                 return false;
+        }
+
+        public static List<string> validateUserInfo(User user)
+        {
+            if (user.email == null || !Regex.IsMatch(user.email, @"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$"))
+                return new List<string> { "email", "Email follow the general email template: example@abc.xyz" };
+            else
+            {
+                if ((currentUser.email != user.email) && SQLHelper.SQLCheckEmail(user.email))
+                    return new List<string> { "email", "This email already in use, try a different one." };
+            }
+
+            if (user.fname == null || !Regex.IsMatch(user.fname, @"^[a-zA-Z]{2,20}$"))
+                return new List<string> { "fname", "First name should be only letters." };
+
+            if (user.lname == null || !Regex.IsMatch(user.lname, @"^[a-zA-Z]{2,20}$"))
+                return new List<string> { "lname", "Last name should be only letters." };
+
+            return new List<string> {"valid"};
         }
 
         public void setUser(string email, string fname, string lname)

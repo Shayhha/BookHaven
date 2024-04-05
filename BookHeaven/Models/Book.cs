@@ -124,7 +124,7 @@ namespace BookHeaven.Models
         /// <returns></returns>
         public static bool addBook(Book book)
         {
-            if (Models.User.currentUser.isAdmin)
+            if (User.currentUser.isAdmin)
             {
                 if (book != null)
                 {
@@ -142,7 +142,7 @@ namespace BookHeaven.Models
         /// <returns></returns>
         public static bool deleteBook(int bookId)
         {
-            if (Models.User.currentUser.isAdmin)
+            if (User.currentUser.isAdmin)
             {
                 if (SQLHelper.SQLDeleteBook(bookId))
                     return true;
@@ -160,7 +160,7 @@ namespace BookHeaven.Models
         /// <returns></returns>
         public static bool updateBookPrice(int bookId, float newPrice, bool isSale = false)
         {
-            if (Models.User.currentUser.isAdmin == true)
+            if (User.currentUser.isAdmin == true)
             {
                 if (SQLHelper.SQLUpdateBookPrice(bookId, newPrice, isSale))
                     return true;
@@ -193,7 +193,7 @@ namespace BookHeaven.Models
         /// <returns></returns>
         public static bool updateBook(Book book)
         {
-            if (Models.User.currentUser.isAdmin)
+            if (User.currentUser.isAdmin)
             {
                 if (book.salePrice > book.price) //we set salePrice to 0 to indicate that its not on sale
                     book.salePrice = 0;

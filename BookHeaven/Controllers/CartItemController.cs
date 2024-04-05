@@ -56,11 +56,11 @@ namespace BookHeaven.Controllers
 
                 if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
                 {
-                    success = Models.CartItem.addCartItemUser(Models.User.currentUser.userId, cartItem);
+                    success = CartItem.addCartItemUser(Models.User.currentUser.userId, cartItem);
                 }
                 else
                 {
-                    success = Models.CartItem.addCartItemDefault(cartItem);
+                    success = CartItem.addCartItemDefault(cartItem);
                 }
 
                 if (success)
@@ -86,11 +86,11 @@ namespace BookHeaven.Controllers
 
                 if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
                 {
-                    success = Models.CartItem.updateCartItemUser(Models.User.currentUser.userId, cartItem, oldQuantity - newQuantity);
+                    success = CartItem.updateCartItemUser(Models.User.currentUser.userId, cartItem, oldQuantity - newQuantity);
                 }
                 else
                 {
-                    success = Models.CartItem.updateCartItemDefault(cartItem, oldQuantity - newQuantity);
+                    success = CartItem.updateCartItemDefault(cartItem, oldQuantity - newQuantity);
                 }
 
                 if (success)
@@ -110,11 +110,11 @@ namespace BookHeaven.Controllers
                 CartItem cartItem = new CartItem(book, amount);
                 if (_contx.HttpContext.Session.GetString("isLoggedIn") == "true")
                 {
-                    success = Models.CartItem.deleteCartItemUser(Models.User.currentUser.userId, cartItem);
+                    success = CartItem.deleteCartItemUser(Models.User.currentUser.userId, cartItem);
                 }
                 else
                 {
-                    success = Models.CartItem.deleteCartItemDefault(cartItem);
+                    success = CartItem.deleteCartItemDefault(cartItem);
                 }
             }
             if (success)

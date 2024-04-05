@@ -265,6 +265,7 @@ function deleteCreditCard() {
 
 
 
+let beforeUnloadHandlerAdded = false;
 
 // Clearing the default user's cart when he exits our app or redirects to a different url (outside of our app).
 function handleBeforeUnload(e) {
@@ -273,6 +274,7 @@ function handleBeforeUnload(e) {
         fetch(`/CartItem/clearDefaultUserCart`)
             .then(response => response.json());
     });
+    beforeUnloadHandlerAdded = true;
 }
 
 handleBeforeUnload();

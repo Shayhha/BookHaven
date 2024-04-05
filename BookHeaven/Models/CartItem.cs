@@ -35,11 +35,11 @@ namespace BookHeaven.Models
 
         public static bool addCartItemDefault(CartItem cartItem) //for user without db
         {
-            if (Models.User.currentUser.cartItems != null)
+            if (User.currentUser.cartItems != null)
             {
                 if (SQLHelper.SQLUpdateBookStock(cartItem.book.bookId, (-1) * cartItem.amount)) //we need to remove amount from stock in db
                 {
-                    Models.User.currentUser.cartItems.Add(cartItem); //add the cartItem
+                    User.currentUser.cartItems.Add(cartItem); //add the cartItem
                     return true;
                 }
             }
@@ -48,11 +48,11 @@ namespace BookHeaven.Models
 
         public static bool addCartItemUser(int userId, CartItem cartItem) //for user with db
         {
-            if (Models.User.currentUser.cartItems != null)
+            if (User.currentUser.cartItems != null)
             {
                 if (SQLHelper.SQLAddCartItem(userId, cartItem)) //if we successfully added item
                 {
-                    Models.User.currentUser.cartItems.Add(cartItem); //add the cartItem
+                    User.currentUser.cartItems.Add(cartItem); //add the cartItem
                     return true;
                 }
             }
@@ -61,15 +61,15 @@ namespace BookHeaven.Models
 
         public static bool updateCartItemDefault(CartItem cartItem, int amountDifference) //for user without db
         {
-            if (Models.User.currentUser.cartItems != null)
+            if (User.currentUser.cartItems != null)
             {
-                for (int i = 0; i < Models.User.currentUser.cartItems.Count; i++)
+                for (int i = 0; i < User.currentUser.cartItems.Count; i++)
                 {
-                    if (Models.User.currentUser.cartItems[i].Equals(cartItem)) //if true found the object we want to change amount
+                    if (User.currentUser.cartItems[i].Equals(cartItem)) //if true found the object we want to change amount
                     {
                         if (SQLHelper.SQLUpdateBookStock(cartItem.book.bookId, amountDifference)) //try to update item amount
                         {
-                            Models.User.currentUser.cartItems[i].amount = cartItem.amount; //set new amount
+                            User.currentUser.cartItems[i].amount = cartItem.amount; //set new amount
                             return true;
                         }
                         else
@@ -82,15 +82,15 @@ namespace BookHeaven.Models
 
         public static bool updateCartItemUser(int userId, CartItem cartItem, int amountDifference) //for user with db
         {
-            if (Models.User.currentUser.cartItems != null)
+            if (User.currentUser.cartItems != null)
             {
-                for (int i = 0; i < Models.User.currentUser.cartItems.Count; i++)
+                for (int i = 0; i < User.currentUser.cartItems.Count; i++)
                 {
-                    if (Models.User.currentUser.cartItems[i].Equals(cartItem)) //if true found the object we want to change amount
+                    if (User.currentUser.cartItems[i].Equals(cartItem)) //if true found the object we want to change amount
                     {
                         if (SQLHelper.SQLUpdateCartItem(userId, cartItem, amountDifference)) //try to update item amount
                         {
-                            Models.User.currentUser.cartItems[i].amount = cartItem.amount; //set new amount
+                            User.currentUser.cartItems[i].amount = cartItem.amount; //set new amount
                             return true;
                         }
                         else
@@ -103,11 +103,11 @@ namespace BookHeaven.Models
 
         public static bool deleteCartItemDefault(CartItem cartItem) //for users without db
         {
-            if (Models.User.currentUser.cartItems != null)
+            if (User.currentUser.cartItems != null)
             {
                 if (SQLHelper.SQLUpdateBookStock(cartItem.book.bookId, cartItem.amount)) //we need to add amount to stock
                 {
-                    Models.User.currentUser.cartItems.RemoveAll(cartItems => cartItems.book.bookId == cartItem.book.bookId); //remove item from cart list that matches the bookId
+                    User.currentUser.cartItems.RemoveAll(cartItems => cartItems.book.bookId == cartItem.book.bookId); //remove item from cart list that matches the bookId
                     return true;
                 }
             }
@@ -116,11 +116,11 @@ namespace BookHeaven.Models
 
         public static bool deleteCartItemUser(int userId, CartItem cartItem) //for users with db
         {
-            if (Models.User.currentUser.cartItems != null)
+            if (User.currentUser.cartItems != null)
             {
                 if (SQLHelper.SQLDeleteCartItem(userId, cartItem))
                 {
-                    Models.User.currentUser.cartItems.RemoveAll(cartItems => cartItems.book.bookId == cartItem.book.bookId); //remove item from cart list that matches the bookId
+                    User.currentUser.cartItems.RemoveAll(cartItems => cartItems.book.bookId == cartItem.book.bookId); //remove item from cart list that matches the bookId
                     return true;
                 }
             }

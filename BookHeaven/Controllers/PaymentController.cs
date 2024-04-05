@@ -61,7 +61,6 @@ namespace BookHeaven.Controllers
                 string total = TempData["totalPayment"] as string;
                 Payment payment = new Payment(null, 0, (total == null ? 0 : float.Parse(total)), tempUser.creditCard, tempUser.address);
                 ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
-                //ViewBag.totalPayment = TempData["totalPayment"] as string;
                 return View("PaymentCartView", payment);
             }
 
@@ -168,7 +167,6 @@ namespace BookHeaven.Controllers
                     List<CartItem> tempList = new List<CartItem> { new CartItem(SQLHelper.SQLSearchBookById(bookId), quantity) };
                     if (Payment.AddOrder(currentUser.userId, tempList))
                         message = "Your payment was processed successfully! You can view your orders in your profile.";
-                   
                 }
                 else
                     message = "Your payment was processed successfully! Check your email for the details.";
