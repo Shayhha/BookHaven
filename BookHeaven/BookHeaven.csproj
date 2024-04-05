@@ -12,7 +12,6 @@
     <None Remove="Views\UserHome\" />
     <None Remove="Views\SearchResults\" />
     <None Remove="Views\Payment\" />
-    <None Remove="Views\Orders\" />
     <None Remove="Views\Book\" />
     <None Remove="Views\AdminHome\" />
     <None Remove="Views\Profile\" />
@@ -23,7 +22,6 @@
     <Folder Include="Views\UserHome\" />
     <Folder Include="Views\SearchResults\" />
     <Folder Include="Views\Payment\" />
-    <Folder Include="Views\Orders\" />
     <Folder Include="Views\Book\" />
     <Folder Include="Views\AdminHome\" />
     <Folder Include="Views\Profile\" />
