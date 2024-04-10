@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace BookHeaven.Models
 {
@@ -193,7 +191,7 @@ namespace BookHeaven.Models
             return false;
         }
 
-        public bool existsInCart(int bookId) // checks if the given bookId exists in the 
+        public bool existsInCart(int bookId) // checks if the given bookId exists in the cart
         {
             if (this.cartItems != null)
             {

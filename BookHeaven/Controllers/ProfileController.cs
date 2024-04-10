@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using BookHeaven.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BookHeaven.Controllers
 {
@@ -20,11 +19,6 @@ namespace BookHeaven.Controllers
         {
             ViewBag.cardNumber = Payment.saveCardNumberInViewBag();
             return View("ProfileView", Models.User.currentUser);
-        }
-
-        public IActionResult showSettingsView()
-        {
-            return View("SettingsView");
         }
 
         public IActionResult showEditProfileView()

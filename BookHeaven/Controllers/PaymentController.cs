@@ -176,14 +176,14 @@ namespace BookHeaven.Controllers
             return RedirectToAction("showUserHome", "UserHome");
         }
 
-        public IActionResult checkoutHasFailed(int bookId, int quantity)
+        public IActionResult checkoutHasFailed(int bookId, int quantity) // Only runs if the Stripe payment has failed!
         {
             User currentUser = Models.User.currentUser;
             string message = "Your order is canceled.";
 
             if (currentUser != null)
             {
-                if (!SQLHelper.SQLUpdateBookStock(bookId, quantity))
+                if (!SQLHelper.SQLUpdateBookStock(bookId, quantity)) // Updated the stock because Stripe removes the stock
                     message = "Your order is canceled. But there was a problem updating the book stock.";
             }
 

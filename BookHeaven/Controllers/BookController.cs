@@ -12,7 +12,7 @@ namespace BookHeaven.Controllers
             {
                 return View("BookEditView", book);
             }
-            return RedirectToAction("showUserHome", "UserHome");
+            return RedirectToAction("showAdminHome", "AdminHome");
         }
 
         public IActionResult showAddNewBook()
@@ -31,10 +31,14 @@ namespace BookHeaven.Controllers
                 ViewBag.GeneralMessage = message;
                 return View("BookInfoView", book);
             }
+
+            if (Models.User.currentUser.isAdmin)
+                return RedirectToAction("showAdminHome", "AdminHome");
+
             return RedirectToAction("showUserHome", "UserHome");
         }
 
-        public IActionResult addBook(Book newBook)
+        public IActionResult addBook(Book newBook) // For adding a book as an Admin user
         {
             if (ModelState.IsValid)
             {
@@ -60,7 +64,7 @@ namespace BookHeaven.Controllers
             }
         }
 
-        public IActionResult updateBook(Book updatedBook)
+        public IActionResult updateBook(Book updatedBook) // For updating a book as an Admin user
         {
             if (ModelState.IsValid)
             {
@@ -92,7 +96,7 @@ namespace BookHeaven.Controllers
             }
         }
 
-        public IActionResult deleteBook(int bookId)
+        public IActionResult deleteBook(int bookId) // For deleting a book as an Admin user
         {
             if (ModelState.IsValid)
             {
@@ -114,7 +118,7 @@ namespace BookHeaven.Controllers
         }
 
 
-        public IActionResult restockBook(int bookId, int restockAmount)
+        public IActionResult restockBook(int bookId, int restockAmount) // For restocking a book as an Admin user
         {
             if (Book.updateBookStock(bookId, restockAmount))
             {
@@ -128,7 +132,7 @@ namespace BookHeaven.Controllers
             }
         }
 
-        public IActionResult putBookOnSale(int bookId, float salePrice)
+        public IActionResult putBookOnSale(int bookId, float salePrice) // For putting a book on sale as an Admin user
         {
             if (Book.updateBookPrice(bookId, salePrice, true))
             {
@@ -142,7 +146,7 @@ namespace BookHeaven.Controllers
             }
         }
 
-        public IActionResult removeBookFromSale(int bookId)
+        public IActionResult removeBookFromSale(int bookId) // For removing a book from sale as an Admin user
         {
             if (Book.updateBookPrice(bookId, 0, true))
             {

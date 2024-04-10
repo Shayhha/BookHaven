@@ -1,6 +1,4 @@
-﻿using BookHeaven.Models;
-
-namespace BookHeaven.Models
+﻿namespace BookHeaven.Models
 {
     public class SearchResults
     {
