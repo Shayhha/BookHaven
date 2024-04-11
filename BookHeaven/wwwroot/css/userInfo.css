@@ -1,8 +1,7 @@
 ﻿/* Profile View Page Styles */
 .container2 {
     max-width: 800px;
-    margin: auto;
-    margin-top: 50px;
+    margin: 50px auto;
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
